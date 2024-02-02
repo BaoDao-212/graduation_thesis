@@ -19,7 +19,6 @@ import {
   RegisterUserOutput,
 } from './dto/auth.dto';
 import { createError } from '../common/utils/createError';
-import { hash } from 'bcrypt';
 import {
   ACCESS_TOKEN_EXPIRED_IN,
   ACCESS_TOKEN_SECRET,
@@ -247,12 +246,13 @@ const generateRandomPassword = (length: number): string => {
 
 // Hàm gửi email với mật khẩu mới
 async function sendEmail(newPassword, email) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const nodemailer = require('nodemailer');
 
   try {
     console.log(newPassword);
     // Tạo transporter
-    let transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
@@ -263,15 +263,14 @@ async function sendEmail(newPassword, email) {
     });
 
     // Cấu hình thông tin email
-    let mailOptions = {
-      from: 'duytuongkhmt@gmail.com',
+    const mailOptions = {
+      from: 'L O',
       to: `${email}`,
-      subject: 'Mật khẩu mới',
-      text: `Mật khẩu mới của bạn là: ${newPassword}`,
+      subject: 'Welcome to L.O',
+      text: `Your new passwork is: ${newPassword}`,
     };
-
     // Gửi email
-    let info = await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
     console.log('Email đã được gửi:', info.response);
   } catch (error) {
     console.log('Lỗi khi gửi email:', error);
