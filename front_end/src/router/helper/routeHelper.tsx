@@ -42,8 +42,8 @@ export const transformMenuToRoutes = (routeList: RouteRecordRaw[]) => {
   return routeList;
 };
 
-export const generateDynamicRoutes = (menus: RouteRecordRaw[]) => {
-  const routes = [...routeModules, ...transformMenuToRoutes(menus)];
+export const generateDynamicRoutes = () => {
+  const routes = [...routeModules];
   const allRoute = [...routes, ...basic];
   genNamePathForRoutes(allRoute);
   rootRoute.children = allRoute;

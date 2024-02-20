@@ -3,11 +3,11 @@ import NProgress from 'nprogress'; // progress bar
 import { LOGIN_NAME, PAGE_NOT_FOUND_NAME, REDIRECT_NAME } from './constant';
 import type { WhiteNameList } from './constant';
 import type { Router, RouteLocationNormalized } from 'vue-router';
-import { useUserStore } from '@/store/modules/user';
 import { useKeepAliveStore } from '@/store/modules/keepAlive';
 import { ACCESS_TOKEN_KEY } from '@/enums/cacheEnum';
 import { Storage } from '@/utils/Storage';
 import { to as _to } from '@/utils/awaitTo';
+import { useUserStore } from '@/store/modules/user';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -16,9 +16,8 @@ const defaultRoutePath = '/dashboard/welcome';
 export function createRouterGuards(router: Router, whiteNameList: WhiteNameList) {
   router.beforeEach(async (to, _, next) => {
     NProgress.start(); // start progress bar
-    const userStore = useUserStore();
     const token = Storage.get(ACCESS_TOKEN_KEY, null);
-
+    const userStore = useUserStore();
     if (token) {
       if (to.name === LOGIN_NAME) {
         next({ path: defaultRoutePath });
@@ -69,7 +68,6 @@ export function createRouterGuards(router: Router, whiteNameList: WhiteNameList)
       // console.error('failed navigation', failure);
       return;
     }
-
     const keepAliveStore = useKeepAliveStore();
     const token = Storage.get(ACCESS_TOKEN_KEY, null);
 

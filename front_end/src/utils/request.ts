@@ -39,7 +39,7 @@ service.interceptors.request.use(
     const token = Storage.get(ACCESS_TOKEN_KEY);
     if (token && config.headers) {
       // 请求头token信息，请根据实际情况进行修改
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers['Authorization'] = `${token}`;
     }
     return config;
   },
@@ -98,6 +98,8 @@ service.interceptors.response.use(
 
 type BaseResponse<T = any> = Omit<API.ResOp, 'data'> & {
   data: T;
+  code: T;
+  message: T;
 };
 
 export function request<T = any>(
@@ -132,9 +134,7 @@ export async function request<T = BaseResponse, Passive extends boolean = true>(
     })) as AxiosResponse<BaseResponse>;
     const { data } = response;
     const { code, message } = data || {};
-
     const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
-
     if (hasSuccess) {
       const { successMsg, showSuccessMsg } = config;
       if (successMsg) {

@@ -94,6 +94,8 @@
     // params.password = md5(password)
 
     const [err] = await to(userStore.login(state.formInline));
+    console.log(err);
+
     if (err) {
       Modal.error({
         title: () => '提示',

@@ -38,9 +38,9 @@ export async function accountPermissions(options?: RequestOptions) {
   });
 }
 
-/** 获取账户资料 GET /api/account/profile */
+/** 获取账户资料 GET /account/profile */
 export async function accountProfile(options?: RequestOptions) {
-  return request<API.AccountInfo>('/api/account/profile', {
+  return request<API.AccountInfo>('/account/info', {
     method: 'GET',
     ...(options || {}),
   });

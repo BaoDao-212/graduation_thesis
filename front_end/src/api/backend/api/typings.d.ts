@@ -322,9 +322,9 @@ declare namespace API {
     /** 密码 */
     password: string;
     /** 验证码标识 */
-    captchaId: string;
+    // captchaId: string;
     /** 用户输入的验证码 */
-    verifyCode: string;
+    // verifyCode: string;
   };
 
   type LoginLogInfo = {
@@ -344,9 +344,9 @@ declare namespace API {
     time: string;
   };
 
-  type LoginToken = {
+  type LoginToken = API.BaseDto & {
     /** JWT身份Token */
-    token: string;
+    accessToken: string;
   };
 
   type LogLoginLogPageParams = {

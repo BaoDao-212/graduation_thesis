@@ -4,7 +4,7 @@ import { request, type RequestOptions } from '@/utils/request';
 
 /** 登录 POST /api/auth/login */
 export async function authLogin(body: API.LoginDto, options?: RequestOptions) {
-  return request<API.LoginToken>('/api/auth/login', {
+  return request<API.LoginToken>('/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

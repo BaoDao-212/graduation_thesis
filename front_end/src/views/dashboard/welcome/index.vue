@@ -29,7 +29,7 @@
   defineOptions({
     name: 'DashboardWelcome',
   });
-
+  console.log(123);
   // import performanceMonitor from '@/utils/performanceMonitor'
 
   const loginIp = useUserStore().userInfo?.phone;

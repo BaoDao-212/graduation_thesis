@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
+import { Modal } from 'ant-design-vue';
 import type { RouteRecordRaw } from 'vue-router';
 import { store } from '@/store';
 import Api from '@/api/';
@@ -87,9 +88,22 @@ export const useUserStore = defineStore('user', () => {
   const login = async (params: API.LoginDto) => {
     try {
       const data = await Api.auth.authLogin(params);
-      setToken(data.token);
-      return afterLogin();
+      if (data.ok) {
+        setToken(data.accessToken);
+        return afterLogin();
+      } else {
+        Modal.error({
+          title: 'Error',
+          content: data.error.message,
+          okText: 'Ok',
+          onOk: () => {
+            localStorage.clear();
+            window.location.reload();
+          },
+        });
+      }
     } catch (error) {
+      console.log(error);
       return Promise.reject(error);
     }
   };
@@ -103,7 +117,7 @@ export const useUserStore = defineStore('user', () => {
       userInfo.value = userInfoData;
 
       await fetchPermsAndMenus();
-      initServerMsgListener();
+      return;
     } catch (error) {
       return Promise.reject(error);
       // return logout();
@@ -111,11 +125,10 @@ export const useUserStore = defineStore('user', () => {
   };
   /** 获取权限及菜单 */
   const fetchPermsAndMenus = async () => {
-    const { accountPermissions, accountMenu } = Api.account;
+    // const { accountPermissions, accountMenu } = Api.account;
     // const wsStore = useWsStore();
-    const [menusData, permsData] = await Promise.all([accountMenu(), accountPermissions()]);
-    perms.value = permsData;
-    menus.value = generateDynamicRoutes(menusData as unknown as RouteRecordRaw[]);
+    perms.value = [];
+    menus.value = generateDynamicRoutes();
   };
   /** 登出 */
   const logout = async () => {
