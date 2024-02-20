@@ -84,6 +84,26 @@ export const useUserStore = defineStore('user', () => {
     // const ex = 7 * 24 * 60 * 60 * 1000;
     Storage.set(ACCESS_TOKEN_KEY, token.value);
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const forgotPassword = async (params: API.ForgotPasswordDto) => {
+    try {
+      const data = await Api.auth.authforgotPassword(params);
+      if (!data.ok) {
+        Modal.error({
+          title: 'Error',
+          content: data.error.message,
+          okText: 'Ok',
+          onOk: () => {
+            localStorage.clear();
+            window.location.reload();
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  };
   /** 登录 */
   const login = async (params: API.LoginDto) => {
     try {
@@ -149,6 +169,7 @@ export const useUserStore = defineStore('user', () => {
     logout,
     resetToken,
     setServerConnectStatus,
+    forgotPassword,
   };
 });
 

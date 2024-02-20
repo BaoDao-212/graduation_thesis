@@ -5,28 +5,15 @@
         <LocalePicker />
       </div>
       <div class="login-logo">
-        <!-- <svg-icon name="logo" :size="45" /> -->
         <h1 class="mb-0 ml-2 text-3xl font-bold"> Study Quiz Center</h1>
         <img src="~@/assets/images/logo0.png" width="80" />
       </div>
       <a-form layout="horizontal" :model="state.formInline" @submit.prevent="handleSubmit">
         <a-form-item>
-          <a-input v-model:value="state.formInline.username" size="large" placeholder="rootadmin">
+          <a-input v-model:value="state.formInline.email" size="large" placeholder="rootadmin">
             <template #prefix><user-outlined type="user" /></template>
           </a-input>
         </a-form-item>
-        <a-form-item>
-          <a-input
-            v-model:value="state.formInline.password"
-            size="large"
-            type="password"
-            placeholder="123456"
-            autocomplete="new-password"
-          >
-            <template #prefix><lock-outlined type="user" /></template>
-          </a-input>
-        </a-form-item>
-
         <a-form-item>
           <a-button type="primary" html-type="submit" size="large" :loading="state.loading" block>
             {{ $t('routes.login.login') }}
@@ -39,9 +26,9 @@
 
 <script setup lang="ts">
   import { reactive } from 'vue';
-  import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+  import { UserOutlined } from '@ant-design/icons-vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { message, Modal } from 'ant-design-vue';
+  import { message } from 'ant-design-vue';
   import { useUserStore } from '@/store/modules/user';
   import { LocalePicker } from '@/components/basic/locale-picker';
   import { to } from '@/utils/awaitTo';
@@ -49,8 +36,7 @@
     loading: false,
     captcha: '',
     formInline: {
-      username: 'string',
-      password: 'MshpH5em',
+      email: 'string',
     },
   });
   const route = useRoute();
@@ -59,23 +45,16 @@
   const userStore = useUserStore();
 
   const handleSubmit = async () => {
-    const { username, password } = state.formInline;
-    if (username.trim() == '' || password.trim() == '') {
+    const { email } = state.formInline;
+    if (email.trim() == '') {
       return message.warning('用户名或密码不能为空！');
     }
     message.loading('登录中...', 0);
     state.loading = true;
-    console.log(state.formInline);
-
-    const [err] = await to(userStore.login(state.formInline));
+    const [err] = await to(userStore.forgotPassword(state.formInline));
     console.log(err);
 
-    if (err) {
-      Modal.error({
-        title: () => '提示',
-        content: () => err.message,
-      });
-    } else {
+    if (!err) {
       message.success('登录成功！');
       setTimeout(() => router.replace((route.query.redirect as string) ?? '/'));
     }

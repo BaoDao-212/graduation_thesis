@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { request, type RequestOptions } from '@/utils/request';
 
-/** 登录 POST /api/auth/login */
+/** 登录 POST /auth/login */
 export async function authLogin(body: API.LoginDto, options?: RequestOptions) {
   return request<API.LoginToken>('/auth/login', {
     method: 'POST',
@@ -14,9 +14,20 @@ export async function authLogin(body: API.LoginDto, options?: RequestOptions) {
   });
 }
 
-/** 注册 POST /api/auth/register */
+/** 注册 POST /auth/register */
 export async function authRegister(body: API.RegisterDto, options?: RequestOptions) {
-  return request<any>('/api/auth/register', {
+  return request<any>('/auth/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+/** 注册 POST /auth/forgot-password */
+export async function authforgotPassword(body: API.ForgotPasswordDto, options?: RequestOptions) {
+  return request<any>('/auth/forgot-password', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
