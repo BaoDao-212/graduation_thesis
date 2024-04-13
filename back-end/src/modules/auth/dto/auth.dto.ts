@@ -51,10 +51,18 @@ export class LoginInput {
   @MinLength(1)
   password: string;
 }
+export class RefreshTokenInput {
+  @ApiProperty({ description: 'refresh token' })
+  @IsString()
+  @MinLength(1)
+  refreshToken: string;
 
+}
 export class LoginOutput extends CoreOutput {
-  @ApiProperty({ description: 'JWT身份Token' })
+  @ApiProperty({ description: 'Access token' })
   accessToken?: string;
+  @ApiProperty({ description: 'Refresh token' })
+  refreshToken?: string;
 }
 
 export class NewAccessTokenInput {

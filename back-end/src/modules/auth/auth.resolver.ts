@@ -13,6 +13,7 @@ import {
   ListUserOutput,
   ForgotPasswordOutput,
   ForgotPasswordInput,
+  RefreshTokenInput,
 } from './dto/auth.dto';
 import { Roles } from './role.decorator';
 import { CurrentUser } from './user.decorator';
@@ -46,7 +47,14 @@ export class AuthResolver {
   async login(@Body() input: LoginInput): Promise<LoginOutput> {
     return this.authService.login(input);
   }
-
+  @ApiOperation({
+    summary: 'Refresh Access Token User',
+  })
+  @Post('/refresh-token')
+  @ApiOkResponse({ type: LoginOutput })
+  async refreshToken(@Body() input: RefreshTokenInput): Promise<LoginOutput> {
+    return this.authService.refreshToken(input.refreshToken);
+  }
   @ApiOperation({
     summary: 'New Access Token User',
   })
@@ -78,19 +86,9 @@ export class AuthResolver {
   @Get('list')
   @ApiOkResponse({ type: ListUserOutput })
   @ApiSecurity('admin')
-  @Roles(['Professor', 'Admin'])
+  @Roles(['Admin'])
   async listUser(): Promise<ListUserOutput> {
     return this.authService.listUser();
-  }
-  @ApiOperation({
-    summary: 'New Access Token User',
-  })
-  @Get('list-professor')
-  @ApiOkResponse({ type: ListUserOutput })
-  @ApiSecurity('admin')
-  @Roles(['Admin'])
-  async listUserProfessor(): Promise<ListUserOutput> {
-    return this.authService.listUserProfessor();
   }
   @ApiOperation({
     summary: 'For Get Password',

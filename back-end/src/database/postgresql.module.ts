@@ -1,6 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AccessTokenEntity } from 'src/entities/access-token.entity';
+import { Answer } from 'src/entities/answer.entity';
+import { Exam } from 'src/entities/exam.entity';
+import { Post } from 'src/entities/post.entity';
+import { Question } from 'src/entities/question.entity';
+import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
 import { User } from 'src/entities/user.entity';
 @Module({
   imports: [
@@ -15,7 +21,7 @@ import { User } from 'src/entities/user.entity';
       username: 'postgres',
       password: 'password',
       database: 'finalproject',
-      entities: [User],
+      entities: [User,AccessTokenEntity,RefreshTokenEntity,Post,Exam,Question,Answer],
       synchronize: true,
       ...(process.env.NODE_ENV === 'production'
         ? {

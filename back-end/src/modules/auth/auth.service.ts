@@ -22,12 +22,18 @@ import { createError } from '../common/utils/createError';
 import {
   ACCESS_TOKEN_EXPIRED_IN,
   ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_EXPIRED_IN,
+  REFRESH_TOKEN_SECRET,
 } from '../common/constants/constants';
+import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
+import { AccessTokenEntity } from 'src/entities/access-token.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectRepository(RefreshTokenEntity) private readonly refreshTokenRepository: Repository<RefreshTokenEntity>,
+    @InjectRepository(AccessTokenEntity) private readonly accessTokenRepository: Repository<AccessTokenEntity>,
     private readonly configService: ConfigService,
   ) {}
 
@@ -55,7 +61,7 @@ export class AuthService {
         email,
         name,
         username,
-        position: position == 'Student' ? Position.Student : Position.Professor,
+        position: Position.User,
       });
 
       await this.userRepo.save(userH);
@@ -90,14 +96,103 @@ export class AuthService {
           expiresIn: this.configService.get<string>(ACCESS_TOKEN_EXPIRED_IN),
         },
       );
-
+      // create refresh token
+      const rToken = sign( 
+        {
+          userId: user.id,
+        },
+        this.configService.get<string>(REFRESH_TOKEN_SECRET),
+        {
+          expiresIn: this.configService.get<string>(REFRESH_TOKEN_EXPIRED_IN),
+        },
+      );
+      const refreshToken = this.refreshTokenRepository.create();
+      const accessTokenEntity = this.accessTokenRepository.create();
+      refreshToken.value = rToken;
+      refreshToken.expired_at = this.configService.get<number>(REFRESH_TOKEN_EXPIRED_IN);
+      refreshToken.created_at = new Date();
+      accessTokenEntity.value = accessToken;
+      accessTokenEntity.expired_at = this.configService.get<number>(ACCESS_TOKEN_EXPIRED_IN);
+      accessTokenEntity.created_at = new Date();
+      accessTokenEntity.user = user;
+      await this.accessTokenRepository.save(accessTokenEntity);
+      refreshToken.accessToken = accessTokenEntity;
+      await this.refreshTokenRepository.save(refreshToken);
       return {
         ok: true,
         accessToken,
+        refreshToken: rToken
       };
     } catch (error) {
       console.log(error);
 
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
+  async refreshToken(refreshToken: string): Promise<LoginOutput> {
+    try {
+      const decoded = verify(
+        refreshToken,
+        this.configService.get<string>(REFRESH_TOKEN_SECRET),
+      );
+      if (!decoded || !decoded['userId']) throw new JsonWebTokenError('');
+      const user = await this.userRepo.findOne({
+        where: {
+          id: decoded['userId'],
+        },
+      });
+      if (!user) throw new JsonWebTokenError('');
+      const accessToken = sign(
+        {
+          userId: user.id,
+        },
+        this.configService.get<string>(ACCESS_TOKEN_SECRET),
+        {
+          expiresIn: this.configService.get<string>(ACCESS_TOKEN_EXPIRED_IN),
+        },
+      );
+      // create refresh token 
+
+      const rToken = sign( 
+        {
+          userId: user.id,
+        },
+        this.configService.get<string>(REFRESH_TOKEN_SECRET),
+        {
+          expiresIn: this.configService.get<string>(REFRESH_TOKEN_EXPIRED_IN),
+        },
+      );
+      const refreshTokenEntity =await this.refreshTokenRepository.findOne({
+        where: {
+          value: refreshToken,
+        },
+      });
+      if (!refreshTokenEntity) throw new JsonWebTokenError('');
+
+      const accessTokenEntity =await this.accessTokenRepository.findOne({
+        where: {
+          user: {
+            id: user.id,
+          },
+        },
+      });
+      if (!accessTokenEntity) throw new JsonWebTokenError('');
+      refreshTokenEntity.value = rToken;
+      refreshTokenEntity.expired_at = this.configService.get<number>(REFRESH_TOKEN_EXPIRED_IN);
+      refreshTokenEntity.created_at = new Date();
+      accessTokenEntity.value = accessToken;
+      accessTokenEntity.expired_at = this.configService.get<number>(ACCESS_TOKEN_EXPIRED_IN);
+      accessTokenEntity.created_at = new Date();
+      accessTokenEntity.user = user;
+      await this.refreshTokenRepository.save(refreshTokenEntity);
+      await this.accessTokenRepository.save(accessTokenEntity);
+      return {
+        ok: true,
+        accessToken,
+        refreshToken: rToken
+      };
+    } catch (error) {
+      console.log(error);
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
@@ -106,25 +201,7 @@ export class AuthService {
     try {
       const users = await this.userRepo.find({
         where: {
-          position: Position.Student,
-        },
-        select: ['email', 'id', 'name', 'phone', 'position', 'username'],
-      });
-      return {
-        ok: true,
-        users,
-      };
-    } catch (error) {
-      console.log(error);
-      return createError('Server', 'Lỗi server, thử lại sau');
-    }
-  }
-  // danh sách người dùng
-  async listUserProfessor(): Promise<ListUserOutput> {
-    try {
-      const users = await this.userRepo.find({
-        where: {
-          position: Position.Professor,
+          position: Position.User,
         },
         select: ['email', 'id', 'name', 'phone', 'position', 'username'],
       });
