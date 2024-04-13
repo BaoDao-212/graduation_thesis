@@ -6,12 +6,13 @@ import {
   BeforeUpdate,
   PrimaryGeneratedColumn,
   Column,
-  Entity,
+  Entity,OneToMany,Relation
 } from 'typeorm';
+import { AccessTokenEntity } from './access-token.entity';
+import { Post } from './post.entity';
 export enum Position {
   Admin = 'Admin',
-  Student = 'Student',
-  Professor = 'Professor',
+  User = 'User',
 }
 @Entity({ name: 'user' })
 export class User extends BaseEntity {
@@ -37,7 +38,7 @@ export class User extends BaseEntity {
 
   @Column('enum', {
     enum: Position,
-    default: Position.Student,
+    default: Position.User,
   })
   @ApiProperty()
   position?: Position;
@@ -50,6 +51,14 @@ export class User extends BaseEntity {
   @ApiProperty()
   phone?: string;
 
+  @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
+    cascade: true,
+  })
+  accessTokens: Relation<AccessTokenEntity[]>
+
+  @OneToMany(type=>Post, post =>post.user)
+  @ApiProperty()
+  posts:Post[]
   // phương thức xử lí password
   @BeforeInsert()
   @BeforeUpdate()
