@@ -8,6 +8,7 @@ import { getConfiguration } from './modules/common/config/config';
 import { UserModule } from './modules/user/user.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { FirebaseModule } from './modules/firebase/firebase.module';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { FirebaseModule } from './modules/firebase/firebase.module';
     UserModule,
     UploadModule,
     UserModule,
+    PostModule
   ],
   controllers: [AppController],
   providers: [AppService],

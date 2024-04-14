@@ -38,5 +38,21 @@ export class UpdatePostOutput extends CoreOutput {
   post?: Post;
 }
 export class UpdateReviewPostOutput extends CoreOutput {
+}
+export class ListPostInput{
+  @ApiProperty({ description: 'page' })
+  page: number;
 
+  @ApiProperty({ description: 'size' })
+  size: number;  
+}
+
+export class ListPostOutput extends CoreOutput {
+  @ApiProperty({ description: 'list post' })
+  posts?: Post[];
+}
+// get details a post
+export class DetailPostOutput extends CoreOutput {
+  @ApiProperty({ description: 'details post' })
+  posts?: Post;
 }

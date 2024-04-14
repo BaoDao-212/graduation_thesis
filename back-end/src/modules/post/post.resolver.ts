@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, ParseIntPipe, Param,Patch } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, ParseIntPipe, Param,Patch ,Query,Delete} from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiOperation,
@@ -9,7 +9,7 @@ import { PostService } from './post.servive';
 import { Roles } from '../auth/role.decorator';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from 'src/entities/user.entity';
-import { CreatePostInput, CreatePostOutput, UpdatePostInput, UpdatePostOutput, UpdateReviewPostInput, UpdateReviewPostOutput } from './post.dto';
+import { CreatePostInput, CreatePostOutput, ListPostInput,  ListPostOutput, UpdatePostInput, UpdatePostOutput, UpdateReviewPostInput, UpdateReviewPostOutput } from './post.dto';
 
 
 @ApiTags('Post')
@@ -44,5 +44,51 @@ export class PostController {
   @ApiOkResponse({ type: UpdateReviewPostOutput })
   async updateReviewPost(@Param('id', ParseIntPipe) id: number, @Body() input: UpdateReviewPostInput, @CurrentUser() currentUser: User) {
     return this.postService.updateReviewPost(id, input, currentUser);
+  }
+  @ApiOperation({
+    summary: 'get post',
+  })
+  @Roles(['Any'])
+  @Get('list')
+  @ApiOkResponse({ type: ListPostOutput })
+  async getPost(@Query('pageSize') pageSize: number = 10,@Query('page') page: number = 1, @CurrentUser() currentUser: User ) {
+    return this.postService.listOwnerPosts(currentUser, { size:pageSize, page });
+  }
+  @ApiOperation({
+    summary: 'get list public post',
+  })
+  @Roles(['Any'])
+  @Get('list/:id')
+  @ApiOkResponse({ type: ListPostOutput })
+  async listPublicPost(@Param('id', ParseIntPipe) id: number, @Query('pageSize') pageSize: number = 10,@Query('page') page: number = 1, @CurrentUser() currentUser: User ) {
+    return this.postService.listPublicPosts(id,currentUser,{ size:pageSize, page });
+  }
+  @ApiOperation({
+    summary: 'get list public post all',
+  })
+  @Roles(['Any'])
+  @Get('list-all')
+  @ApiOkResponse({ type: ListPostOutput })
+  async listPublicPostsAll( @Query('pageSize') pageSize: number = 10,@Query('page') page: number = 1) {
+    return this.postService.listPublicPostsAll( { size:pageSize, page });
+  }
+  @ApiOperation({
+    summary: 'details post',
+  })
+  @Roles(['Any'])
+  @Get('detail/:id')
+  @ApiOkResponse({ type: ListPostOutput })
+  async detailsPost(@Param('id', ParseIntPipe) id: number,@CurrentUser() currentUser: User ) {
+    return this.postService.detailsPost( id,currentUser);
+  }
+  //delete post
+  @ApiOperation({
+    summary: 'delete post',
+  })
+  @Roles(['Any'])
+  @Delete('delete/:id')
+  @ApiOkResponse({ type: ListPostOutput })
+  async deletePost(@Param('id', ParseIntPipe) id: number,@CurrentUser() currentUser: User ) {
+    return this.postService.deletePost( id,currentUser);
   }
 }

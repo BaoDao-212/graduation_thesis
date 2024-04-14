@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { createError } from '../common/utils/createError';
-import { CreatePostInput, CreatePostOutput, UpdatePostInput, UpdatePostOutput, UpdateReviewPostInput } from './post.dto';
+import { CreatePostInput, CreatePostOutput,DetailPostOutput,ListPostInput, ListPostOutput, UpdatePostInput, UpdatePostOutput, UpdateReviewPostInput } from './post.dto';
 import { Post, PostStatus } from 'src/entities/post.entity';
 import { Exam } from 'src/entities/exam.entity';
 import { CoreOutput } from '../common/output.dto';
@@ -14,6 +14,7 @@ export class PostService {
   constructor(
     @InjectRepository(Post) private readonly postRepo: Repository<Post>,
     @InjectRepository(Exam) private readonly examRepo: Repository<Exam>,
+    @InjectRepository(User) private readonly userRepo: Repository<User>,
   ) {}
   async findAllExam(examIds: number[]) {
     const exams = await this.examRepo.findByIds(examIds);
@@ -38,6 +39,7 @@ async createPost(
     }
     if(status != PostStatus.PRIVATE && status != PostStatus.PUBLISHED) 
       return createError('Post', 'Status must be private or public');
+    s=status;
     const post = await this.postRepo.create({
       content: content,
       exams: exams,
@@ -128,4 +130,134 @@ async updateReviewPost(
     return createError('Server', 'Lỗi server, thử lại sau');
   }
 }
+async listOwnerPosts(currentUser:User, input:ListPostInput):Promise<ListPostOutput>{
+  try {
+    const {page,size} =input;
+    const posts = await this.postRepo.find({
+      relations:{
+        exams:true,
+        user:true,
+      },
+      where:{
+        user:{
+          id:currentUser.id,
+        }
+      },
+      order:{
+        createdAt:'DESC',
+      },
+      take:size,
+      skip:(page-1)*size,
+    });
+    return {
+      ok: true,
+      posts,
+    };
+  } catch (error) {
+    return createError('Server', 'Lỗi server, thử lại sau');
+  }
+}
+async listPublicPosts(idUser:number,currentUser:User, input:ListPostInput):Promise<ListPostOutput>{
+  try {
+    const {page,size} =input;
+    const user= await this.userRepo.findOne({
+      where:{
+        id:idUser,
+      },
+    });
+    if(!user) return createError('User', 'User not found');
+    const posts = await this.postRepo.find({
+      relations:{
+        exams:true,
+        user:true,
+      },
+      where:{
+        status:PostStatus.PUBLISHED,
+        user:{
+          id:idUser,
+        }
+      },
+      order:{
+        createdAt:'DESC',
+      },
+      take:size,
+      skip:(page-1)*size,
+    });
+    return {
+      ok: true,
+      posts,
+    };
+  } catch (error) {
+    return createError('Server', 'Lỗi server, thử lại sau');
+  }
+}
+
+async listPublicPostsAll(input:ListPostInput):Promise<ListPostOutput>{
+  try {
+    const {page,size} =input;
+    const posts = await this.postRepo.find({
+      relations:{
+        exams:true,
+        user:true,
+      },
+      where:{
+        status:PostStatus.PUBLISHED,
+      },
+      order:{
+        createdAt:'DESC',
+      },
+      take:size,
+      skip:(page-1)*size,
+    });
+    return {
+      ok: true,
+      posts,
+    };
+  } catch (error) {
+    return createError('Server', 'Lỗi server, thử lại sau');
+  }
+}
+async detailsPost(id:number,currentUser:User):Promise<DetailPostOutput>{
+    try {
+      const post = await this.postRepo.findOne({
+        relations:{
+          exams:true,
+          user:true,
+        },
+        where:{
+          id:id,
+          }
+      });
+      if(!post) return createError('Post', 'Post not found');
+      if(post.user.id!==currentUser.id && post.status!=PostStatus.PUBLISHED )
+        return createError('Post', 'Invalid access' )
+      return {
+        ok:true,
+        posts:post,
+      };
+    } catch (error) {
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
+  //delete post
+  async deletePost(id:number,currentUser:User):Promise<CoreOutput>{
+    try {
+      const post = await this.postRepo.findOne({
+        where:{
+          id:id,
+        },
+        relations:{
+          user:true,
+        }
+      });
+      if(!post) return createError('Post', 'Post not found');
+      if(post.user.id!=currentUser.id) return createError('Post', 'You are not the owner of this post');
+      await this.postRepo.delete(id);
+      return {
+        ok:true,
+      };
+    } catch (error) {
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
 }
