@@ -3,11 +3,10 @@ import { BaseEntity } from './base.entity';
 import {
   PrimaryGeneratedColumn,
   Column,
-  Entity,OneToMany,JoinColumn,ManyToMany,JoinTable
+  Entity,OneToMany,JoinColumn
 } from 'typeorm';
 import { User } from './user.entity';
 import { Question } from './question.entity';
-import { Post } from './post.entity';
 
 @Entity({ name: 'exam' })
 export class Exam extends BaseEntity {
@@ -26,12 +25,7 @@ export class Exam extends BaseEntity {
     user: User
     
     @OneToMany(()=> Question, question => question.exam)
-    // @JoinColumn({ name: 'exam_id' })
     @ApiProperty()
     questions: Question
-
-    // @ManyToMany(()=>Post,post=>post.exams)
-    // @JoinTable()
-    // @ApiProperty()
-    // posts:Post[]
+    
 }

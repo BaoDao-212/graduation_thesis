@@ -9,6 +9,8 @@ import { UserModule } from './modules/user/user.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { FirebaseModule } from './modules/firebase/firebase.module';
 import { PostModule } from './modules/post/post.module';
+import { ExamModule } from './modules/exam/exam.module';
+import { QuestionModule } from './modules/question/question.module';
 
 @Module({
   imports: [
@@ -29,7 +31,9 @@ import { PostModule } from './modules/post/post.module';
     UserModule,
     UploadModule,
     UserModule,
-    PostModule
+    PostModule,
+    ExamModule,
+    QuestionModule
   ],
   controllers: [AppController],
   providers: [AppService],

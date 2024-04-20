@@ -18,14 +18,18 @@ export class Question extends BaseEntity {
     @Column({ nullable: true })
     @ApiProperty()
     content?: string;
-
+    
+    @Column({ nullable: true })
+    @ApiProperty()
+    explaination?: string;
+    
 
     @OneToMany(() => Answer,answer=>answer.question )
     @ApiProperty()
     answers?: Answer[];
 
     @ManyToOne(()=>Exam ,exam=>exam.questions)
-    @JoinColumn ({ name: 'user_id' })
+    @JoinColumn ({ name: 'exam_id' })
     @ApiProperty()
     exam:Exam
     
