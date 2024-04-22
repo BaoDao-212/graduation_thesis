@@ -12,19 +12,19 @@ import { CreateQuestionInput, CreateQuestionOutput } from './question.dto';
 import { QuestionService } from './question.servive';
 
 
-@ApiTags('Post')
+@ApiTags('Question')
 @Controller('/api/question')
 @ApiSecurity('admin')
 export class QuestionController {
-  constructor(private readonly postService: QuestionService) { }
+  constructor(private readonly questionService: QuestionService) { }
   @ApiOperation({
-    summary: 'create post',
+    summary: 'create question',
   })
   @Roles(['Any'])
   @Post('create')
   @ApiOkResponse({ type: CreateQuestionOutput })
   async createQuestion(@Body() input: CreateQuestionInput, @CurrentUser() currentUser: User) {
-    return this.postService.createQuestion(input, currentUser);
+    return this.questionService.createQuestion(input, currentUser);
   }
  
 }

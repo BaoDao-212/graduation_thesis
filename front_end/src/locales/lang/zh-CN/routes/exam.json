@@ -1,0 +1,26 @@
+{
+  "list_exam": "Danh sách bộ đề",
+  "add_exam": "Thêm bộ đề",
+  "edit_exam": "Sửa bộ đề",
+  "delete_exam": "Xóa bộ đề",
+  "list": "Danh sách",
+  "exam": "Bộ đề",
+  "table": {
+    "name": "Tên",
+    "level": "Cấp độ",
+    "content": "Mô tả",
+    "action": "Hành động",
+    "createAt": "Ngày tạo"
+  },
+  "modal":{
+    "placeholder": {
+      "name": "Nhập tên bộ đề",
+      "content": "Nhập mô tả"
+    },
+    "required" : {
+      "name": "Tên bộ đề không được để trống",
+      "content": "Mô tả không được để trống"
+    }
+  }
+  
+}

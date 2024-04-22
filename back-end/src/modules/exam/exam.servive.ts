@@ -21,10 +21,12 @@ async createExam(
   currentUser: User,
 ): Promise<CreateExamOutput> {
   try {
-    const {content } = input;
+    const {content,name,level } = input;
     const exam = await this.examRepo.create({
       content: content,
       user: currentUser,
+      name: name,
+      level: level,
     });
     await this.examRepo.save(exam);
     return {

@@ -13,10 +13,10 @@ import { ExamService } from './exam.servive';
 
 
 @ApiTags('Exam')
-@Controller('/api/Exam')
+@Controller('/api/exam')
 @ApiSecurity('admin')
 export class ExamController {
-  constructor(private readonly ExamService: ExamService) { }
+  constructor(private readonly examService: ExamService) { }
   @ApiOperation({
     summary: 'create Exam',
   })
@@ -24,7 +24,7 @@ export class ExamController {
   @Post('create')
   @ApiOkResponse({ type: CreateExamOutput })
   async createExam(@Body() input: CreateExamInput, @CurrentUser() currentUser: User) {
-    return this.ExamService.createExam(input, currentUser);
+    return this.examService.createExam(input, currentUser);
   }
 
   

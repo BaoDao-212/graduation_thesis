@@ -1,0 +1,25 @@
+{
+    "list_exam": "List of exam",
+    "add_exam": "Add set",
+    "edit_exam": "Edit set",
+    "delete_exam": "Delete set",
+    "list": "List",
+    "exam": "Exam",
+    "table": {
+      "name": "Name",
+      "level": "Level",
+      "content": "Description",
+      "action": "Action",
+      "createAt": "Creation Date"
+    },
+    "modal":{
+        "placeholder": {
+          "name": "Please enter name",
+          "content": "PPlease enter content"
+        },
+        "required": {
+          "name": "Name is required",
+          "content": "Content is required"
+        }
+      }
+  }

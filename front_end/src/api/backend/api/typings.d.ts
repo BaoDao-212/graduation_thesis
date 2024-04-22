@@ -805,7 +805,17 @@ declare namespace API {
   type TaskDeleteParams = {
     id: number;
   };
-
+  type CreateExamDto = {
+    content: string;
+    name: string;
+    level: ExamLevel;
+  };
+  enum ExamLevel {
+    EASY = 0,
+    NORMAL = 1,
+    HARD = 2,
+    VERY_HARD = 3,
+  }
   type TaskDto = {
     /** 任务名称 */
     name: string;

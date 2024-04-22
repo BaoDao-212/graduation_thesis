@@ -11,6 +11,7 @@ import { FirebaseModule } from './modules/firebase/firebase.module';
 import { PostModule } from './modules/post/post.module';
 import { ExamModule } from './modules/exam/exam.module';
 import { QuestionModule } from './modules/question/question.module';
+import { AnswerModule } from './modules/answer/answer.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { QuestionModule } from './modules/question/question.module';
     UserModule,
     PostModule,
     ExamModule,
-    QuestionModule
+    QuestionModule,
+    AnswerModule
   ],
   controllers: [AppController],
   providers: [AppService],
