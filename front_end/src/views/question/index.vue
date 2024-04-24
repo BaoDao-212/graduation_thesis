@@ -12,14 +12,25 @@
         class="flex"
         style="justify-content: space-between; align-items: center; margin-bottom: 4px"
       >
-        <span v-if="listExam"> {{ t('routes.exam.total') }}: {{ pageSetting.total }} </span>
+        <span v-if="listQuestion"> {{ t('routes.exam.total') }}: {{ pageSetting.total }} </span>
         <div style="display: flex; align-items: center">
           <AddUser @update-list="updateListAfterCreate" />
         </div>
       </div>
+      <div style="display: flex; flex-direction: row; align-items: center">
+        <span style="margin-right: 10px">{{ t('routes.scenario.category') }}:</span>
+        <a-select
+          v-if="listNameExam"
+          v-model:value="exam"
+          style="width: 300px"
+          class="border border-primary rounded-2"
+          :options="listNameExam.map((t) => ({ value: t.name }))"
+          @change="newListQuestion"
+        ></a-select>
+      </div>
       <a-table
         v-if="showTable"
-        v-model:data-source="listExam"
+        v-model:data-source="listQuestion"
         :columns="columns"
         :pagination="{
           showSizeChanger: true,
@@ -112,10 +123,11 @@
   import type { TableProps } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
   import to from '@/utils/awaitTo';
-  import { getExamList } from '@/api/backend/api/exam';
+  import {  getExamNameList } from '@/api/backend/api/exam';
   import { formatToDate } from '@/utils/dateUtil';
-
-  const listExam = ref();
+  const exam=ref();
+  const listQuestion = ref();
+  const listNameExam = ref();
   const showTable = ref(true);
   const { t } = useI18n();
   type PageSetting = {
@@ -128,22 +140,35 @@
     page: 1,
     total: 0,
   });
+  const newListQuestion=()=>{
+
+  }
   // hàm lây data
   const getData = async () => {
-    const [err, res] = await to(getExamList(pageSetting.value.page, pageSetting.value.pageSize));
+    console.log(12);
+    
+    // lấy danh sách tên tất cả bộ đê thi
+    const [err, res] = await to(getExamNameList());
     if (err) {
       notification.error({
         message: t('common.error'),
         description: err.message,
       });
-      return;
     }
-    pageSetting.value.total = res.total;
-    listExam.value = res.exams;
-    listExam.value.forEach(
-      (e, index) =>
-        (e.index = pageSetting.value.pageSize * (pageSetting.value.page - 1) + index + 1),
-    );
+    listNameExam.value = res.exams;
+    // if (err) {
+    //   notification.error({
+    //     message: t('common.error'),
+    //     description: err.message,
+    //   });
+    //   return;
+    // }
+    // pageSetting.value.total = res.total;
+    // listQuestion.value = res.exams;
+    // listQuestion.value.forEach(
+    //   (e, index) =>
+    //     (e.index = pageSetting.value.pageSize * (pageSetting.value.page - 1) + index + 1),
+    // );
   };
   onMounted(async () => {
     await getData();
@@ -156,7 +181,7 @@
   };
 
   const updateListAfterCreate = (data) => {
-    listExam.value.push({
+    listQuestion.value.push({
       id: data.id,
       name: data.name,
       content: data.content,

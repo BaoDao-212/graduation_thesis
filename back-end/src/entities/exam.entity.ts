@@ -3,7 +3,7 @@ import { BaseEntity } from './base.entity';
 import {
   PrimaryGeneratedColumn,
   Column,
-  Entity,OneToMany,JoinColumn
+  Entity,ManyToOne,JoinColumn,OneToMany
 } from 'typeorm';
 import { User } from './user.entity';
 import { Question } from './question.entity';
@@ -13,6 +13,11 @@ export enum ExamLevel{
   NORMAL = 1,
   HARD = 2,
   VERY_HARD = 3,
+}
+export enum ExamStatus{
+  ACTIVE = 0,
+  INACTIVE = 1,
+  DELETED = 2,
 }
 @Entity({ name: 'exam' })
 export class Exam extends BaseEntity {
@@ -32,8 +37,12 @@ export class Exam extends BaseEntity {
     @ApiProperty()
     level?: ExamLevel;
 
-    @OneToMany(() => User, user => user.posts)
-    @JoinColumn ({ name: 'user_id' })
+    @Column({ nullable: true,default : ExamStatus.ACTIVE })
+    @ApiProperty()
+    status?: ExamStatus;
+
+    @ManyToOne(() => User, user => user.id)
+    @JoinColumn ({name:'user_id'})
     @ApiProperty()
     user: User
     

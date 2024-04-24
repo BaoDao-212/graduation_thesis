@@ -1,0 +1,17 @@
+{
+    "list_question": "Danh sách câu hỏi",
+    "add_question": "Thêm câu hỏi",
+    "edit_question": "Sửa câu hỏi",
+    "delete_question": "Xóa câu hỏi",
+    "list": "Danh sách",
+    "question": "Câu hỏi",
+    "total":"Tổng",
+    "table": {
+      "id": "No",
+      "status": "Trạng thái",
+      "name": "Tên",
+      "createdAt":"Ngày tạo",
+      "action": "Hành động"
+    }
+}
+  

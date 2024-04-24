@@ -1,0 +1,16 @@
+{
+    "list_question": "List of questions",
+    "add_question": "Add question",
+    "edit_question": "Edit question",
+    "delete_question": "Delete question",
+    "list": "List",
+    "question": "Question",
+    "total":"Total",
+    "table": {
+      "id": "No",
+      "status": "Status",
+      "name": "Name",
+      "createdAt":"Created at",
+      "action": "Action"
+    }
+}

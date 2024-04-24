@@ -15,3 +15,17 @@ export async function createExam(body: API.CreateExamDto, options?: RequestOptio
     ...(options || {}),
   });
 }
+// TODO: lấy danh sách tất cả đề thi exam của current user
+export async function getExamList(page?: number, pageSize?: number, options?: RequestOptions) {
+  return request<any>(`/api/exam/list/?page=${page}&pageSize=${pageSize}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+// TODO: lấy danh sách tên tất cả đề thi exam của current user
+export async function getExamNameList(options?: RequestOptions) {
+  return request<any>(`/api/exam/list_name`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

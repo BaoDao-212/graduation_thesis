@@ -1,25 +1,29 @@
 {
-    "list_exam": "List of exam",
-    "add_exam": "Add set",
-    "edit_exam": "Edit set",
-    "delete_exam": "Delete set",
-    "list": "List",
-    "exam": "Exam",
-    "table": {
-      "name": "Name",
-      "level": "Level",
-      "content": "Description",
-      "action": "Action",
-      "createAt": "Creation Date"
+  "list_exam": "List of exam",
+  "add_exam": "Add set",
+  "edit_exam": "Edit set",
+  "delete_exam": "Delete set",
+  "list": "List exam",
+  "exam": "Exam",
+  "total":"Total",
+  "table": {
+    "id": "No",
+    "status": "Status",
+    "name": "Name",
+    "createdAt":"Created at",
+    "level": "Level",
+    "content": "Description",
+    "action": "Action",
+    "createAt": "Creation Date"
+  },
+  "modal": {
+    "placeholder": {
+      "name": "Please enter name",
+      "content": "PPlease enter content"
     },
-    "modal":{
-        "placeholder": {
-          "name": "Please enter name",
-          "content": "PPlease enter content"
-        },
-        "required": {
-          "name": "Name is required",
-          "content": "Content is required"
-        }
-      }
+    "required": {
+      "name": "Name is required",
+      "content": "Content is required"
+    }
   }
+}

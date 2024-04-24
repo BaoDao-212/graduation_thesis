@@ -10,8 +10,6 @@ export class CreateQuestionInput {
   @ApiProperty({ description: 'explaination' })
   explaination?: string;
 
-
-
   @ApiProperty({ description: 'exam id' })
   examId: number;
 }

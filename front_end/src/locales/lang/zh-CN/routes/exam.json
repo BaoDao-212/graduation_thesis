@@ -5,8 +5,12 @@
   "delete_exam": "Xóa bộ đề",
   "list": "Danh sách",
   "exam": "Bộ đề",
+  "total":"Tổng",
   "table": {
+    "id": "No",
+    "status": "Trạng thái",
     "name": "Tên",
+    "createdAt":"Ngày tạo",
     "level": "Cấp độ",
     "content": "Mô tả",
     "action": "Hành động",
