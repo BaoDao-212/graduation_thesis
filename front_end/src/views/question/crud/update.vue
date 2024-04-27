@@ -79,6 +79,7 @@
       </Button>
     </div>
   </Card>
+  <ListAnswer :questionId="Number(route.params.id)" />
 </template>
 <script lang="ts" setup>
   import { ref } from 'vue';
@@ -88,6 +89,7 @@
   import { getExamNameList, getQuestionById, updateQuestion } from '@/api/backend/api/question';
   import { onBeforeMount } from 'vue';
   import { useRoute } from 'vue-router';
+  import ListAnswer from '@/views/answer/index.vue';
   interface FormState {
     explaination: string;
     content: string;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card v-if="listNameExam" style="margin: 0 6px 0px 6px; min-width: fit-content">
+    <Card style="margin: 0 6px 0px 6px; min-width: fit-content">
       <template #title>
         <div class="flex" style="justify-content: space-between; align-items: center">
           <span>
@@ -12,7 +12,7 @@
         class="flex"
         style="justify-content: space-between; align-items: center; margin-bottom: 4px"
       >
-        <span v-if="listQuestion"> {{ t('routes.exam.total') }}: {{ pageSetting.total }} </span>
+        <span v-if="listAnswer"> {{ t('routes.exam.total') }}: {{ pageSetting.total }} </span>
         <div style="display: flex; align-items: center">
           <Add @update-list="updateListAfterCreate" :exam="listNameExam" />
         </div>
@@ -30,7 +30,7 @@
       </div>
       <a-table
         v-if="showTable"
-        v-model:data-source="listQuestion"
+        v-model:data-source="listAnswer"
         :columns="columns"
         :pagination="{
           showSizeChanger: true,
@@ -54,7 +54,7 @@
           <template v-else-if="column.dataIndex === 'content'">
             <span>{{ $t('routes.question.table.content') }}</span>
           </template>
-          <template v-else-if="column.dataIndex === 'level'">
+          <template v-else-if="column.dataIndex === 'isCorrect'">
             <span>{{ $t('routes.exam.table.level') }}</span>
           </template>
           <template v-else-if="column.dataIndex === 'action'">
@@ -93,11 +93,7 @@
               <AppstoreTwoTone />
               <template #overlay>
                 <Menu>
-                  <Menu.Item> 
-                    <router-link :to="`/question/update/${record.id}`">
-                      <edit-two-tone />{{ $t('routes.question.update') }}
-                    </router-link>
-                  </Menu.Item>
+                  <Menu.Item> </Menu.Item>
                 </Menu>
               </template>
             </Dropdown>
@@ -105,23 +101,22 @@
         </template>
       </a-table>
     </Card>
-    <Card v-else style="margin: 0 6px 0px 6px; min-width: fit-content"> {{ t('routes.question.empty') }}</Card>
+   
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, ref } from 'vue';
+  import { onMounted, ref, defineProps } from 'vue';
   import { AppstoreTwoTone, SearchOutlined } from '@ant-design/icons-vue';
   import { Card, Tag, Menu, Dropdown, notification } from 'ant-design-vue';
   import Add from './crud/add.vue';
   import type { TableProps } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
   import to from '@/utils/awaitTo';
-  import { getExamNameList } from '@/api/backend/api/exam';
   import { formatToDate } from '@/utils/dateUtil';
-  import { getQuestionList } from '@/api/backend/api/question';
+  import { getAnswerList } from '@/api/backend/api/answer';
   const exam = ref();
-  const listQuestion = ref();
+  const listAnswer = ref();
   const listNameExam = ref();
   const showTable = ref(true);
   const { t } = useI18n();
@@ -131,47 +126,31 @@
   const pageSetting = ref<PageSetting>({
     total: 0,
   });
-  // hàm lây data
-  const getDataExamName = async () => {
-    // lấy danh sách tên tất cả bộ đê thi
-    const [err, res] = await to(getExamNameList());
-    if (err) {
-      notification.error({
-        message: t('common.error'),
-        description: err.message,
-      });
-    }
-    listNameExam.value = res.exams;
-  };
+  const props = defineProps({
+    questionId: Number,
+  });
+  
   const getDataQuestion = async (examId: number) => {
     // lấy danh sách tên tất cả bộ đê thi
-    const [err, res] = await to(getQuestionList(examId));
+    const [err, res] = await to(getAnswerList(props.questionId ?? 0));
     if (err) {
       notification.error({
         message: t('common.error'),
         description: err.message,
       });
     }
-    listQuestion.value = res.questions;
-    listQuestion.value.forEach((e, index) => (e.index = index + 1));
+    listAnswer.value = res.questions;
+    listAnswer.value.forEach((e, index) => (e.index = index + 1));
     pageSetting.value.total = res.questions.length;
   };
   onMounted(async () => {
-    await getDataExamName();
-    if (listNameExam.value.length) {
-      exam.value = listNameExam.value[0].id;
       await getDataQuestion(exam.value);
-    }
   });
-  // hàm thay đổi khi sort
-  // const handleChange: TableProps['onChange'] = async (_pagination, _filters, _sorter) => {
-  //   await getDataExamName();
-  // };
 
   const updateListAfterCreate = (data) => {
     if (exam.value == data.examId)
-      listQuestion.value.push({
-        index: listQuestion.value.length + 1,
+      listAnswer.value.push({
+        index: listAnswer.value.length + 1,
         id: data.id,
         content: data.content,
         explaination: data.explaination,
@@ -198,12 +177,7 @@
       minWidth: 180,
     },
     {
-      dataIndex: 'explaination',
-      align: 'left',
-      width: 250,
-    },
-    {
-      dataIndex: 'level',
+      dataIndex: 'isCorrect',
       align: 'left',
       width: 100,
     },
