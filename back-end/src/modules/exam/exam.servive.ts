@@ -68,7 +68,6 @@ async listExams(currentUser: User, input: ListExamInput): Promise<ListExamOutput
           createdAt: 'DESC',
         },
       });
-      console.log(exams);
       
       return {
         ok: true,
@@ -76,7 +75,6 @@ async listExams(currentUser: User, input: ListExamInput): Promise<ListExamOutput
         total,
       };
   } catch (error) {
-    console.log(error);
     return createError('Server', 'Lỗi server, thử lại sau');
   }
 }

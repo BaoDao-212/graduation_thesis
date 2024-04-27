@@ -144,6 +144,7 @@
     listNameExam.value = res.exams;
   };
   const getDataQuestion = async (examId: number) => {
+    // lấy danh sách tên tất cả bộ đê thi
     const [err, res] = await to(getQuestionList(examId));
     if (err) {
       notification.error({

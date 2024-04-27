@@ -810,6 +810,17 @@ declare namespace API {
     name: string;
     level: ExamLevel;
   };
+  type CreateQuestionDto = {
+    content: string;
+    explaination: string;
+    level: ExamLevel;
+    examId: number;
+  };
+  type CreateAnswerDto = {
+    content: string;
+    isCorrect: boolean;
+    questionId: number;
+  };
   enum ExamLevel {
     EASY = 0,
     NORMAL = 1,

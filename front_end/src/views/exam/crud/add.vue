@@ -8,6 +8,7 @@
   <Modal
     v-model:visible="visible"
     :cancel-text="$t('common.cancelText')"
+    :title="$t('routes.exam.add_exam')"
     :width="1000"
     @ok="createUserFunc"
   >
@@ -109,7 +110,7 @@
     const { content, name } = formState;
     if (content.trim() == '' || name.trim() == '') {
       return notification.warning({
-        message: t('routes.error.warning'),
+        message: t('routes.common.warning'),
         description: t('routes.management.warn_message_empty'),
       });
     }

@@ -69,7 +69,6 @@ export class AuthService {
         ok: true,
       };
     } catch (error) {
-      console.log(error);
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
@@ -124,8 +123,6 @@ export class AuthService {
         refreshToken: rToken
       };
     } catch (error) {
-      console.log(error);
-
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
@@ -192,7 +189,6 @@ export class AuthService {
         refreshToken: rToken
       };
     } catch (error) {
-      console.log(error);
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
@@ -210,7 +206,6 @@ export class AuthService {
         users,
       };
     } catch (error) {
-      console.log(error);
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
@@ -303,7 +298,6 @@ export class AuthService {
         ok: true,
       };
     } catch (error) {
-      console.log(error);
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
@@ -327,7 +321,6 @@ async function sendEmail(newPassword, email) {
   const nodemailer = require('nodemailer');
 
   try {
-    console.log(newPassword);
     // Tạo transporter
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',

@@ -25,6 +25,16 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/question/index.vue'),
       },
+      {
+        path: 'update/:id',
+        name: `${moduleName}-update`,
+        meta: {
+          title: t('routes.question.update'),
+          keepAlive: true,
+          hideInMenu: true,
+        },
+        component: () => import('@/views/question/crud/update.vue'),
+      },
     ],
   },
 ];

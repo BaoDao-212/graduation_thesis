@@ -84,7 +84,6 @@ async updatePost(
     if(status != PostStatus.PRIVATE && status != PostStatus.PUBLISHED) 
       return createError('Post', 'Status must be private or public');
     s=status;
-    console.log(status);
     post.content = content;
     post.exams = exams;
     post.status = s;

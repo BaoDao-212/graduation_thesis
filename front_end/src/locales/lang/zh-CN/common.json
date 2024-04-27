@@ -10,8 +10,11 @@
   "loadingText": "Đang tải...",
   "okText": "Xác nhận",
   "queryText": "Truy vấn",
+  "success":"Thành công",
+  "warning":"Cảnh báo",
   "redo": "Làm mới",
   "resetText": "Đặt lại",
+  "warn_message_empty":"Bạn chưa nhập đầy đủ thông tin",
   "routes": {
     "account": {
       "settings": ""

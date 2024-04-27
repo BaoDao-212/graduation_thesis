@@ -9,6 +9,12 @@ import { User } from './user.entity';
 import { Answer } from './answer.entity';
 import { Exam } from './exam.entity';
 
+export enum QuestionLevel{
+  EASY = 0,
+  NORMAL = 1,
+  HARD = 2,
+  VERY_HARD = 3,
+}
 @Entity({ name: 'question' })
 export class Question extends BaseEntity {
     @PrimaryGeneratedColumn()
@@ -23,6 +29,9 @@ export class Question extends BaseEntity {
     @ApiProperty()
     explaination?: string;
     
+    @Column({ nullable: true ,default:QuestionLevel.NORMAL})
+    @ApiProperty()
+    level?: QuestionLevel;
 
     @OneToMany(() => Answer,answer=>answer.question )
     @ApiProperty()

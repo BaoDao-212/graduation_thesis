@@ -1,17 +1,35 @@
 {
-    "list_question": "Danh sách câu hỏi",
-    "add_question": "Thêm câu hỏi",
-    "edit_question": "Sửa câu hỏi",
-    "delete_question": "Xóa câu hỏi",
-    "list": "Danh sách",
-    "question": "Câu hỏi",
-    "total":"Tổng",
-    "table": {
-      "id": "No",
-      "status": "Trạng thái",
-      "name": "Tên",
-      "createdAt":"Ngày tạo",
-      "action": "Hành động"
-    }
+  "list_question": "Danh sách câu hỏi",
+  "add_question": "Thêm câu hỏi",
+  "edit_question": "Sửa câu hỏi",
+  "delete_question": "Xóa câu hỏi",
+  "list": "Danh sách",
+  "question": "Câu hỏi",
+  "total": "Tổng",
+  "exam": "Bộ đề ",
+  "create": "Thêm câu hỏi",
+  "update": "Sửa câu hỏi",
+  "delete": "Xóa câu hỏi",
+  "explaination": "Chú giải",
+  "placeholder": {
+    "name": "Nhập tên câu hỏi",
+    "explaination": "Nhập chú giải",
+    "exam": "Chọn bộ đề",
+    "level": "Chọn cấp độ"
+  },
+  "table": {
+    "id": "No",
+    "status": "Trạng thái",
+    "name": "Tên",
+    "exam": "Bộ đề ",
+    "content":"Nội dung",
+    "createdAt": "Ngày tạo",
+    "action": "Hành động"
+  },
+  "notification": {
+    "create_success": "Tạo câu hỏi thành công",
+    "update_success": "Cập nhật câu hỏi thành công",
+    "delete_success": "Xóa câu hỏi thành công"
+  },
+"empty": "Hiện tại không có bộ đề thi nào, vui lòng tạo một bộ đề thi mới"
 }
-  

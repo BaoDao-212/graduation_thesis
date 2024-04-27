@@ -6,11 +6,30 @@
     "list": "List",
     "question": "Question",
     "total":"Total",
+    "exam":"Exam",
+    "create":"Create question",
+    "update":"Update question",
+    "delete": "Delete question",
+    "explaination": "Explaination",
+    "placeholder": {
+      "name": "Please enter question name",
+      "explaination": "Please enter explanation",
+      "exam": "Please select exam",
+      "level": "Please select level"
+      },
     "table": {
       "id": "No",
       "status": "Status",
       "name": "Name",
+      "exam":"Exam",
+      "content":"Content",
       "createdAt":"Created at",
       "action": "Action"
-    }
+    },
+    "notification":{
+      "create_success": "Created question successfully",
+      "update_success": "Updated question successfully",
+      "delete_success": "Deleted question successfully"
+    },
+    "empty":"Currently, there are no exams, please create a new one"
 }

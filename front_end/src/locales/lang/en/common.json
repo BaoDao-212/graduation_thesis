@@ -8,7 +8,9 @@
   "resetText": "Reset",
   "searchText": "Search",
   "queryText": "Search",
-
+  "success":"Success",
+  "warning":"Warning",
+  "warn_message_empty": "You have not entered complete information",
   "inputText": "Please enter",
   "chooseText": "Please choose",
 
