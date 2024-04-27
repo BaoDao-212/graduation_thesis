@@ -4,7 +4,7 @@
       <template #title>
         <div class="flex" style="justify-content: space-between; align-items: center">
           <span>
-            {{ t('routes.question.list_question') }}
+            {{ t('routes.answer.list_answer') }}
           </span>
         </div>
       </template>
@@ -16,17 +16,6 @@
         <div style="display: flex; align-items: center">
           <Add @update-list="updateListAfterCreate" :exam="listNameExam" />
         </div>
-      </div>
-      <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 5px">
-        <span style="margin-right: 10px">{{ t('routes.question.exam') }}:</span>
-        <a-select
-          v-if="listNameExam"
-          v-model:value="exam"
-          style="width: 300px"
-          class="border border-primary rounded-2"
-          :options="listNameExam.map((t) => ({ label: t.name, value: t.id }))"
-          @change="getDataQuestion(exam)"
-        ></a-select>
       </div>
       <a-table
         v-if="showTable"
@@ -45,17 +34,14 @@
           <template v-if="column.dataIndex === 'index'">
             <span>{{ $t('routes.exam.table.id') }}</span>
           </template>
-          <template v-else-if="column.dataIndex === 'explaination'">
-            <span>{{ $t('routes.question.explaination') }}</span>
-          </template>
           <template v-else-if="column.dataIndex === 'createdAt'">
             <span>{{ $t('routes.exam.table.createdAt') }}</span>
           </template>
-          <template v-else-if="column.dataIndex === 'content'">
-            <span>{{ $t('routes.question.table.content') }}</span>
+          <template v-else-if="column.dataIndex === 'answer'">
+            <span>{{ $t('routes.answer.table.answer') }}</span>
           </template>
           <template v-else-if="column.dataIndex === 'isCorrect'">
-            <span>{{ $t('routes.exam.table.level') }}</span>
+            <span>{{ $t('routes.answer.table.isCorrect') }}</span>
           </template>
           <template v-else-if="column.dataIndex === 'action'">
             <span>{{ $t('routes.exam.table.action') }}</span>
@@ -73,21 +59,6 @@
           <template v-if="column.dataIndex === 'createdAt'">
             {{ formatToDate(record.createdAt) }}
           </template>
-          <template v-else-if="column.dataIndex === 'level'">
-            <span>
-              <Tag color="green">
-                {{
-                  record.level == 0
-                    ? 'EASY'
-                    : record.level == 1
-                      ? 'MEDIUM'
-                      : record.level == 2
-                        ? 'HARD'
-                        : 'VERY HARD'
-                }}
-              </Tag>
-            </span>
-          </template>
           <template v-else-if="column.dataIndex === 'action'">
             <Dropdown placement="bottomRight">
               <AppstoreTwoTone />
@@ -101,14 +72,13 @@
         </template>
       </a-table>
     </Card>
-   
   </div>
 </template>
 
 <script lang="ts" setup>
   import { onMounted, ref, defineProps } from 'vue';
   import { AppstoreTwoTone, SearchOutlined } from '@ant-design/icons-vue';
-  import { Card, Tag, Menu, Dropdown, notification } from 'ant-design-vue';
+  import { Card, Menu, Dropdown, notification } from 'ant-design-vue';
   import Add from './crud/add.vue';
   import type { TableProps } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
@@ -129,7 +99,7 @@
   const props = defineProps({
     questionId: Number,
   });
-  
+
   const getDataQuestion = async (examId: number) => {
     // lấy danh sách tên tất cả bộ đê thi
     const [err, res] = await to(getAnswerList(props.questionId ?? 0));
@@ -144,7 +114,7 @@
     pageSetting.value.total = res.questions.length;
   };
   onMounted(async () => {
-      await getDataQuestion(exam.value);
+    await getDataQuestion(exam.value);
   });
 
   const updateListAfterCreate = (data) => {

@@ -1,0 +1,23 @@
+{
+    "list_answer": "Danh sách câu trả lời",
+    "add_answer": "Thêm câu trả lời",
+    "edit_answer": "Chỉnh sửa câu trả lời",
+    "delete_answer": "Xóa câu trả lời",
+    "list": "Danh sách",
+    "answer": "Câu trả lời",
+    "create":"Tạo câu trả lời",
+    "update":"Cập nhật câu trả lời",
+    "delete": "Xóa câu trả lời",
+    "placeholder": {
+    "name": "Vui lòng nhập tên câu trả lời",
+    "isCorrect": "Vui lòng chọn tính đúng sai"
+    },
+    "table": {
+    "isCorrect": "Đúng/sai"
+    },
+    "notification":{
+    "create_success": "Tạo câu trả lời thành công",
+    "update_success": "Cập nhật câu trả lời thành công",
+    "delete_success": "Xóa câu trả lời thành công"
+    }
+    }

@@ -1,0 +1,23 @@
+{
+    "list_answer": "List of answers",
+    "add_answer": "Add answer",
+    "edit_answer": "Edit answer",
+    "delete_answer": "Delete answer",
+    "list": "List",
+    "answer": "Answer",
+    "create":"Create answer",
+    "update":"Update answer",
+    "delete": "Delete answer",
+    "placeholder": {
+      "name": "Please enter answer name",
+      "isCorrect": "Please select correct/incorrect"
+      },
+    "table": {
+      "isCorrect": "Correct/incorrect"
+    },
+    "notification":{
+      "create_success": "Created answer successfully",
+      "update_success": "Updated answer successfully",
+      "delete_success": "Deleted answer successfully"
+    }
+}
