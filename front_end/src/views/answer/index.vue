@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card style="margin: 0 6px 0px 6px; min-width: fit-content">
+    <Card style="margin: 20px 6px 0px 6px; min-width: fit-content">
       <template #title>
         <div class="flex" style="justify-content: space-between; align-items: center">
           <span>
@@ -59,12 +59,26 @@
           <template v-if="column.dataIndex === 'createdAt'">
             {{ formatToDate(record.createdAt) }}
           </template>
+          <template v-else-if="column.dataIndex === 'isCorrect'">
+            <span>
+              <Tag color="green">{{
+                record.isCorrect == false
+                  ? t('routes.answer.incorrect')
+                  : t('routes.answer.correct')
+              }}</Tag>
+            </span>
+          </template>
           <template v-else-if="column.dataIndex === 'action'">
             <Dropdown placement="bottomRight">
               <AppstoreTwoTone />
               <template #overlay>
                 <Menu>
-                  <Menu.Item> </Menu.Item>
+                  <Menu.Item>
+                    <Update :answer="record" @update-list="updateListAfterUpdate" />
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Delete :answer="record" @update-list="updateListAfterDelete" />
+                  </Menu.Item>
                 </Menu>
               </template>
             </Dropdown>
@@ -80,6 +94,8 @@
   import { AppstoreTwoTone, SearchOutlined } from '@ant-design/icons-vue';
   import { Card, Menu, Dropdown, notification } from 'ant-design-vue';
   import Add from './crud/add.vue';
+  import Update from './crud/update.vue';
+  import Delete from './crud/delete.vue';
   import type { TableProps } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
   import to from '@/utils/awaitTo';
@@ -109,24 +125,34 @@
         description: err.message,
       });
     }
-    listAnswer.value = res.questions;
+    listAnswer.value = res.answers;
     listAnswer.value.forEach((e, index) => (e.index = index + 1));
-    pageSetting.value.total = res.questions.length;
+    pageSetting.value.total = res.answers.length;
   };
   onMounted(async () => {
     await getDataQuestion(exam.value);
   });
 
+  const updateListAfterDelete = (data) => {
+    listAnswer.value = listAnswer.value.filter((e) => e.id !== data);
+  };
+  const updateListAfterUpdate = (data) => {
+    listAnswer.value.forEach((e, index) => {
+      if (e.id === data.answerId) {
+        console.log(e);
+        console.log(data);
+        e.answer = data.answer;
+        e.isCorrect = Boolean(data.isCorrect);
+      }
+    });
+  };
   const updateListAfterCreate = (data) => {
-    if (exam.value == data.examId)
-      listAnswer.value.push({
-        index: listAnswer.value.length + 1,
-        id: data.id,
-        content: data.content,
-        explaination: data.explaination,
-        level: data.level,
-        createdAt: new Date(),
-      });
+    listAnswer.value.push({
+      index: listAnswer.value.length + 1,
+      answer: data.answer,
+      isCorrect: data.isCorrect,
+      createdAt: new Date(),
+    });
   };
   const columns: TableProps['columns'] = [
     {
@@ -135,7 +161,7 @@
       width: 30,
     },
     {
-      dataIndex: 'content',
+      dataIndex: 'answer',
       align: 'left',
       width: 200,
       minWidth: 180,

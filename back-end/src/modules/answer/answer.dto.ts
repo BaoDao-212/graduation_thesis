@@ -5,8 +5,8 @@ import { User } from 'src/entities/user.entity';
 import { CoreOutput } from 'src/modules/common/output.dto';
 
 export class AnswerInput {
-  @ApiProperty({ description: 'content' })
-  content: string;
+  @ApiProperty({ description: 'answer' })
+  answer: string;
 
   @ApiProperty({ description: 'isCorrect' })
   isCorrect: boolean;

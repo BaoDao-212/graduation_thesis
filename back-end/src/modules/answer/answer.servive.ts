@@ -22,7 +22,7 @@ export class AnswerService {
     currentUser: User,
   ): Promise<CreateAnswerOutput> {
     try {
-      const { questionId, content, isCorrect } = input;
+      const { questionId, answer, isCorrect } = input;
      const question = await this.questionRepo.findOne(
         {
           where: { id: questionId },
@@ -43,12 +43,12 @@ export class AnswerService {
       );
       if(exam.user.id!==currentUser.id)
       return createError('Exam', 'You are not allowed to create answer in this exam')
-      const answer = await this.answerRepo.create({
-       answer:content,
+      const ans = await this.answerRepo.create({
+       answer,
        isCorrect,
        question,
       });
-      await this.answerRepo.save(answer);
+      await this.answerRepo.save(ans);
       return {
         ok: true,
       };
@@ -101,7 +101,7 @@ export class AnswerService {
     id: number,
   ): Promise<AnswerOutPut> {
     try {
-      const { questionId, content, isCorrect } = input;
+      const { questionId, answer, isCorrect } = input;
       const question = await this.questionRepo.findOne(
         {
           where: { id: questionId },
@@ -122,20 +122,17 @@ export class AnswerService {
       );
       if(exam.user.id!==currentUser.id)
       return createError('Exam', 'You are not allowed to update answer in this exam')
-      const answer = await this.answerRepo.findOne({
+      const ans = await this.answerRepo.findOne({
         where: {
           id,
-          question: {
-            id: questionId,
-          },
         },
       });
-      if (!answer) {
+      if (!ans) {
         return createError('Answer', 'Not found answer');
       }
-      answer.answer = content;
-      answer.isCorrect = isCorrect;
-      await this.answerRepo.save(answer);
+      ans.answer = answer;
+      ans.isCorrect = isCorrect;
+      await this.answerRepo.save(ans);
       return {
         ok: true,
       };
@@ -143,6 +140,7 @@ export class AnswerService {
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
+
   // xóa một câu trả lời
   async deleteAnswer(
     id: number,

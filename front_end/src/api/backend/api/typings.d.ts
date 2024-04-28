@@ -817,7 +817,7 @@ declare namespace API {
     examId: number;
   };
   type CreateAnswerDto = {
-    content: string;
+    answer: string;
     isCorrect: boolean;
     questionId: number;
   };

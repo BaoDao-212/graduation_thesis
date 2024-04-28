@@ -6,7 +6,7 @@ import { request, type RequestOptions } from '@/utils/request';
  * @param options
  */
 export async function createAnswer(body: API.CreateAnswerDto, options?: RequestOptions) {
-  return request<any>('/api/question/create', {
+  return request<any>('/api/answer/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export async function createAnswer(body: API.CreateAnswerDto, options?: RequestO
 }
 // TODO: lấy danh sách tất cả câu hỏi đề thi theo examId
 export async function getAnswerList(examId: number, options?: RequestOptions) {
-  return request<any>(`/api/question/list/${examId}`, {
+  return request<any>(`/api/answer/list/${examId}`, {
     method: 'GET',
     ...(options || {}),
   });
@@ -28,12 +28,19 @@ export async function updateAnswer(
   body: API.CreateAnswerDto,
   options?: RequestOptions,
 ) {
-  return request<any>(`/api/question/${id}`, {
+  return request<any>(`/api/answer/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+// TODO: xóa một câu hỏi
+export async function deleteAnswer(id: number, options?: RequestOptions) {
+  return request<any>(`/api/answer/${id}`, {
+    method: 'DELETE',
     ...(options || {}),
   });
 }

@@ -2,13 +2,13 @@
 <template>
   <div class="flex justify-end">
     <Button type="primary" @click="showModal"
-      ><PlusOutlined /> {{ t('routes.question.create') }}</Button
+      ><PlusOutlined /> {{ t('routes.answer.add_answer') }}</Button
     >
   </div>
   <Modal
     v-model:visible="visible"
     :cancel-text="$t('common.cancelText')"
-    :title="$t('routes.question.create')"
+    :title="$t('routes.answer.add_answer')"
     :width="1000"
     @ok="createFunc"
   >
@@ -18,53 +18,26 @@
       autocomplete="off"
       class="d-flex justify-content-center align-items-center"
     >
-      <Form.Item :label="t('routes.question.table.exam')" name="exam">
-        <a-select
-          v-if="props.exam && props.exam.length > 0"
-          v-model:value="formState.examId"
-          class="border border-primary rounded-2"
-          :options="
-            (props.exam as Array<{ name: string; id: number }>).map((t) => ({
-              label: t.name,
-              value: t.id,
-            }))
-          "
-        ></a-select>
-      </Form.Item>
       <Form.Item
         :label="t('routes.exam.table.content')"
-        name="content"
+        name="answer"
         :rules="[{ required: true, message: t('routes.exam.modal.required.content') }]"
       >
         <Input
-          v-model:value="formState.content"
+          v-model:value="formState.answer"
           class="border border-primary rounded-2"
           :placeholder="t('routes.exam.modal.placeholder.content')"
         >
         </Input>
       </Form.Item>
       <Form.Item
-        :label="t('routes.question.explaination')"
-        name="explaination"
-        :rules="[{ required: true, message: t('routes.question.placeholder.explaination') }]"
-      >
-        <Input
-          v-model:value="formState.explaination"
-          class="border border-primary rounded-2"
-          :placeholder="t('routes.question.placeholder.explaination')"
-        >
-        </Input>
-      </Form.Item>
-      <Form.Item
-        :label="t('routes.exam.table.level')"
+        :label="t('routes.answer.table.isCorrect')"
         name="correct"
         :rules="[{ required: true, message: '' }]"
       >
-        <a-radio-group v-model:value="formState.level" button-style="solid">
-          <a-radio-button value="0">EASY</a-radio-button>
-          <a-radio-button value="1">MEDIUM</a-radio-button>
-          <a-radio-button value="2">HARD</a-radio-button>
-          <a-radio-button value="3">VERY HARD</a-radio-button>
+        <a-radio-group v-model:value="formState.isCorrect" button-style="solid">
+          <a-radio-button value="true">{{ t('routes.answer.correct') }}</a-radio-button>
+          <a-radio-button value="false">{{ t('routes.answer.incorrect') }}</a-radio-button>
         </a-radio-group>
       </Form.Item>
     </Form>
@@ -74,7 +47,7 @@
           {{ $t('common.cancelText') }}
         </a-button>
         <Button
-          v-if="formState.content.trim() != '' && formState.explaination.trim() != ''"
+          v-if="formState.answer.trim() != ''"
           html-type="submit"
           type="primary"
           @click="createFunc()"
@@ -88,67 +61,58 @@
   </Modal>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, defineEmits, defineProps } from 'vue';
+  import { ref, defineEmits, defineProps } from 'vue';
   import { PlusOutlined } from '@ant-design/icons-vue';
   import { Button, Form, Input, Modal, notification } from 'ant-design-vue';
   import { to } from '@/utils/awaitTo';
   import { useI18n } from '@/hooks';
-  import { createQuestion } from '@/api/backend/api/question';
+  import { createAnswer } from '@/api/backend/api/answer';
+  import { useRoute } from 'vue-router';
   const props = defineProps({
-    exam: Array,
+    questionId: Number,
   });
   interface FormState {
-    explaination: string;
-    content: string;
-    level: ExamLevel;
-    examId: number;
+    isCorrect: boolean;
+    answer: string;
+    questionId: number;
   }
-  enum ExamLevel {
-    EASY = 0,
-    NORMAL = 1,
-    HARD = 2,
-    VERY_HARD = 3,
-  }
-  const formState = reactive<FormState>({
-    explaination: '',
-    content: '',
-    level: ExamLevel.NORMAL,
-    examId: ((props.exam ?? [])[0] as { id?: number })?.id ?? 0,
+  const formState = ref<FormState>({
+    isCorrect: false,
+    answer: '',
+    questionId: props.questionId ?? 0,
   });
+  const route = useRoute();
   const emit = defineEmits(['update-list']);
   const visible = ref<boolean>(false);
   const { t } = useI18n();
   const showModal = () => {
     visible.value = true;
-    formState.level = ExamLevel.NORMAL;
-    formState.content = '';
-    formState.explaination = '';
-    formState.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0;
+    formState.value.answer = '';
+    formState.value.questionId = props.questionId ?? 0;
+    formState.value.isCorrect = false;
   };
 
   const createFunc = async () => {
-    const { content, explaination } = formState;
-    if (content.trim() == '' || explaination.trim() == '') {
+    const { answer } = formState.value;
+    if (answer.trim() == '') {
       return notification.warning({
         message: t('common.warning'),
         description: t('common.warn_message_empty'),
       });
     }
-    const [err, _res] = await to(createQuestion(formState));
+    formState.value.questionId = Number(route.params.id);
+    const [err, _res] = await to(createAnswer(formState.value));
     if (!err) {
       notification.success({
         message: t('common.success'),
         description: t('routes.question.notification.create_success'),
       });
-      emit('update-list', formState);
+      emit('update-list', formState.value);
       setTimeout(() => {
         visible.value = false;
       }, 10);
     }
-    formState.explaination = '';
-    formState.content = '';
-    formState.level = ExamLevel.NORMAL;
-    formState.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0;
+    formState.value.answer = '';
   };
 </script>
 
