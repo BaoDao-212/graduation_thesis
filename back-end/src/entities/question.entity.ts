@@ -41,5 +41,4 @@ export class Question extends BaseEntity {
     @JoinColumn ({ name: 'exam_id' })
     @ApiProperty()
     exam:Exam
-    
 }

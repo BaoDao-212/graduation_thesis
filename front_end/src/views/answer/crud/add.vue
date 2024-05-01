@@ -36,8 +36,8 @@
         :rules="[{ required: true, message: '' }]"
       >
         <a-radio-group v-model:value="formState.isCorrect" button-style="solid">
-          <a-radio-button value="true">{{ t('routes.answer.correct') }}</a-radio-button>
-          <a-radio-button value="false">{{ t('routes.answer.incorrect') }}</a-radio-button>
+          <a-radio-button :value="true">{{ t('routes.answer.correct') }}</a-radio-button>
+          <a-radio-button :value="false">{{ t('routes.answer.incorrect') }}</a-radio-button>
         </a-radio-group>
       </Form.Item>
     </Form>

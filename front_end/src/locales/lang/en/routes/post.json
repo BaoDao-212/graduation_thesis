@@ -24,5 +24,11 @@
   "reviews":"reviews",
   "post":"Post",
   "list_post":"List post",
-  "detail":"Detail post"
+  "detail":"Detail post",
+  "easy":"Easy",
+  "normal":"Normal",
+  "hard":"Hard",
+  "very_hard":"Very Hard",
+  "start":"Start exam"
+  
 }

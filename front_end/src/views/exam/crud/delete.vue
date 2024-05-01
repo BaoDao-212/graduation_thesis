@@ -42,15 +42,6 @@
   const emit = defineEmits(['update-list']);
   const handleOk = async () => {
     confirmLoading.value = true;
-    // const [err] = await to(deleteUser(props.user.id));
-    // if (!err) {
-    //   modalText.value += ' has removed';
-    //   emit('update-list', props.user.id);
-    //   notification.success({
-    //     message: t('routes.error.success'),
-    //     description: t('routes.management.success_message_delete'),
-    //   });
-    // }
     setTimeout(() => {
       visible.value = false;
       confirmLoading.value = false;

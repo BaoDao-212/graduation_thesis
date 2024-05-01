@@ -25,5 +25,11 @@
   "reviews":"đánh giá",
   "post":"Bài viết",
   "list_post":"Danh sách bài viết",
-  "detail":"Chi tiết bài viết"
+  "detail":"Chi tiết bài viết",
+  "easy":"Dễ",
+  "normal":"Trung bình",
+  "hard":"Khó",
+  "very_hard":"Rất khó",
+  "start":"Bắt đầu làm đề thi",
+  "end":"Kết thúc"
 }

@@ -3,10 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccessTokenEntity } from 'src/entities/access-token.entity';
 import { Answer } from 'src/entities/answer.entity';
+import { DetailResult } from 'src/entities/detail-result.entity';
 import { Exam } from 'src/entities/exam.entity';
 import { Post } from 'src/entities/post.entity';
 import { Question } from 'src/entities/question.entity';
 import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
+import { Result } from 'src/entities/result.entity';
 import { User } from 'src/entities/user.entity';
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { User } from 'src/entities/user.entity';
       username: 'postgres',
       password: 'password',
       database: 'finalproject',
-      entities: [User,AccessTokenEntity,RefreshTokenEntity,Post,Exam,Question,Answer],
+      entities: [User,AccessTokenEntity,RefreshTokenEntity,Post,Exam,Question,Answer,Result,DetailResult],
       synchronize: true,
       ...(process.env.NODE_ENV === 'production'
         ? {

@@ -147,6 +147,7 @@
     });
   };
   const updateListAfterCreate = (data) => {
+    console.log(data);
     listAnswer.value.push({
       index: listAnswer.value.length + 1,
       answer: data.answer,
