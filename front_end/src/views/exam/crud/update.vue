@@ -2,12 +2,13 @@
 <template>
   <div class="flex justify-end">
     <Button type="primary" @click="showModal"
-      ><PlusOutlined /> {{ t('routes.exam.add_exam') }}</Button
+      ><PlusOutlined /> {{ t('routes.exam.edit_exam') }}</Button
     >
   </div>
   <Modal
     v-model:visible="visible"
     :cancel-text="$t('common.cancelText')"
+    :title="$t('routes.exam.edit_exam')"
     :width="1000"
     @ok="createUserFunc"
   >
@@ -60,31 +61,36 @@
           {{ $t('common.cancelText') }}
         </a-button>
         <Button
-          v-if="formState.content.trim() != '' && formState.name.trim() != ''"
+          v-if="
+            examOld &&
+            ((examOld.content && examOld.content != formState.content) ||
+              (examOld.name && examOld.name != formState.name) ||
+              (examOld.level && examOld.level != formState.level))
+          "
           html-type="submit"
           type="primary"
           @click="createUserFunc()"
-        >{{$t('common.okText')}}
+          >{{ $t('common.okText') }}
         </Button>
         <Button v-else html-type="submit" disabled>
-          {{$t('common.okText')}}
+          {{ $t('common.okText') }}
         </Button>
       </div>
     </template>
   </Modal>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, defineEmits } from 'vue';
+  import { ref, defineEmits, defineProps } from 'vue';
   import { PlusOutlined } from '@ant-design/icons-vue';
   import { Button, Form, Input, Modal, notification } from 'ant-design-vue';
   import { to } from '@/utils/awaitTo';
   import { useI18n } from '@/hooks';
-  import { createExam } from '@/api/backend/api/exam';
+  import { updateExam } from '@/api/backend/api/exam';
 
   interface FormState {
     name: string;
     content: string;
-    level: ExamLevel;
+    level: ExamLevel | string;
   }
   enum ExamLevel {
     EASY = 0,
@@ -92,7 +98,14 @@
     HARD = 2,
     VERY_HARD = 3,
   }
-  const formState = reactive<FormState>({
+  const props = defineProps({
+    exam: {
+      type: Object,
+      required: true,
+    },
+  });
+  const examOld = ref();
+  const formState = ref<FormState>({
     name: '',
     content: '',
     level: ExamLevel.NORMAL,
@@ -101,32 +114,40 @@
   const visible = ref<boolean>(false);
   const { t } = useI18n();
   const showModal = () => {
+    examOld.value = props.exam;
+    formState.value.level = String(props.exam?.level);
+    formState.value.name = props.exam?.name;
+    formState.value.content = props.exam?.content;
     visible.value = true;
-    formState.level = ExamLevel.NORMAL;
   };
 
   const createUserFunc = async () => {
-    const { content, name } = formState;
+    const { content, name } = formState.value;
     if (content.trim() == '' || name.trim() == '') {
       return notification.warning({
-        message: t('routes.error.warning'),
+        message: t('routes.common.warning'),
         description: t('routes.management.warn_message_empty'),
       });
     }
-    const [err, res] = await to(createExam(formState));
+    const [err, res] = await to(
+      updateExam(props.exam?.id, {
+        ...formState.value,
+        level: formState.value.level as ExamLevel,
+      }),
+    );
     if (!err) {
       notification.success({
         message: t('routes.error.success'),
-        description: t('routes.management.success_message_add'),
+        description: t('routes.management.success_message_update'),
       });
       emit('update-list', res);
       setTimeout(() => {
         visible.value = false;
       }, 10);
     }
-    formState.name = '';
-    formState.content = '';
-    formState.level = ExamLevel.NORMAL;
+    formState.value.name = '';
+    formState.value.content = '';
+    formState.value.level = ExamLevel.NORMAL;
   };
 </script>
 

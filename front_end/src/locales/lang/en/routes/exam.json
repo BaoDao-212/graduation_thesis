@@ -1,8 +1,8 @@
 {
   "list_exam": "List of exam",
-  "add_exam": "Add set",
-  "edit_exam": "Edit set",
-  "delete_exam": "Delete set",
+  "add_exam": "Add exam",
+  "edit_exam": "Update exam",
+  "delete_exam": "Delete exam",
   "list": "List exam",
   "exam": "Exam",
   "total":"Total",
@@ -14,7 +14,7 @@
     "level": "Level",
     "content": "Description",
     "action": "Action",
-    "createAt": "Creation Date"
+    "createAt": "Created at"
   },
   "modal": {
     "placeholder": {

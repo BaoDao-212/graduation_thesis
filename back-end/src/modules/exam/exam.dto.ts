@@ -3,7 +3,7 @@ import { Exam, ExamLevel, ExamStatus } from 'src/entities/exam.entity';
 import { User } from 'src/entities/user.entity';
 import { CoreOutput } from 'src/modules/common/output.dto';
 
-export class CreateExamInput {
+export class ExamInput {
   @ApiProperty({ description: 'content' })
   content: string;
   

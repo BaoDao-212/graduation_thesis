@@ -29,3 +29,18 @@ export async function getExamNameList(options?: RequestOptions) {
     ...(options || {}),
   });
 }
+// TODO: cập nhật thông tin của một một đề thi
+export async function updateExam(
+  id: number,
+  body: API.CreateExamDto,
+  options?: RequestOptions,
+) {
+  return request<any>(`/api/exam/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

@@ -93,7 +93,9 @@
               <AppstoreTwoTone />
               <template #overlay>
                 <Menu>
-                  <Menu.Item> </Menu.Item>
+                  <Menu.Item>
+                    <Update :exam="record" @update-list="updateListAfterUpdate" />
+                  </Menu.Item>
                 </Menu>
               </template>
             </Dropdown>
@@ -114,7 +116,7 @@
   import to from '@/utils/awaitTo';
   import { getExamList } from '@/api/backend/api/exam';
   import { formatToDate } from '@/utils/dateUtil';
-
+  import Update from './crud/update.vue';
   const listExam = ref();
   const showTable = ref(true);
   const { t } = useI18n();
@@ -155,6 +157,17 @@
     await getData();
   };
 
+  const updateListAfterUpdate = (data) => {
+    listExam.value.forEach((e) => {
+      if (e.id === data.id) {
+        e.name = data.name;
+        e.content = data.content;
+        e.level = data.level;
+        e.status = data.status;
+        e.createdAt = data.createdAt;
+      }
+    });
+  };
   const updateListAfterCreate = (data) => {
     listExam.value.push({
       id: data.id,
