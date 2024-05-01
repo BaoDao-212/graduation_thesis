@@ -30,11 +30,7 @@ export async function getExamNameList(options?: RequestOptions) {
   });
 }
 // TODO: cập nhật thông tin của một một đề thi
-export async function updateExam(
-  id: number,
-  body: API.CreateExamDto,
-  options?: RequestOptions,
-) {
+export async function updateExam(id: number, body: API.CreateExamDto, options?: RequestOptions) {
   return request<any>(`/api/exam/${id}`, {
     method: 'PUT',
     headers: {

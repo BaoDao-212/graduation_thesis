@@ -7,7 +7,12 @@ declare namespace API {
     refreshToken: RefreshTokenEntity;
     user: UserEntity;
   };
-
+  type PostDto = {
+    name: string;
+    content: string;
+    status: string;
+    examId: number[];  
+  }
   type AccountInfo = {
     /** 用户名 */
     username: string;
@@ -885,7 +890,11 @@ declare namespace API {
   type TaskInfoParams = {
     id: number;
   };
-
+  type PostListParams = {
+    page?: number;
+    pageSize?: number;
+  };
+  
   type TaskListParams = {
     page?: number;
     pageSize?: number;

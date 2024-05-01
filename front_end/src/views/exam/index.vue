@@ -163,8 +163,6 @@
         e.name = data.name;
         e.content = data.content;
         e.level = data.level;
-        e.status = data.status;
-        e.createdAt = data.createdAt;
       }
     });
   };

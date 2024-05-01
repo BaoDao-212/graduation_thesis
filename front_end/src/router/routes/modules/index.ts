@@ -4,4 +4,6 @@ import externaLink from './externa-link';
 import account from './account';
 import exam from './exam';
 import question from './question';
-export default [...dashboard, ...demos, ...externaLink, ...account, ...exam, ...question];
+import post from './post';
+
+export default [...dashboard, ...demos, ...externaLink, ...account, ...exam, ...question, ...post];

@@ -28,8 +28,9 @@ async createPost(
   currentUser: User,
 ): Promise<CreatePostOutput> {
   try {
-    const {examIds, content,status } = input;
+    const {examIds, content,status,name } = input;
     const exams = await this.examRepo.findByIds(examIds);
+    console.log(exams);
     if (exams.length !== examIds.length) {
         return createError('Exam', 'No exist one exam in array exam and there exists a pair of identical exams');
     }
@@ -40,6 +41,16 @@ async createPost(
     if(status != PostStatus.PRIVATE && status != PostStatus.PUBLISHED) 
       return createError('Post', 'Status must be private or public');
     s=status;
+    const examName= await this.examRepo.findOne({
+      where:{
+        name:name,
+        user:{
+          id:currentUser.id,
+        }
+      }
+
+    });
+    if(examName) return createError('Post',"You have created a post with this name");
     const post = await this.postRepo.create({
       content: content,
       exams: exams,
@@ -61,7 +72,7 @@ async updatePost(
   currentUser: User,
 ): Promise<UpdatePostOutput> {
   try {
-    const {examIds, content,status } = input;
+    const {examIds, content,status,name } = input;
     const post = await this.postRepo.findOne({
       where:{
         id:id,
@@ -83,10 +94,21 @@ async updatePost(
     }
     if(status != PostStatus.PRIVATE && status != PostStatus.PUBLISHED) 
       return createError('Post', 'Status must be private or public');
+    const examName= await this.examRepo.findOne({
+      where:{
+        name:name,
+        user:{
+          id:currentUser.id,
+        }
+      }
+
+    });
+    if(examName) return createError('Post',"You have created a post with this name");
     s=status;
     post.content = content;
     post.exams = exams;
     post.status = s;
+    post.name=name;
     post.updatedAt = new Date();
     await this.postRepo.save(post);
     return {

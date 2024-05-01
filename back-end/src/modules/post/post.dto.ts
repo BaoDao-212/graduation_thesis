@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Post, PostStatus } from 'src/entities/post.entity';
-import { User } from 'src/entities/user.entity';
 import { CoreOutput } from 'src/modules/common/output.dto';
 
 export class CreatePostInput {
+  @ApiProperty({ description: 'name' })
+  name: string;
+
   @ApiProperty({ description: 'content' })
   content: string;
 
@@ -15,6 +17,9 @@ export class CreatePostInput {
 }
 
 export class UpdatePostInput {
+  @ApiProperty({ description: 'name' })
+  name: string;
+
   @ApiProperty({ description: 'content' })
   content: string;
 

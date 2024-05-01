@@ -93,7 +93,7 @@
               <AppstoreTwoTone />
               <template #overlay>
                 <Menu>
-                  <Menu.Item> 
+                  <Menu.Item>
                     <router-link :to="`/question/update/${record.id}`">
                       <edit-two-tone />{{ $t('routes.question.update') }}
                     </router-link>
@@ -105,12 +105,14 @@
         </template>
       </a-table>
     </Card>
-    <Card v-else style="margin: 0 6px 0px 6px; min-width: fit-content"> {{ t('routes.question.empty') }}</Card>
+    <Card v-else style="margin: 0 6px 0px 6px; min-width: fit-content">
+      {{ t('routes.question.empty') }}</Card
+    >
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, ref } from 'vue';
+  import { onBeforeMount, ref } from 'vue';
   import { AppstoreTwoTone, SearchOutlined } from '@ant-design/icons-vue';
   import { Card, Tag, Menu, Dropdown, notification } from 'ant-design-vue';
   import Add from './crud/add.vue';
@@ -155,7 +157,7 @@
     listQuestion.value.forEach((e, index) => (e.index = index + 1));
     pageSetting.value.total = res.questions.length;
   };
-  onMounted(async () => {
+  onBeforeMount(async () => {
     await getDataExamName();
     if (listNameExam.value.length) {
       exam.value = listNameExam.value[0].id;

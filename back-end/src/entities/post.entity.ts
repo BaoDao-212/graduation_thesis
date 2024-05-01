@@ -17,6 +17,10 @@ export class Post extends BaseEntity {
     @ApiProperty()
     id: number;
 
+    @Column()
+    @ApiProperty()
+    name?: string;
+
     @Column({ nullable: true })
     @ApiProperty()
     content?: string;

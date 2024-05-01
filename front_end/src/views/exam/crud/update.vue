@@ -129,7 +129,7 @@
         description: t('routes.management.warn_message_empty'),
       });
     }
-    const [err, res] = await to(
+    const [err, _res] = await to(
       updateExam(props.exam?.id, {
         ...formState.value,
         level: formState.value.level as ExamLevel,
@@ -140,7 +140,7 @@
         message: t('routes.error.success'),
         description: t('routes.management.success_message_update'),
       });
-      emit('update-list', res);
+      emit('update-list', {id:props.exam.id, ...formState.value});
       setTimeout(() => {
         visible.value = false;
       }, 10);
