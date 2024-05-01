@@ -15,8 +15,8 @@
           margin-bottom: 4px;
         "
       >
-        <div v-for="item in listPost" style="display: flex; align-items: center">
-          <CardPost :post="item"></CardPost>
+        <div v-for="item in listPost" style="display: flex; align-items: center; width: 100%">
+          <CardPost :post="item" />
         </div>
       </div>
     </Card>

@@ -25,3 +25,10 @@ export async function createPost(body: API.PostDto, options?: RequestOptions) {
     ...(options || {}),
   });
 }
+// TODO: xem chi tiết bài viết
+export async function detailPost(id: number, options?: RequestOptions) {
+  return request<any>(`/api/post/detail/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

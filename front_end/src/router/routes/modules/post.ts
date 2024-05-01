@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import RouterView from '@/layout/routerView/index.vue';
 import { t } from '@/hooks/useI18n';
 
-const moduleName = 'question';
+const moduleName = 'post';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: { name: `${moduleName}-list` },
     component: RouterView,
     meta: {
-      title: t('routes.question.question'),
+      title: t('routes.post.post'),
       icon: 'ant-design:desktop-outlined',
     },
     children: [
@@ -24,6 +24,16 @@ const routes: Array<RouteRecordRaw> = [
           keepAlive: true,
         },
         component: () => import('@/views/post/index.vue'),
+      },
+      {
+        path: 'detail/:id',
+        name: `${moduleName}-detail`,
+        meta: {
+          title: t('routes.post.detail'),
+          keepAlive: true,
+          hideInMenu: true,
+        },
+        component: () => import('@/views/post/crud/detail.vue'),
       },
     ],
   },

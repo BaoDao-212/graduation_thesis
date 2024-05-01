@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository,In } from 'typeorm';
 import { createError } from '../common/utils/createError';
 import { CreatePostInput, CreatePostOutput,DetailPostOutput,ListPostInput, ListPostOutput, UpdatePostInput, UpdatePostOutput, UpdateReviewPostInput } from './post.dto';
 import { Post, PostStatus } from 'src/entities/post.entity';
@@ -29,7 +29,12 @@ async createPost(
 ): Promise<CreatePostOutput> {
   try {
     const {examIds, content,status,name } = input;
-    const exams = await this.examRepo.findByIds(examIds);
+    console.log(examIds);
+    const exams = await this.examRepo.find({
+      where:{
+        id:In(examIds),
+      },
+    });
     console.log(exams);
     if (exams.length !== examIds.length) {
         return createError('Exam', 'No exist one exam in array exam and there exists a pair of identical exams');
@@ -56,6 +61,7 @@ async createPost(
       exams: exams,
       user: currentUser,
       status:s,
+      name,
     });
     await this.postRepo.save(post);
     return {
@@ -281,4 +287,5 @@ async detailsPost(id:number,currentUser:User):Promise<DetailPostOutput>{
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
+ 
 }

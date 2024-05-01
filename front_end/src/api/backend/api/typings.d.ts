@@ -11,8 +11,8 @@ declare namespace API {
     name: string;
     content: string;
     status: string;
-    examId: number[];  
-  }
+    examIds: number[];
+  };
   type AccountInfo = {
     /** 用户名 */
     username: string;
@@ -894,7 +894,7 @@ declare namespace API {
     page?: number;
     pageSize?: number;
   };
-  
+
   type TaskListParams = {
     page?: number;
     pageSize?: number;

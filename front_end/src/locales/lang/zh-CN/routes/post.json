@@ -21,5 +21,9 @@
   },
   "create":"Thêm bài viết",
   "update":"Cập nhật bài viết",
-  "delete":"Xóa bài viết"
+  "delete":"Xóa bài viết",
+  "reviews":"đánh giá",
+  "post":"Bài viết",
+  "list_post":"Danh sách bài viết",
+  "detail":"Chi tiết bài viết"
 }

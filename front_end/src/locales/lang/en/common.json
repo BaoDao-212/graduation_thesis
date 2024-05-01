@@ -16,7 +16,7 @@
 
   "redo": "Refresh",
   "back": "Back",
-
+  "error":"Error",
   "light": "Light",
   "dark": "Dark"
 }

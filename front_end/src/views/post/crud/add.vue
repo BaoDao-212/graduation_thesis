@@ -59,7 +59,7 @@
       <Form.Item :label="t('routes.question.table.exam')" name="exam">
         <a-select
           v-if="props.exam && props.exam.length > 0"
-          v-model:value="formState.examId"
+          v-model:value="formState.examIds"
           mode="tags"
           class="border border-primary rounded-2"
           :options="
@@ -92,7 +92,7 @@
   </Modal>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, defineEmits, defineProps } from 'vue';
+  import { ref, defineEmits, defineProps } from 'vue';
   import { PlusOutlined } from '@ant-design/icons-vue';
   import { Button, Form, Input, Modal, notification } from 'ant-design-vue';
   import { to } from '@/utils/awaitTo';
@@ -105,52 +105,57 @@
     name: string;
     content: string;
     status: PostStatus;
-    examId: number[];
+    examIds: number[];
   }
   enum PostStatus {
     PRIVATE = 'PRIVATE',
     PUBLISHED = 'PUBLISHED',
   }
-  const formState = reactive<FormState>({
+  const formState = ref<FormState>({
     name: '',
     content: '',
     status: PostStatus.PUBLISHED,
-    examId: [],
+    examIds: [],
   });
   const emit = defineEmits(['update-list']);
   const visible = ref<boolean>(false);
   const { t } = useI18n();
   const showModal = () => {
     visible.value = true;
-    formState.status = PostStatus.PUBLISHED;
-    formState.content = '';
-    formState.name = '';
-    formState.examId = [];
+    formState.value.status = PostStatus.PUBLISHED;
+    formState.value.content = '';
+    formState.value.name = '';
+    formState.value.examIds = [];
   };
 
   const createFunc = async () => {
-    const { content, name } = formState;
+    const { content, name } = formState.value;
     if (content.trim() == '' || name.trim() == '') {
       return notification.warning({
         message: t('common.warning'),
         description: t('common.warn_message_empty'),
       });
     }
-    const [err, _res] = await to(createPost(formState));
-    if (!err) {
+    const [_err, _res] = await to(createPost(formState.value));
+    if (_res.ok) {
       notification.success({
         message: t('common.success'),
         description: t('routes.post.notification.create_success'),
       });
-      emit('update-list', formState);
+      emit('update-list', formState.value);
       setTimeout(() => {
         visible.value = false;
       }, 10);
+    } else {
+      notification.error({
+        message: t('common.error'),
+        description: _res.error.message,
+      });
     }
-    formState.name = '';
-    formState.content = '';
-    formState.status = PostStatus.PUBLISHED;
-    formState.examId = [];
+    formState.value.name = '';
+    formState.value.content = '';
+    formState.value.status = PostStatus.PUBLISHED;
+    formState.value.examIds = [];
   };
 </script>
 

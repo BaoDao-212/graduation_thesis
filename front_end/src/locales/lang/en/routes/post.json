@@ -20,5 +20,9 @@
   },
   "create":"Create post",
   "update":"Update post",
-  "delete":"Delete post"
+  "delete":"Delete post",
+  "reviews":"reviews",
+  "post":"Post",
+  "list_post":"List post",
+  "detail":"Detail post"
 }
