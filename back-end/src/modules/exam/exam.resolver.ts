@@ -8,7 +8,7 @@ import {
 import { Roles } from '../auth/role.decorator';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from 'src/entities/user.entity';
-import {CreateExamOutput, ExamInput, ListExamOutput} from './exam.dto';
+import {CreateExamOutput, ExamInput, ExamOutput, ListExamOutput} from './exam.dto';
 import { ExamService } from './exam.servive';
 
 
@@ -54,5 +54,14 @@ export class ExamController {
   @ApiOkResponse({ type:CreateExamOutput })
   async updateExam(@Body() input: ExamInput, @Param('id', ParseIntPipe) id: number,@CurrentUser() currentUser: User) {
     return this.examService.updateExam(input, id,currentUser);
+  }
+  // lấy thông tin chi tiết của một đề thi
+  @ApiOperation({
+    summary: 'get exam detail',
+  })
+  @Roles(['Any'])
+  @Get(':id')
+  async getExamDetail(@Param('id', ParseIntPipe) id: number) {
+    return this.examService.getExam(id);
   }
 }

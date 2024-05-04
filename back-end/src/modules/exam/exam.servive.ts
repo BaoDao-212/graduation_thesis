@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository,In } from 'typeorm';
 import { createError } from '../common/utils/createError';
-import { ExamInput, CreateExamOutput, ListExamInput, ListExamOutput} from './exam.dto';
+import { ExamInput, CreateExamOutput, ListExamInput, ListExamOutput, ExamOutput} from './exam.dto';
 import { Exam, ExamStatus } from 'src/entities/exam.entity';
 
 @Injectable()
@@ -127,6 +127,42 @@ async updateExam(
     await this.examRepo.save(exam);
     return {
       ok: true,
+    };
+  } catch (error) {
+    return createError('Server', 'Lỗi server, thử lại sau');
+  }
+}
+// lấy thông tin chi tiết của một đề thi
+async getExam(id: number): Promise<ExamOutput> {
+  try {
+    // const exam = await this.examRepo.findOne({
+    //   where: {
+    //     id,
+    //    status: In([ExamStatus.ACTIVE, ExamStatus.INACTIVE]),
+    //   },
+    //   //ở đây tôi chỉ muốn hiển thị các trường id, name,level status và không muốn hiển thị cột question cho ngườii dùng
+    //   // relations: {
+    //   //   questions:{
+    //   //     answers:true,
+    //   //   },
+    //   // },
+    //   select: ['id','name','level','status','content'],
+    // });
+    const exam = await this.examRepo.createQueryBuilder('exam')
+    .where('exam.id = :id', { id })
+    .andWhere('exam.status = :status', { status: ExamStatus.ACTIVE })
+    .leftJoinAndSelect('exam.questions', 'question')
+    .leftJoinAndSelect('question.answers', 'answer')
+    .select(['exam.id','exam.name','exam.level','exam.status','exam.content'])
+    .addSelect(['question.id','question.content'])
+    .addSelect(['answer.id', 'answer.answer'])
+    .getOne();
+    if (!exam) {
+      return createError('Exam', 'Exam not found');
+    }
+    return {
+      ok: true,
+      exam,
     };
   } catch (error) {
     return createError('Server', 'Lỗi server, thử lại sau');

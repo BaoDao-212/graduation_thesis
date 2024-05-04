@@ -31,10 +31,10 @@ export class Result extends BaseEntity {
     @ApiProperty()
     time?: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true,default:-1 })
     @ApiProperty()
     score?: number;
-
+    
     @OneToMany(() => DetailResult,detailResult=>detailResult.result )
     @ApiProperty()
     detailResult?: DetailResult[];

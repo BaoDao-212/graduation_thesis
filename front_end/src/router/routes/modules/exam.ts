@@ -25,6 +25,17 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/exam/index.vue'),
       },
+      {
+        path: 'room/:id',
+        name: `${moduleName}-room`,
+        meta: {
+          title: t('routes.exam.table.room'),
+          icon: 'ant-design:desktop-outlined',
+          keepAlive: true,
+          hideInMenu: true,
+        },
+        component: () => import('@/views/examination-room/index.vue'),
+      },
     ],
   },
 ];

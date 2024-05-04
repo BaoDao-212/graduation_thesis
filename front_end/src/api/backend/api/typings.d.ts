@@ -826,6 +826,9 @@ declare namespace API {
     isCorrect: boolean;
     questionId: number;
   };
+  type ResultDto={
+    examId:number;
+  }
   enum ExamLevel {
     EASY = 0,
     NORMAL = 1,

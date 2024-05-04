@@ -14,7 +14,8 @@
     "level": "Level",
     "content": "Description",
     "action": "Action",
-    "createAt": "Created at"
+    "createAt": "Created at",
+    "room":"Room examination"
   },
   "modal": {
     "placeholder": {

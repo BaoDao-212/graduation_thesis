@@ -17,7 +17,9 @@
         <Tag v-if="level" color="green">
           {{ level }}
         </Tag>
-        <Button>{{ t('routes.post.start') }} </Button>
+        <RouterLink :to="`/exam/room/${props.exam.id}`">
+          <Button>{{ t('routes.post.start') }} </Button>
+        </RouterLink>
       </div>
     </Card>
   </div>

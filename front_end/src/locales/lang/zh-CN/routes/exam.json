@@ -5,26 +5,26 @@
   "delete_exam": "Xóa bộ đề",
   "list": "Danh sách",
   "exam": "Bộ đề",
-  "total":"Tổng",
+  "total": "Tổng",
   "table": {
     "id": "No",
     "status": "Trạng thái",
     "name": "Tên",
-    "createdAt":"Ngày tạo",
+    "createdAt": "Ngày tạo",
     "level": "Cấp độ",
     "content": "Mô tả",
     "action": "Hành động",
-    "createAt": "Ngày tạo"
+    "createAt": "Ngày tạo",
+    "room": "Phòng thi"
   },
-  "modal":{
+  "modal": {
     "placeholder": {
       "name": "Nhập tên bộ đề",
       "content": "Nhập mô tả"
     },
-    "required" : {
+    "required": {
       "name": "Tên bộ đề không được để trống",
       "content": "Mô tả không được để trống"
     }
   }
-  
 }

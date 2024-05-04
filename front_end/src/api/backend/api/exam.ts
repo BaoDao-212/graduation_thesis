@@ -40,3 +40,10 @@ export async function updateExam(id: number, body: API.CreateExamDto, options?: 
     ...(options || {}),
   });
 }
+// TODO: lấy thông tin chi tiết của một đề thi
+export async function getExamDetail(id: number, options?: RequestOptions) {
+  return request<any>(`/api/exam/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

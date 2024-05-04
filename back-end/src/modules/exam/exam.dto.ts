@@ -34,3 +34,7 @@ export class ListExamOutput extends CoreOutput {
   total?: number;
 }
 
+export class ExamOutput extends CoreOutput {
+  @ApiProperty({ description: 'exam' })
+  exam?: Exam;
+}
