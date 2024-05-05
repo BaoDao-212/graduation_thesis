@@ -5,7 +5,10 @@
   "delete_exam": "Delete exam",
   "list": "List exam",
   "exam": "Exam",
+  "submit":"Submit",
+  "finish":"Finish exam",
   "total":"Total",
+  "confirm_submited":"Are you sure you want to submit the exam?",
   "table": {
     "id": "No",
     "status": "Status",

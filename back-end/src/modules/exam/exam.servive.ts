@@ -135,19 +135,7 @@ async updateExam(
 // lấy thông tin chi tiết của một đề thi
 async getExam(id: number): Promise<ExamOutput> {
   try {
-    // const exam = await this.examRepo.findOne({
-    //   where: {
-    //     id,
-    //    status: In([ExamStatus.ACTIVE, ExamStatus.INACTIVE]),
-    //   },
-    //   //ở đây tôi chỉ muốn hiển thị các trường id, name,level status và không muốn hiển thị cột question cho ngườii dùng
-    //   // relations: {
-    //   //   questions:{
-    //   //     answers:true,
-    //   //   },
-    //   // },
-    //   select: ['id','name','level','status','content'],
-    // });
+   
     const exam = await this.examRepo.createQueryBuilder('exam')
     .where('exam.id = :id', { id })
     .andWhere('exam.status = :status', { status: ExamStatus.ACTIVE })

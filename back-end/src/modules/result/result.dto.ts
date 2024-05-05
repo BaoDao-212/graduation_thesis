@@ -13,3 +13,15 @@ export class ResultOutput extends CoreOutput {
   @ApiProperty()
   result?: Result;
 }
+export class DetailResultInput {
+  @ApiProperty({description: 'question id'})
+  questionId: number;
+
+  @ApiProperty({description: 'answer id'})
+  answerId: number[];
+
+  @ApiProperty({description: 'result id'})
+  resultId: number;
+}
+export class DetailResultOutput extends CoreOutput {
+}

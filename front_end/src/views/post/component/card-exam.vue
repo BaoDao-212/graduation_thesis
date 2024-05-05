@@ -17,9 +17,7 @@
         <Tag v-if="level" color="green">
           {{ level }}
         </Tag>
-        <RouterLink :to="`/exam/room/${props.exam.id}`">
-          <Button>{{ t('routes.post.start') }} </Button>
-        </RouterLink>
+        <Button type="primary" @click="handleCreateResult">{{ t('routes.post.start') }} </Button>
       </div>
     </Card>
   </div>
@@ -30,6 +28,9 @@
   import { useI18n } from '@/hooks';
   import DetailItem from './detail-item.vue';
   import { ref } from 'vue';
+  import { createResult } from '@/api/backend/api/room';
+  import to from '@/utils/awaitTo';
+  import { useRouter } from 'vue-router';
   const { t } = useI18n();
   const props = defineProps({
     exam: {
@@ -37,6 +38,24 @@
       required: true,
     },
   });
+  const result = ref();
+  const router = useRouter();
+  const createResultForExam = async () => {
+    const [err, res] = await to(createResult({ examId: props.exam.id }));
+    if (err) {
+      notification.error({
+        message: t('common.error'),
+        description: err.message,
+      });
+      router.push('/post/list');
+    } else {
+      result.value = res.result;
+      router.push(`/exam/room/${result.value.id}`);
+    }
+  };
+  const handleCreateResult =async () => {
+    await createResultForExam();
+  };
   const level = ref(
     props.exam.level === '0'
       ? t('routes.post.easy')

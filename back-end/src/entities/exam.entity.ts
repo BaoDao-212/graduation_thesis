@@ -50,4 +50,11 @@ export class Exam extends BaseEntity {
     @ApiProperty()
     questions: Question
     
+    @ApiProperty()
+    @Column({ default: 0 })
+    numberReviews?: number;
+
+    @ApiProperty()
+    @Column({ default: 0 })
+    averageRating?: number;
 }

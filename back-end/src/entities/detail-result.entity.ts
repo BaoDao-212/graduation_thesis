@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseEntity } from './base.entity';
 import {
-  PrimaryGeneratedColumn,
-  Entity,ManyToOne,JoinColumn
+  PrimaryGeneratedColumn,Column,
+  Entity,ManyToOne,JoinColumn,ManyToMany,JoinTable
 } from 'typeorm';
 import { Question } from './question.entity';
 import { Answer } from './answer.entity';
@@ -20,13 +19,16 @@ export class DetailResult {
     @ApiProperty()
     question: Question;
 
-    @ManyToOne(() => Answer, answer => answer.id)
-    @JoinColumn ({name:'answer_id'})
-    @ApiProperty()
-    answer: Answer;
+    @ManyToMany(() => Answer, answer => answer.id)
+    @JoinTable()
+    answer: Answer[];
 
     @ManyToOne(() => Result, result => result.detailResult)
     @JoinColumn ()
     @ApiProperty()
     result: Result;
+
+    @ApiProperty({default:0})
+    @Column({default:0})
+    score: number;
 }

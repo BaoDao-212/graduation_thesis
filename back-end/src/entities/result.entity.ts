@@ -6,7 +6,6 @@ import {
   Entity,ManyToOne,JoinColumn,OneToMany,ManyToMany,JoinTable
 } from 'typeorm';
 import { User } from './user.entity';
-import { Question } from './question.entity';
 import { Exam } from './exam.entity';
 import { DetailResult } from './detail-result.entity';
 
@@ -17,15 +16,15 @@ export class Result extends BaseEntity {
     @ApiProperty()
     id: number;
 
-    @ManyToMany(() => Exam)
-    @JoinTable()
+    @ManyToOne(() => Exam, exam => exam.id)
+    @JoinColumn ({name:'exam_id'})
     @ApiProperty()
     exam?: Exam;
 
     @ManyToOne(() => User, user => user.id)
     @JoinColumn ({name:'user_id'})
     @ApiProperty()
-    user: User
+    user: User;
 
     @Column({ nullable: true })
     @ApiProperty()

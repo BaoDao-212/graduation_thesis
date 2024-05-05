@@ -12,6 +12,7 @@ import { PostModule } from './modules/post/post.module';
 import { ExamModule } from './modules/exam/exam.module';
 import { QuestionModule } from './modules/question/question.module';
 import { AnswerModule } from './modules/answer/answer.module';
+import { ResultModule } from './modules/result/result.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { AnswerModule } from './modules/answer/answer.module';
     PostModule,
     ExamModule,
     QuestionModule,
-    AnswerModule
+    AnswerModule,
+    ResultModule,
   ],
   controllers: [AppController],
   providers: [AppService],
