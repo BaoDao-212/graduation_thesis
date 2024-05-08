@@ -7,7 +7,7 @@ ARG PROJECT_DIR
 WORKDIR $PROJECT_DIR
 
 # 安装pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8.10.2
 
 COPY . ./
 # 安装依赖
@@ -16,7 +16,7 @@ COPY . ./
 RUN pnpm install
 
 # 构建项目
-ENV VITE_BASE_URL=/
+ENV VITE_BASE_URL=
 RUN pnpm build
 
 
