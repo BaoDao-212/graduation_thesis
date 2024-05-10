@@ -12,8 +12,6 @@ tests/server/static/upload
 .env.local
 .env.*.local
 .eslintcache
-.env.development
-.env.production
 .env
 
 # Log files
