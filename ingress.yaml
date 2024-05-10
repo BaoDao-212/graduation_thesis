@@ -26,4 +26,4 @@ spec:
           service:
                 name: api
                 port:
-                  number: 7001
+                  number: 45615

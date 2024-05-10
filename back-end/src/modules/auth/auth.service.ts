@@ -40,11 +40,8 @@ export class AuthService {
   // TODO: thêm kiểm tra opt gửi về điện thoại
   async registerUser({
     password,
-    email,
-    name,
     username,
     confirmPassword,
-    position,
   }: RegisterUserInput): Promise<RegisterUserOutput> {
     try {
       if (password !== confirmPassword)
@@ -56,14 +53,13 @@ export class AuthService {
       });
       if (user) return createError('Input', 'Tài khoản đã được đăng kí');
 
-      const userH = this.userRepo.create({
+      const userH =await this.userRepo.create({
         password,
-        email,
-        name,
         username,
         position: Position.User,
       });
-
+      console.log(userH);
+      
       await this.userRepo.save(userH);
       return {
         ok: true,

@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import vue3GoogleLogin from 'vue3-google-login';
 import { setupMock } from '../mocks/';
 import App from './App.vue';
 import { setupRouter } from './router';
@@ -6,7 +7,6 @@ import { setupIcons } from './components/basic/icon';
 import { setupStore } from '@/store';
 import { setupI18n } from '@/locales';
 import { setupAntd, setupAssets, setupGlobalMethods } from '@/plugins';
-
 const app = createApp(App);
 
 function setupPlugins() {
@@ -32,7 +32,9 @@ async function setupApp() {
   await setupI18n(app);
   // 挂载路由
   await setupRouter(app);
-
+  app.use(vue3GoogleLogin, {
+    clientId: import.meta.env.VITE_APP_BASE_GOOGLE_LOGIN,
+  });
   app.mount('#app');
 }
 

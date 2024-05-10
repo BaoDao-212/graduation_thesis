@@ -9,8 +9,16 @@ export const LoginRoute: RouteRecordRaw = {
   name: LOGIN_NAME,
   component: () => import('@/views/login/index.vue'),
   meta: {
-    title: '登录',
+    title: 'Login',
+  },
+};
+export const RegisterRoute: RouteRecordRaw = {
+  path: '/registry',
+  name: 'Registry',
+  component: () => import('@/views/login/registry-account.vue'),
+  meta: {
+    title: 'Register',
   },
 };
 
-export default [LoginRoute];
+export default [LoginRoute, RegisterRoute];

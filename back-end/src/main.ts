@@ -22,7 +22,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ApiTransformInterceptor(new Reflector()));
 
   // swagger
-  // setupSwagger(app);
+  setupSwagger(app);
   // start
   await app.listen(SERVER_PORT, '0.0.0.0');
   const serverUrl = await app.getUrl();

@@ -32,6 +32,15 @@
             {{ $t('routes.login.login') }}
           </a-button>
         </a-form-item>
+        <a-form-item>
+          <router-link to="/registry">
+
+            <a-button type="primary" html-type="submit" size="large" :loading="state.loading" block>
+              {{ $t('routes.login.registry') }}
+            </a-button>
+          </router-link>
+          <GoogleLogin :callback="callback" prompt auto-login class="ml-1" />
+        </a-form-item>
       </a-form>
     </div>
   </div>
@@ -45,6 +54,7 @@
   import { useUserStore } from '@/store/modules/user';
   import { LocalePicker } from '@/components/basic/locale-picker';
   import { to } from '@/utils/awaitTo';
+  import { GoogleLogin } from 'vue3-google-login';
   const state = reactive({
     loading: false,
     captcha: '',
@@ -57,7 +67,17 @@
   const router = useRouter();
 
   const userStore = useUserStore();
-
+  // login google
+  const callback = async (response) => {
+    console.log('Handle the response', response);
+    console.log(response.credential);
+    // userStore.setToken(response.credential);
+    // const userInfo = await new Promise((resolve) => {
+        // resolve(getInfo());
+    // });
+    // Storage.set('INFO_ACCOUNT', userInfo?.user);
+    // router.push('/');
+};
   const handleSubmit = async () => {
     const { username, password } = state.formInline;
     if (username.trim() == '' || password.trim() == '') {

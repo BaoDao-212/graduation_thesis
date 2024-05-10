@@ -24,7 +24,7 @@ export class User extends BaseEntity {
   @ApiProperty()
   department?: string;
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty()
   name?: string;
 
@@ -54,11 +54,11 @@ export class User extends BaseEntity {
   @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
     cascade: true,
   })
-  accessTokens: Relation<AccessTokenEntity[]>
+  accessTokens?: Relation<AccessTokenEntity[]>
 
   @OneToMany(type=>Post, post =>post.user)
   @ApiProperty()
-  posts:Post[]
+  posts?:Post[]
   // phương thức xử lí password
   @BeforeInsert()
   @BeforeUpdate()

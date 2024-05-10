@@ -636,15 +636,6 @@ declare namespace API {
     accessToken: AccessTokenEntity;
   };
 
-  type RegisterDto = {
-    /** 账号 */
-    username: string;
-    /** 密码 */
-    password: string;
-    /** 语言 */
-    lang: string;
-  };
-
   type ResOp = {
     data: Record<string, any>;
     code: number;
@@ -840,6 +831,11 @@ declare namespace API {
     HARD = 2,
     VERY_HARD = 3,
   }
+  type RegisterDto = {
+    username: string;
+    password: string;
+    confirmPassword: string;
+  };
   type TaskDto = {
     /** 任务名称 */
     name: string;

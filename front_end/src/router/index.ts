@@ -1,5 +1,5 @@
 import 'nprogress/css/nprogress.css'; // 进度条样式
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter,createWebHistory } from 'vue-router';
 
 import { createRouterGuards } from './router-guards';
 
@@ -9,7 +9,7 @@ import type { App } from 'vue';
 
 export const router = createRouter({
   // process.env.BASE_URL
-  history: createWebHashHistory(''),
+  history: createWebHistory(import.meta.env.VITE_BASE_URL),
   routes: basicRoutes,
 });
 
