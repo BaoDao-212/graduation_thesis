@@ -36,3 +36,15 @@ export async function authforgotPassword(body: API.ForgotPasswordDto, options?: 
     ...(options || {}),
   });
 }
+//TODO: Login with google
+/** 登录 POST /auth/login-google */
+export async function authLoginGoogle(body: API.LoginGoogleDto, options?: RequestOptions) {
+  return request<API.LoginToken>('/auth/login-google', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

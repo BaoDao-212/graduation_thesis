@@ -33,13 +33,17 @@
           </a-button>
         </a-form-item>
         <a-form-item>
-          <router-link to="/registry">
-
-            <a-button type="primary" html-type="submit" size="large" :loading="state.loading" block>
+          <div class="flex flex-row align-center" style="justify-content: center">
+            <div class="mt-1">
+              {{ $t('routes.login.text_registry') }}
+            </div>
+            <a-button type="link" @click="router.push('/registry')">
               {{ $t('routes.login.registry') }}
             </a-button>
-          </router-link>
-          <GoogleLogin :callback="callback" prompt auto-login class="ml-1" />
+          </div>
+          <div class="flex flex-row align-center mt-2" style="justify-content: center">
+            <GoogleLogin :callback="callback" prompt auto-login />
+          </div>
         </a-form-item>
       </a-form>
     </div>
@@ -50,34 +54,44 @@
   import { reactive } from 'vue';
   import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { message, Modal } from 'ant-design-vue';
+  import { message, Modal, notification } from 'ant-design-vue';
   import { useUserStore } from '@/store/modules/user';
   import { LocalePicker } from '@/components/basic/locale-picker';
   import { to } from '@/utils/awaitTo';
   import { GoogleLogin } from 'vue3-google-login';
+  import { authLoginGoogle } from '@/api/backend/api/auth';
+  // import { useI18n } from 'vue-i18n';
   const state = reactive({
     loading: false,
     captcha: '',
     formInline: {
       username: 'string',
-      password: 'MshpH5em',
+      password: 'string',
     },
   });
   const route = useRoute();
   const router = useRouter();
-
+  // const { t } = useI18n();
   const userStore = useUserStore();
   // login google
   const callback = async (response) => {
     console.log('Handle the response', response);
     console.log(response.credential);
-    // userStore.setToken(response.credential);
-    // const userInfo = await new Promise((resolve) => {
-        // resolve(getInfo());
-    // });
-    // Storage.set('INFO_ACCOUNT', userInfo?.user);
-    // router.push('/');
-};
+    const res = await authLoginGoogle({ accessToken: response.credential });
+    if (!res.ok) {
+      notification.error({
+        message: 'Error',
+        description: res.error.message,
+      });
+    } else {
+      userStore.setToken(res.accessToken);
+      notification.success({
+        message: "Success",
+        description: 'Login Success',
+      });
+      setTimeout(() => router.replace((route.query.redirect as string) ?? '/'));
+    }
+  };
   const handleSubmit = async () => {
     const { username, password } = state.formInline;
     if (username.trim() == '' || password.trim() == '') {

@@ -22,7 +22,11 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   @ApiProperty()
-  department?: string;
+  address?: string;
+
+  @Column({ nullable: true })
+  @ApiProperty()
+  introduce?: string;
 
   @Column({ nullable: true })
   @ApiProperty()
@@ -32,9 +36,9 @@ export class User extends BaseEntity {
   @ApiProperty()
   username: string;
 
-  @Column()
+  @Column({nullable: true})
   @ApiProperty()
-  password: string;
+  password?: string;
 
   @Column('enum', {
     enum: Position,

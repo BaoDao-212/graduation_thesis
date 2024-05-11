@@ -30,16 +30,18 @@
       </slot>
     </Space>
     <Space :size="20">
-      <Search />
-      <Tooltip :title="$t('layout.header.tooltipLock')" placement="bottom">
-        <LockOutlined @click="lockscreenStore.setLock(true)" />
-      </Tooltip>
       <FullScreen />
       <LocalePicker />
       <Dropdown placement="bottomRight">
         <Avatar :src="userInfo.avatar" :alt="userInfo.username">{{ userInfo.username }}</Avatar>
         <template #overlay>
           <Menu>
+            <Menu.Item >
+              <ChangePassword />
+            </Menu.Item>
+            <Menu.Item >
+              <Profile />
+            </Menu.Item>
             <Menu.Item @click="$router.push({ name: 'account-about' })">
               {{ $t('routes.account.about') }}
             </Menu.Item>
@@ -55,7 +57,6 @@
           </Menu>
         </template>
       </Dropdown>
-      <ProjectSetting />
     </Space>
   </Layout.Header>
 </template>
@@ -68,7 +69,6 @@
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     PoweroffOutlined,
-    LockOutlined,
   } from '@ant-design/icons-vue';
   import {
     Layout,
@@ -79,18 +79,17 @@
     Space,
     Breadcrumb,
     Avatar,
-    Tooltip,
     type MenuTheme,
   } from 'ant-design-vue';
-  import { Search, FullScreen, ProjectSetting } from './components/';
+  import { FullScreen } from './components/';
   import { LocalePicker } from '@/components/basic/locale-picker';
   import { useUserStore } from '@/store/modules/user';
   import { useKeepAliveStore } from '@/store/modules/keepAlive';
-  import { useLockscreenStore } from '@/store/modules/lockscreen';
   import { LOGIN_NAME } from '@/router/constant';
   import { TitleI18n } from '@/components/basic/title-i18n';
   import { useLayoutSettingStore } from '@/store/modules/layoutSetting';
-
+  import ChangePassword from '@/views/account/change-password.vue';
+  import Profile from '@/views/account/profile.vue';
   defineProps({
     collapsed: {
       type: Boolean,
@@ -102,7 +101,6 @@
   const emit = defineEmits(['update:collapsed']);
   const userStore = useUserStore();
   const layoutSettingStore = useLayoutSettingStore();
-  const lockscreenStore = useLockscreenStore();
   const keepAliveStore = useKeepAliveStore();
 
   const router = useRouter();
@@ -183,7 +181,7 @@
   // 退出登录
   const doLogout = () => {
     Modal.confirm({
-      title: '您确定要退出登录吗？',
+      title: 'Are you sure you want to log out?',
       icon: <QuestionCircleOutlined />,
       centered: true,
       onOk: async () => {

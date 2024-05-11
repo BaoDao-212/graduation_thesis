@@ -5,11 +5,15 @@
           <LocalePicker />
         </div>
         <div class="login-logo">
-          <!-- <svg-icon name="logo" :size="45" /> -->
           <h1 class="mb-0 ml-2 text-3xl font-bold"> Study Quiz Center</h1>
           <img src="~@/assets/images/logo0.png" width="80" />
         </div>
         <a-form layout="horizontal" :model="state.formInline" @submit.prevent="handleSubmit">
+          <a-form-item>
+            <a-input v-model:value="state.formInline.email" size="large" placeholder="rootadmin">
+              <template #prefix><user-outlined type="user" /></template>
+            </a-input>
+          </a-form-item>
           <a-form-item>
             <a-input v-model:value="state.formInline.username" size="large" placeholder="rootadmin">
               <template #prefix><user-outlined type="user" /></template>
@@ -42,6 +46,14 @@
               {{ $t('routes.login.registry') }}
             </a-button>
           </a-form-item>
+          <div class="flex flex-row align-center" style="justify-content: center">
+            <div class="mt-1">
+              {{ $t('routes.login.text_login') }}
+            </div>
+            <a-button type="link" @click="router.replace('/login')">
+              {{ $t('routes.login.login') }}
+            </a-button>
+          </div>
         </a-form>
       </div>
     </div>
@@ -59,6 +71,7 @@
       loading: false,
       captcha: '',
       formInline: {
+        email : '',
         username: '',
         password: '',
         confirmPassword: '',

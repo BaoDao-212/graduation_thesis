@@ -1,4 +1,38 @@
 {
-  "settings": "个人设置",
-  "about": "关于"
-}
+  "settings": "Cài đặt",
+  "about": "Giới thiệu",
+  "personal_profile": "Hồ sơ cá nhân",
+  "change_password": "Đổi mật khẩu",
+  "update_password": "Cập nhật mật khẩu",
+  "changepassword": {
+  "old_password": "Mật khẩu cũ",
+  "rules_old_password": "Vui lòng nhập mật khẩu cũ của bạn",
+  "new_password": "Mật khẩu mới",
+  "rules_new_password": "Vui lòng nhập mật khẩu mới của bạn",
+  "confirm_new_password": "Xác nhận mật khẩu mới",
+  "rules_confirm_new_password": "Vui lòng nhập xác nhận mật khẩu mới của bạn",
+  "notes_password": "Yêu cầu tối thiểu là 6 ký tự bất kỳ",
+  "warn_input": "Tất cả các trường không được để trống. Vui lòng nhập một số gì đó",
+  "warn_new_password": "Mật khẩu mới không khớp",
+  "loading_password": "Đang đổi mật khẩu...",
+  "success_change": "Đổi mật khẩu thành công"
+  },
+  "profile": {
+  "email": "Email",
+  "rules_email": "Vui lòng nhập email của bạn",
+  "name": "Tên",
+  "username": "Tên đăng nhập",
+  "rules_name": "Vui lòng nhập tên của bạn",
+  "mobile": "Điện thoại",
+  "rules_mobile": "Vui lòng nhập số điện thoại của bạn",
+  "type": "Loại",
+  "address": "Địa chỉ",
+  "rules_address": "Vui lòng nhập địa chỉ của bạn",
+  "country": "Quốc gia",
+  "rules_country": "Vui lòng nhập quốc gia của bạn",
+  "button_update_profile": "Cập nhật",
+  "warn_input": "Tất cả các trường không được để trống. Vui lòng nhập một số gì đó",
+  "warn_loading": "Đang cập nhật hồ sơ...",
+  "success_update": "Cập nhật thành công"
+  }
+  }

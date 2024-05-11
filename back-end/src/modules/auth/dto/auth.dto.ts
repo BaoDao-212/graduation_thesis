@@ -93,3 +93,7 @@ export class ForgotPasswordInput {
   email?: string;
 }
 export class ForgotPasswordOutput extends CoreOutput {}
+export class LoginGoogleInput {
+  @ApiProperty({ description: 'google access token' })
+  accessToken: string;
+}

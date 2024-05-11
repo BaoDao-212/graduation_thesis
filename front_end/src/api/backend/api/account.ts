@@ -4,7 +4,7 @@ import { request, type RequestOptions } from '@/utils/request';
 
 /** 账户登出 GET /api/account/logout */
 export async function accountLogout(options?: RequestOptions) {
-  return request<any>('/api/account/logout', {
+  return request<any>('/auth/logout', {
     method: 'GET',
     ...(options || {}),
   });
@@ -20,7 +20,7 @@ export async function accountMenu(options?: RequestOptions) {
 
 /** 更改账户密码 POST /api/account/password */
 export async function accountPassword(body: API.PasswordUpdateDto, options?: RequestOptions) {
-  return request<any>('/api/account/password', {
+  return request<any>('/account/change-password', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export async function accountPermissions(options?: RequestOptions) {
 
 /** 获取账户资料 GET /account/profile */
 export async function accountProfile(options?: RequestOptions) {
-  return request<API.AccountInfo>('/account/info', {
+  return request<any>('/account/info', {
     method: 'GET',
     ...(options || {}),
   });
@@ -48,7 +48,7 @@ export async function accountProfile(options?: RequestOptions) {
 
 /** 更改账户资料 PUT /api/account/update */
 export async function accountUpdate(body: API.AccountUpdateDto, options?: RequestOptions) {
-  return request<any>('/api/account/update', {
+  return request<any>('/account/change-profile', {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

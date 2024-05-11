@@ -17,15 +17,12 @@ declare namespace API {
     /** 用户名 */
     username: string;
     /** 昵称 */
-    nickname: string;
+    name: string;
     /** 邮箱 */
     email: string;
     /** 手机号 */
     phone: string;
     /** 备注 */
-    remark: string;
-    /** 头像 */
-    avatar: string;
   };
 
   type AccountMenus = {
@@ -37,18 +34,10 @@ declare namespace API {
   };
 
   type AccountUpdateDto = {
-    /** 用户呢称 */
-    nickname: string;
-    /** 用户邮箱 */
-    email: string;
-    /** 用户QQ */
-    qq: string;
-    /** 用户手机号 */
+    name: string;
+    address: string;
+    introduce: string;
     phone: string;
-    /** 用户头像 */
-    avatar: string;
-    /** 用户备注 */
-    remark: string;
   };
 
   type Buffer = {};
@@ -644,6 +633,9 @@ declare namespace API {
 
   type RoleDeleteParams = {
     id: number;
+  };
+  type LoginGoogleDto = {
+    accessToken: string;
   };
 
   type RoleDto = {

@@ -1,20 +1,20 @@
 {
-  "demo": "demo演示",
-  "button": "按钮的扩展",
-  "modal": "可拖拽弹窗",
+  "demo": "Demo trình diễn",
+  "button": "Mở rộng nút bấm",
+  "modal": "Cửa sổ bật có thể kéo",
   "form": {
-    "demo": "表单演示",
-    "basic": "基础表单",
-    "rule": "表单校验",
-    "dynamic": "动态表单",
-    "customForm": "自定义表单组件"
+  "demo": "Trình diễn biểu mẫu",
+  "basic": "Biểu mẫu cơ bản",
+  "rule": "Xác thực biểu mẫu",
+  "dynamic": "Biểu mẫu động",
+  "customForm": "Thành phần biểu mẫu tùy chỉnh"
   },
   "table": {
-    "demo": "表格演示",
-    "searchTable": "查询表格",
-    "editRowTable": "可编辑行",
-    "wzry": "王者荣耀",
-    "lol": "英雄联盟"
+  "demo": "Trình diễn bảng",
+  "searchTable": "Bảng tìm kiếm",
+  "editRowTable": "Hàng có thể chỉnh sửa",
+  "wzry": "Vua Vinh Quang",
+  "lol": "Liên Minh Huyền Thoại"
   },
-  "icon": "自定义图标"
-}
+  "icon": "Biểu tượng tùy chỉnh"
+  }

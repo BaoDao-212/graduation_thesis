@@ -9,11 +9,13 @@ export class GetInfoOutput extends CoreOutput {
 
 export class ChangePersonalInfoInput {
   @ApiProperty({ description: 'name' })
-  newName: string;
-  @ApiProperty({ description: 'email' })
-  newEmail: string;
+  name: string;
+  @ApiProperty({ description: 'address' })
+  address: string;
+  @ApiProperty({ description: 'introduce' })
+  introduce: string;
   @ApiProperty({ description: 'phone' })
-  newPhone: string;
+  phone: string;
 }
 
 export class ChangePasswordInput {

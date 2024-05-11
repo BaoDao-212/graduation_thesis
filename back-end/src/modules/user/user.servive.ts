@@ -40,28 +40,16 @@ export class UserService {
     input: ChangePersonalInfoInput,
   ): Promise<ChangePersonalInfoOutput> {
     try {
-      const { newName, newEmail, newPhone } = input;
+      const { address, introduce, name, phone } = input;
       const user = await this.userRepo.findOne({
         where: { id: currentUser.id },
-        select: ['id'],
+        select: ['id','name', 'phone', 'address', 'introduce'],
       });
-
-      //kiem tra User ton tai khong
-      if (!user) createError('Input', 'Người dùng không tồn tại');
-
-      //kiem tra tên mới trống trống hay khong
-      if (!newName)
-        return createError('Input', 'Tên người dùng không được bỏ trống');
-      user.name = newName;
-
-      //Kiem tra email mới trống hay khong
-      if (!newEmail) return createError('Input', 'Email không được bỏ trống');
-      user.email = newEmail;
-
-      //kiem tra SĐT mới trống hay khong
-      if (!newPhone) return createError('Input', 'SĐT không được bỏ trống');
-      user.phone = newPhone;
-
+      if (!user) createError('Input', 'User not found');
+      if (!name && name!=user.name) user.name = name;
+      if (!phone) user.phone = phone;
+      if (!address) user.address = address;
+      if (!introduce) user.introduce = introduce;
       await this.userRepo.save(user);
       return {
         ok: true,
@@ -77,30 +65,29 @@ export class UserService {
     input: ChangePasswordInput,
   ): Promise<ChangePasswordOutput> {
     try {
-      const { oldPassword, newPassword, confirmNewPassword } = input;
+      const { oldPassword, newPassword } = input;
       const user = await this.userRepo.findOne({
         where: { id: currentUser.id },
         select: ['password', 'id'],
       });
+      console.log(user);
 
       //kiem tra User ton tai khong
       if (!user) return createError('Input', 'Người dùng không tồn tại');
 
       //kiem tra mat khau hien tai dung hay khong
-      if (!(await user.checkPassword(oldPassword)))
-        return createError('Input', 'Mật khẩu hiện tại không đúng');
+      if (user.password) {
+        if (!(await user.checkPassword(oldPassword)))
+          return createError('Input', 'Mật khẩu hiện tại không đúng');
 
-      //Kiem tra mat khau moi va mat khau nhap lai co trung nhau hay khong
-      if (newPassword !== confirmNewPassword)
-        return createError('Input', 'Mật khẩu lặp lại không khớp');
-
-      //kiem tra mat khau cu va mat khau moi co trung nhau khong
-      if (await user.checkPassword(newPassword))
-        return createError(
-          'Input',
-          'Mật khẩu mới không được trùng mật khẩu cũ',
-        );
-
+        //kiem tra mat khau cu va mat khau moi co trung nhau khong
+        if (await user.checkPassword(newPassword))
+          return createError(
+            'Input',
+            'Mật khẩu mới không được trùng mật khẩu cũ',
+          );
+      }
+      console.log(user);
       user.password = newPassword;
       await this.userRepo.save(user);
       return {

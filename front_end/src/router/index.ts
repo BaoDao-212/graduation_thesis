@@ -1,5 +1,5 @@
 import 'nprogress/css/nprogress.css'; // 进度条样式
-import { createRouter,createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 
 import { createRouterGuards } from './router-guards';
 

@@ -14,6 +14,7 @@ import {
   ForgotPasswordOutput,
   ForgotPasswordInput,
   RefreshTokenInput,
+  LoginGoogleInput,
 } from './dto/auth.dto';
 import { Roles } from './role.decorator';
 import { CurrentUser } from './user.decorator';
@@ -99,5 +100,23 @@ export class AuthResolver {
     @Body() input: ForgotPasswordInput,
   ): Promise<ForgotPasswordOutput> {
     return this.authService.forgotPassword(input);
+  }
+  @ApiOperation({
+    summary: 'login with google',
+  })
+  @Post('login-google')
+  @ApiOkResponse({ type: LoginOutput })
+  async loginWithGoogle(
+    @Body() input: LoginGoogleInput,
+  ): Promise<LoginOutput> {
+    return this.authService.loginWithGoogle(input);
+  }
+  @ApiOperation({
+    summary: 'logout',
+  })
+  @Get('logout')
+  @ApiOkResponse({ type: ForgotPasswordOutput })
+  async logout(@CurrentUser() user: User): Promise<ForgotPasswordOutput> {
+    return this.authService.logout(user);
   }
 }

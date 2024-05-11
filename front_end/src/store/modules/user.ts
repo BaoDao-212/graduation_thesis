@@ -170,6 +170,7 @@ export const useUserStore = defineStore('user', () => {
     resetToken,
     setServerConnectStatus,
     forgotPassword,
+    setToken,
   };
 });
 

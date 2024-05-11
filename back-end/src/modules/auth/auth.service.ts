@@ -17,6 +17,8 @@ import {
   NewAccessTokenOutput,
   RegisterUserInput,
   RegisterUserOutput,
+  LoginGoogleInput,
+  ForgotPasswordOutput,
 } from './dto/auth.dto';
 import { createError } from '../common/utils/createError';
 import {
@@ -27,6 +29,7 @@ import {
 } from '../common/constants/constants';
 import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
 import { AccessTokenEntity } from 'src/entities/access-token.entity';
+import { OAuth2Client } from 'google-auth-library';
 
 @Injectable()
 export class AuthService {
@@ -271,6 +274,116 @@ export class AuthService {
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
+  // TODO: Xử lý đăng nhập bằng oauth2.0 (Google)
+  
+  async loginWithGoogle(
+    input: LoginGoogleInput,
+  ): Promise<LoginOutput> {
+    try {
+      const {accessToken} = input;
+      console.log(accessToken);
+      const cId="422848963352-rajg4vboua3403fmsm83c494as3bstc3.apps.googleusercontent.com"
+      const googleAuthClient = new OAuth2Client({
+        clientId: cId,
+        clientSecret: this.configService.get<string>('CLIENT_SECRET'),
+        redirectUri: this.configService.get<string>('REDIRECT_URI'),
+      });
+      console.log(googleAuthClient);
+      
+      const ticket = await googleAuthClient.verifyIdToken({
+        idToken: accessToken,
+        audience: cId,
+      });
+      console.log(ticket);
+      const info = ticket.getPayload();
+      let user= await this.userRepo.findOne({
+        where: {
+          email: ticket.getPayload().email,
+        },
+      });
+      if (!user){
+        const newUser=await this.userRepo.create({
+          email: ticket.getPayload().email,
+          name: ticket.getPayload().name,
+          position: Position.User,
+          username: ticket.getPayload().email.split('@')[0],
+        });
+        await this.userRepo.save(newUser);
+        user=newUser;
+      }
+      const newAccessToken = sign(
+        {
+          userId: user.id,
+        },
+        this.configService.get<string>(ACCESS_TOKEN_SECRET),
+        {
+          expiresIn: this.configService.get<string>(ACCESS_TOKEN_EXPIRED_IN),
+        },
+      );
+      const newRefreshToken = sign(
+        {
+          userId: user.id,
+        },
+        this.configService.get<string>(REFRESH_TOKEN_SECRET),
+        {
+          expiresIn: this.configService.get<string>(REFRESH_TOKEN_EXPIRED_IN),
+        },
+      );
+      const refreshTokenR =await this.refreshTokenRepository.create({
+        value: newRefreshToken,
+        expired_at: this.configService.get<number>(REFRESH_TOKEN_EXPIRED_IN),
+        created_at: new Date(),
+
+      }
+      );
+      const accessTokenR =await this.accessTokenRepository.create({
+        value: newAccessToken,
+        expired_at: this.configService.get<number>(ACCESS_TOKEN_EXPIRED_IN),
+        created_at: new Date(),
+        user:user,
+      });
+      await this.refreshTokenRepository.save(refreshTokenR);
+      await this.accessTokenRepository.save(accessTokenR);
+      console.log(info);
+      return {
+        ok: true,
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      };
+    } catch (error) {
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
+//TODO: triển khai logout ra khỏi hệ thống
+async logout(currentUser: User): Promise<ForgotPasswordOutput> {
+  try {
+    const accessTokenEntity = await this.accessTokenRepository.findOne({
+      where: {
+        user: {
+          id: currentUser.id,
+        },
+      },
+    });
+    if (!accessTokenEntity) return createError('Input', 'Người dùng  đã đăng xuất');
+    const refreshTokenEntity = await this.refreshTokenRepository.findOne({
+      where: {
+        accessToken: {
+          id: accessTokenEntity.id,
+        },
+      },
+    });
+    if (!refreshTokenEntity) return createError('Input', 'Người dùng  đã đăng xuất');
+    await this.refreshTokenRepository.remove(refreshTokenEntity);
+    await this.accessTokenRepository.remove(accessTokenEntity);
+    return {
+      ok: true,
+    };
+  } catch (error) {
+    return createError('Server', 'Lỗi server, thử lại sau');
+  }
+}
+
+
 
   // TODO: Triển khai quên mật khẩu (khi chọn được dịch vụ SMS phù hợp)
   async forgotPassword(input: ForgotPasswordInput) {
@@ -315,7 +428,7 @@ const generateRandomPassword = (length: number): string => {
 async function sendEmail(newPassword, email) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const nodemailer = require('nodemailer');
-
+  
   try {
     // Tạo transporter
     const transporter = nodemailer.createTransport({
@@ -327,7 +440,7 @@ async function sendEmail(newPassword, email) {
         pass: 'ayaozgozntxogrgy',
       },
     });
-
+    
     // Cấu hình thông tin email
     const mailOptions = {
       from: 'L O',
@@ -342,3 +455,4 @@ async function sendEmail(newPassword, email) {
     console.log('Lỗi khi gửi email:', error);
   }
 }
+// TODO: Xử lý đăng nhập bằng oauth2.0 (Google)
