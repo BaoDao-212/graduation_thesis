@@ -14,8 +14,8 @@ export const localeList = [
   },
   {
     lang: localeMap.zh_CN,
-    label: '简体中文',
-    icon: '🇨🇳',
-    title: '语言',
+    label: 'Tiếng việt',
+    icon: '🇻🇳',
+    title: 'Ngôn ngữ',
   },
 ] as const;

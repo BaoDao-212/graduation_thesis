@@ -1,0 +1,10 @@
+{
+  "title": "Tạo câu hỏi bằng AI",
+  "error": "Hệ thống đang quá tải, xin vui lòng thử lại sau 60 giây",
+  "new": "Mới",
+  "review": "Xem lại",
+  "title_review": "Xem lại câu hỏi và câu trả lời",
+  "save": "Lưu",
+  "description": "Mô tả",
+  "generate_with_ai": "Tạo câu hỏi bằng AI"
+}

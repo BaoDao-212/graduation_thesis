@@ -6,10 +6,11 @@ import {
   BeforeUpdate,
   PrimaryGeneratedColumn,
   Column,
-  Entity,OneToMany,Relation
+  Entity,OneToMany,Relation,OneToOne
 } from 'typeorm';
 import { AccessTokenEntity } from './access-token.entity';
 import { Post } from './post.entity';
+import { Apikey } from './apikey.entity';
 export enum Position {
   Admin = 'Admin',
   User = 'User',
@@ -54,6 +55,11 @@ export class User extends BaseEntity {
   @Column({ nullable: true, default: '' })
   @ApiProperty()
   phone?: string;
+
+  @OneToOne(() => Apikey, apikey => apikey.user)
+  @ApiProperty()
+  apiKey?: Apikey;
+
 
   @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
     cascade: true,

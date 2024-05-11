@@ -26,6 +26,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/exam/index.vue'),
       },
       {
+        path: 'generate_question',
+        name: `${moduleName}-generate-question`,
+        meta: {
+          title: t('routes.generate_question.generate_with_ai'),
+          icon: 'ant-design:desktop-outlined',
+          keepAlive: true,
+        },
+        component: () => import('@/views/generate_question_with_AI/index.vue'),
+      },
+      {
         path: 'room/:id',
         name: `${moduleName}-room`,
         meta: {

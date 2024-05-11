@@ -120,6 +120,7 @@
   import type { Rule } from 'ant-design-vue/lib/form';
   import { useI18n } from '@/hooks';
   import { accountProfile, accountUpdate } from '@/api/backend/api/account';
+  import Storage from '@/utils/Storage';
 
   // update profile
   const visible = ref<boolean>(false);
@@ -172,6 +173,7 @@
       });
     } else {
       user.value = res.user;
+      Storage.set('PROFILE', res.user);
     }
   });
   const { t } = useI18n();
@@ -181,11 +183,11 @@
       return notification.error({
         message: res.error.message,
       });
-    }else
-    notification.success({
-      message: t('common.success'),
-      description: t('routes.account.profile.success_update'),
-    });
+    } else
+      notification.success({
+        message: t('common.success'),
+        description: t('routes.account.profile.success_update'),
+      });
     setTimeout(() => {
       visible.value = false;
     }, 2000);

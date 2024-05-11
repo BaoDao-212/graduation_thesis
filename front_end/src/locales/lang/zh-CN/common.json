@@ -15,6 +15,7 @@
   "redo": "Làm mới",
   "resetText": "Đặt lại",
   "warn_message_empty":"Bạn chưa nhập đầy đủ thông tin",
+  "home":"Trang chủ",
   "routes": {
     "account": {
       "settings": ""

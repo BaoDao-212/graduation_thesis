@@ -29,3 +29,8 @@ export class ChangePasswordInput {
 
 export class ChangePersonalInfoOutput extends CoreOutput { }
 export class ChangePasswordOutput extends CoreOutput { }
+export class OpenAiKeyInput {
+  @ApiProperty({ description: 'openAiKey' })
+  openAiKey: string;
+}
+export class OpenAiKeyOutput extends CoreOutput { }

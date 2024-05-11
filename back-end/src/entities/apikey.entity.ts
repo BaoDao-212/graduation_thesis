@@ -1,0 +1,25 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { BaseEntity } from './base.entity';
+import { PrimaryGeneratedColumn, Column, Entity, OneToOne } from 'typeorm';
+import { User } from './user.entity';
+export enum PostStatus {
+  PRIVATE = 'PRIVATE',
+  PUBLISHED = 'PUBLISHED',
+}
+@Entity({ name: 'apikey' })
+export class Apikey extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  @ApiProperty()
+  id: number;
+
+  @Column({ nullable: true })
+  @ApiProperty()
+  apikey?: string;
+
+  @Column({ nullable: true })
+  @ApiProperty()
+  assistantId?: string;
+
+  @OneToOne(() => User, (user) => user.id)
+  user: User;
+}

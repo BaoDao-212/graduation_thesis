@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
+import OpenAI from 'openai';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { createError } from '../common/utils/createError';
@@ -10,12 +10,16 @@ import {
   ChangePersonalInfoOutput,
   ChangePasswordOutput,
   GetInfoOutput,
+  OpenAiKeyInput,
+  OpenAiKeyOutput,
 } from './user.dto';
+import { Apikey } from 'src/entities/apikey.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectRepository(Apikey) private readonly apiKeyRepo: Repository<Apikey>,
   ) {}
 
   async getInfo(input: User): Promise<GetInfoOutput> {
@@ -43,17 +47,49 @@ export class UserService {
       const { address, introduce, name, phone } = input;
       const user = await this.userRepo.findOne({
         where: { id: currentUser.id },
-        select: ['id','name', 'phone', 'address', 'introduce'],
+        select: ['id', 'name', 'phone', 'address', 'introduce'],
       });
       if (!user) createError('Input', 'User not found');
-      if (!name && name!=user.name) user.name = name;
-      if (!phone) user.phone = phone;
-      if (!address) user.address = address;
-      if (!introduce) user.introduce = introduce;
+      if (name && name != user.name) user.name = name;
+      if (phone && phone != user.phone) user.phone = phone;
+      if (address && address != user.address) user.address = address;
+      if (introduce && introduce != user.introduce) user.introduce = introduce;
       await this.userRepo.save(user);
       return {
         ok: true,
         // 'message': 'Thay đổi thông tin thành công'
+      };
+    } catch (error) {
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
+  async updateApiKeyOpenAI(
+    currentUser: User,
+    input: OpenAiKeyInput,
+  ): Promise<OpenAiKeyOutput> {
+    try {
+      const { openAiKey } = input;
+      const openai = new OpenAI({
+        apiKey: openAiKey, 
+      });
+      const assistant = await openai.beta.assistants.create({
+        name: "Data visualizer",
+        description: "You are great at creating beautiful data visualizations. You analyze data present in .csv files, understand trends, and come up with data visualizations relevant to those trends. You also share a brief text summary of the trends observed.",
+        model: "gpt-4-turbo",
+        tools: [{"type": "code_interpreter"}],
+        tool_resources: {
+          "code_interpreter": {
+            "file_ids": [file.id]
+          }
+        }
+      });
+      const apikey = await this.apiKeyRepo.findOne({
+        where: { id: currentUser.id },
+      });
+
+      await this.apiKeyRepo.save(apikey);
+      return {
+        ok: true,
       };
     } catch (error) {
       return createError('Server', 'Lỗi server, thử lại sau');

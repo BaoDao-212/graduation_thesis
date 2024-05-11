@@ -1,0 +1,10 @@
+{
+  "title": "Generate question with AI",
+  "error": "The system is overloaded, please try again after 60 seconds",
+  "new": "New",
+  "review": "Review",
+  "title_review": "Review question and answers",
+  "save": "Save",
+  "description": "Description",
+  "generate_with_ai": "Generate with AI"
+}

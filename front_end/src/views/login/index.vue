@@ -60,6 +60,8 @@
   import { to } from '@/utils/awaitTo';
   import { GoogleLogin } from 'vue3-google-login';
   import { authLoginGoogle } from '@/api/backend/api/auth';
+import { accountProfile } from '@/api/backend/api/account';
+import Storage from '@/utils/Storage';
   // import { useI18n } from 'vue-i18n';
   const state = reactive({
     loading: false,
@@ -85,8 +87,16 @@
       });
     } else {
       userStore.setToken(res.accessToken);
+      const res1 = await accountProfile();
+      if (!res1.ok) {
+        notification.error({
+          message: res1.error.message,
+        });
+      } else {
+        Storage.set('PROFILE', res1.user);
+      }
       notification.success({
-        message: "Success",
+        message: 'Success',
         description: 'Login Success',
       });
       setTimeout(() => router.replace((route.query.redirect as string) ?? '/'));
@@ -106,11 +116,19 @@
 
     if (err) {
       Modal.error({
-        title: () => '提示',
+        title: () => 'Error',
         content: () => err.message,
       });
     } else {
-      message.success('登录成功！');
+      message.success('Login Success');
+      const res1 = await accountProfile();
+      if (!res1.ok) {
+        notification.error({
+          message: res1.error.message,
+        });
+      } else {
+        Storage.set('PROFILE', res1.user);
+      }
       setTimeout(() => router.replace((route.query.redirect as string) ?? '/'));
     }
     state.loading = false;

@@ -33,20 +33,14 @@
       <FullScreen />
       <LocalePicker />
       <Dropdown placement="bottomRight">
-        <Avatar :src="userInfo.avatar" :alt="userInfo.username">{{ userInfo.username }}</Avatar>
+        <Avatar :src="userInfo.avatar" :alt="userInfo.username">{{ username[0] }}</Avatar>
         <template #overlay>
           <Menu>
-            <Menu.Item >
+            <Menu.Item>
               <ChangePassword />
             </Menu.Item>
-            <Menu.Item >
+            <Menu.Item>
               <Profile />
-            </Menu.Item>
-            <Menu.Item @click="$router.push({ name: 'account-about' })">
-              {{ $t('routes.account.about') }}
-            </Menu.Item>
-            <Menu.Item @click="$router.push({ name: 'account-settings' })">
-              {{ $t('routes.account.settings') }}
             </Menu.Item>
             <Menu.Divider />
             <Menu.Item>
@@ -72,7 +66,6 @@
   } from '@ant-design/icons-vue';
   import {
     Layout,
-    message,
     Modal,
     Dropdown,
     Menu,
@@ -90,6 +83,9 @@
   import { useLayoutSettingStore } from '@/store/modules/layoutSetting';
   import ChangePassword from '@/views/account/change-password.vue';
   import Profile from '@/views/account/profile.vue';
+  import Storage from '@/utils/Storage';
+  import { ref } from 'vue';
+  import { useI18n } from '@/hooks';
   defineProps({
     collapsed: {
       type: Boolean,
@@ -114,7 +110,7 @@
       color: isDark ? 'rgba(255, 255, 255, 0.85)' : '',
     };
   });
-
+  const { t } = useI18n();
   const menus = computed(() => {
     if (route.meta?.namePath) {
       let children = userStore.menus;
@@ -127,7 +123,7 @@
         {
           name: '__index',
           meta: {
-            title: '首页',
+            title: t("common.home"),
           },
           children: userStore.menus,
         },
@@ -177,13 +173,16 @@
       router.push({ name: lastChild?.name });
     }
   };
-
+  const username = ref(Storage.get('PROFILE').username);
   // 退出登录
   const doLogout = () => {
     Modal.confirm({
       title: 'Are you sure you want to log out?',
       icon: <QuestionCircleOutlined />,
       centered: true,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
       onOk: async () => {
         // 如果不是rootadmin，则退出登录
         if (userStore.userInfo.phone !== '13553550634') {
@@ -193,7 +192,6 @@
         keepAliveStore.clear();
         // 移除标签页
         localStorage.clear();
-        message.success('成功退出登录');
         await nextTick();
         router.replace({
           name: LOGIN_NAME,
@@ -216,7 +214,6 @@
     justify-content: space-between;
     height: @header-height;
     padding: 0 20px;
-
     * {
       cursor: pointer;
     }
