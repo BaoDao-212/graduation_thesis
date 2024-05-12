@@ -5,29 +5,36 @@
   "delete_exam": "Delete exam",
   "list": "List exam",
   "exam": "Exam",
-  "submit":"Submit",
-  "finish":"Finish exam",
-  "total":"Total",
-  "confirm_submited":"Are you sure you want to submit the exam?",
+  "submit": "Submit",
+  "finish": "Finish exam",
+  "total": "Total",
+  "confirm_submited": "Are you sure you want to submit the exam?",
   "table": {
     "id": "No",
     "status": "Status",
     "name": "Name",
-    "createdAt":"Created at",
+    "createdAt": "Created at",
     "level": "Level",
     "content": "Description",
     "action": "Action",
     "createAt": "Created at",
-    "room":"Room examination"
+    "room": "Room examination"
   },
   "modal": {
     "placeholder": {
       "name": "Please enter name",
-      "content": "PPlease enter content"
+      "content": "PPlease enter content",
+      "OpenAI_apikey":"Please enter OpenAI ApiKey"
     },
     "required": {
       "name": "Name is required",
-      "content": "Content is required"
+      "content": "Content is required",
+      "OpenAI_apikey":"OpenAI ApiKey is required"
     }
-  }
+  },
+  "document": "Document",
+  "require_document": "Document is required",
+  "OpenAI_apikey":"OpenAI ApiKey",
+  "success":"Created assistant with OpenAI successfully",
+  "createdAssistant":"Create assistant with OpenAI"
 }

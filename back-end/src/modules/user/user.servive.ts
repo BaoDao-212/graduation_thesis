@@ -72,17 +72,15 @@ export class UserService {
       const openai = new OpenAI({
         apiKey: openAiKey, 
       });
+      console.log(openai);
       const assistant = await openai.beta.assistants.create({
         name: "Data visualizer",
         description: "You are great at creating beautiful data visualizations. You analyze data present in .csv files, understand trends, and come up with data visualizations relevant to those trends. You also share a brief text summary of the trends observed.",
         model: "gpt-4-turbo",
         tools: [{"type": "code_interpreter"}],
-        tool_resources: {
-          "code_interpreter": {
-            "file_ids": [file.id]
-          }
-        }
       });
+      console.log(assistant);
+      
       const apikey = await this.apiKeyRepo.findOne({
         where: { id: currentUser.id },
       });

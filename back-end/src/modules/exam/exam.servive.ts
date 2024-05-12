@@ -156,4 +156,28 @@ async getExam(id: number): Promise<ExamOutput> {
     return createError('Server', 'Lỗi server, thử lại sau');
   }
 }
+//TODO: tạo ra một bộ đề kết hợp assistant của openai
+async generateQuestions(file: any, examId: number): Promise<any> {
+  try {
+    const exam = await this.examRepo.findOne({
+      where: {
+        id: examId,
+        status: ExamStatus.ACTIVE,
+      },
+    });
+    if (!exam) {
+      return createError('Exam', 'Không tìm thấy đề thi');
+    }
+    const { content } = exam;
+    // gửi file lên openai để tạo câu hỏi
+    
+    // code here
+    return {
+      ok: true,
+    };  
+  }
+  catch (error) {
+    return createError('Server', 'Lỗi server, thử lại sau');
+  }
+}
 }

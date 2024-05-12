@@ -64,4 +64,13 @@ export class ExamController {
   async getExamDetail(@Param('id', ParseIntPipe) id: number) {
     return this.examService.getExam(id);
   }
+  // cho phép gửi file qua form data để tạo đề thi
+  @ApiOperation({
+    summary: 'generate questions',
+  })
+  @Roles(['Any'])
+  @Post('generate/:id')
+  async generateQuestions(@Param('id', ParseIntPipe) id: number, @Body() input: any) {
+    return this.examService.generateQuestions(input.file, id);
+  }
 }

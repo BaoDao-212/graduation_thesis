@@ -28,7 +28,6 @@ services:
       - .env
     networks:
       - nest_network
-    command: npm run start:dev
 networks:
   nest_network:
     driver: bridge

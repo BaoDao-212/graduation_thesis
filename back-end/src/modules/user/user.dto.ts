@@ -33,4 +33,7 @@ export class OpenAiKeyInput {
   @ApiProperty({ description: 'openAiKey' })
   openAiKey: string;
 }
-export class OpenAiKeyOutput extends CoreOutput { }
+export class OpenAiKeyOutput extends CoreOutput { 
+  @ApiProperty({ description: 'openAiKey' })
+  assistant?: string;
+}

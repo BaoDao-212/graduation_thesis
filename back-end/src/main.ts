@@ -3,10 +3,8 @@ import { NestFactory, Reflector } from '@nestjs/core';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './setup-swagger';
-// import { ConfigService } from '@nestjs/config';
 import { ApiTransformInterceptor } from './common/api.transform';
 import { ConfigService } from '@nestjs/config';
-
 const SERVER_PORT = process.env.SERVER_PORT;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

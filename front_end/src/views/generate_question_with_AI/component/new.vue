@@ -1,108 +1,115 @@
 <!-- eslint-disable vue/no-unused-components -->
 <template>
-    <div class="flex justify-end">
-      <Button type="primary" @click="showModal"
-        ><PlusOutlined /> {{ t('routes.answer.add_answer') }}</Button
-      >
-    </div>
-    <Modal
-      v-model:visible="visible"
-      :cancel-text="$t('common.cancelText')"
-      :title="$t('routes.answer.add_answer')"
-      :width="1000"
-      @ok="createFunc"
+  <div class="flex justify-end">
+    <Button type="primary" @click="showModal"
+      ><PlusOutlined /> {{ t('routes.generate_question.new') }}</Button
     >
-      <Form
-        :model="formState"
-        layout="vertical"
-        autocomplete="off"
-        class="d-flex justify-content-center align-items-center"
+  </div>
+  <Modal
+    v-model:visible="visible"
+    :cancel-text="$t('common.cancelText')"
+    :title="$t('routes.answer.add_answer')"
+    :width="1000"
+    @ok="createFunc"
+  >
+    <Form
+      :model="formState"
+      layout="vertical"
+      autocomplete="off"
+      class="d-flex justify-content-center align-items-center"
+    >
+      <Form.Item :label="t('routes.question.table.exam')" name="exam">
+        <a-select
+          v-if="props.exam && props.exam.length > 0"
+          v-model:value="formState.examId"
+          class="border border-primary rounded-2"
+          :options="
+            (props.exam as Array<{ name: string; id: number }>).map((t) => ({
+              label: t.name,
+              value: t.id,
+            }))
+          "
+        ></a-select>
+      </Form.Item>
+      <Form.Item
+        :label="t('routes.exam.document')"
+        name="correct"
+        :rules="[{ required: true, message: '' }]"
       >
-        <Form.Item
-          :label="t('routes.exam.table.content')"
-          name="answer"
-          :rules="[{ required: true, message: t('routes.exam.modal.required.content') }]"
+        <a-upload
+          v-model:file-list="fileList"
+          list-type="picture"
+          :max-count="1"
+          :before-upload="beforeUpload"
+          accept=".docx"
         >
-          <Input
-            v-model:value="formState.answer"
-            class="border border-primary rounded-2"
-            :placeholder="t('routes.exam.modal.placeholder.content')"
-          >
-          </Input>
-        </Form.Item>
-        <Form.Item
-          :label="t('routes.answer.table.isCorrect')"
-          name="correct"
-          :rules="[{ required: true, message: '' }]"
-        >
-          <a-radio-group v-model:value="formState.isCorrect" button-style="solid">
-            <a-radio-button :value="true">{{ t('routes.answer.correct') }}</a-radio-button>
-            <a-radio-button :value="false">{{ t('routes.answer.incorrect') }}</a-radio-button>
-          </a-radio-group>
-        </Form.Item>
-      </Form>
-      <template #footer>
-        <div class="flex justify-end mr-2 mb-3">
-          <a-button @click="visible = false">
-            {{ $t('common.cancelText') }}
+          <a-button>
+            <upload-outlined></upload-outlined>
+            Upload file
           </a-button>
-          <Button
-            v-if="formState.answer.trim() != ''"
-            html-type="submit"
-            type="primary"
-            @click="createFunc()"
-            >{{ $t('common.okText') }}
-          </Button>
-          <Button v-else html-type="submit" disabled>
-            {{ $t('common.okText') }}
-          </Button>
-        </div>
-      </template>
-    </Modal>
-  </template>
-  <script lang="ts" setup>
-    import { ref, defineEmits, defineProps } from 'vue';
-    import { PlusOutlined } from '@ant-design/icons-vue';
-    import { Button, Form, Input, Modal, notification } from 'ant-design-vue';
-    import { to } from '@/utils/awaitTo';
-    import { useI18n } from '@/hooks';
-    import { createAnswer } from '@/api/backend/api/answer';
-    import { useRoute } from 'vue-router';
-    const props = defineProps({
-      questionId: Number,
-    });
-    interface FormState {
-      isCorrect: boolean;
-      answer: string;
-      questionId: number;
-    }
-    const formState = ref<FormState>({
-      isCorrect: false,
-      answer: '',
-      questionId: props.questionId ?? 0,
-    });
-    const route = useRoute();
-    const emit = defineEmits(['update-list']);
-    const visible = ref<boolean>(false);
-    const { t } = useI18n();
-    const showModal = () => {
-      visible.value = true;
-      formState.value.answer = '';
-      formState.value.questionId = props.questionId ?? 0;
-      formState.value.isCorrect = false;
-    };
-  
-    const createFunc = async () => {
-      const { answer } = formState.value;
-      if (answer.trim() == '') {
-        return notification.warning({
-          message: t('common.warning'),
-          description: t('common.warn_message_empty'),
-        });
-      }
-      formState.value.questionId = Number(route.params.id);
-      const [err, _res] = await to(createAnswer(formState.value));
-      if (!err) {
+        </a-upload>
+      </Form.Item>
+    </Form>
+    <template #footer>
+      <div class="flex justify-end mr-2 mb-3">
+        <a-button @click="visible = false">
+          {{ $t('common.cancelText') }}
+        </a-button>
+        <Button
+          v-if="fileList && fileList.length > 0"
+          html-type="submit"
+          type="primary"
+          @click="createFunc()"
+          >{{ $t('common.okText') }}
+        </Button>
+        <Button v-else html-type="submit" disabled>
+          {{ $t('common.okText') }}
+        </Button>
+      </div>
+    </template>
+  </Modal>
+</template>
+<script lang="ts" setup>
+  import { ref, defineEmits, defineProps } from 'vue';
+  import { PlusOutlined } from '@ant-design/icons-vue';
+  import { Button, Form, Modal, notification, type UploadProps } from 'ant-design-vue';
+  import { useI18n } from '@/hooks';
+  import { useRoute } from 'vue-router';
+  import { generateQuestions } from '@/api/backend/api/exam';
+  const props = defineProps({
+    exam: Array,
+  });
+  interface FormState {
+    examId: number;
+  }
+  const formState = ref<FormState>({
+    examId: 0,
+  });
+  const fileList = ref<UploadProps['fileList']>([]);
+  const emit = defineEmits(['update-list']);
+  const visible = ref<boolean>(false);
+  const { t } = useI18n();
+  const showModal = () => {
+    visible.value = true;
+    console.log(props.exam);
+    (formState.value.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0),
+      (fileList.value = []);
+  };
+  const beforeUpload = (file) => {
+    fileList.value = [file];
+    return false;
+  };
+
+  const createFunc = async () => {
+    if ((fileList.value ?? []).length === 0) {
+      notification.error({
+        message: t('common.error'),
+        description: t('routes.exam.require_document'),
+      });
+      return;
+    } else {
+      const res = await generateQuestions(fileList.value, formState.value.examId);
+      if (!res.ok) {
         notification.success({
           message: t('common.success'),
           description: t('routes.question.notification.create_success'),
@@ -112,9 +119,8 @@
           visible.value = false;
         }, 10);
       }
-      formState.value.answer = '';
-    };
-  </script>
-  
-  <style lang="less" scoped></style>
-  
+    }
+  };
+</script>
+
+<style lang="less" scoped></style>

@@ -32,7 +32,7 @@ declare namespace API {
     name: string;
     component: string;
   };
-  type OpenAIKey= {
+  type OpenAIKey = {
     openAiKey: string;
   };
   type AccountUpdateDto = {

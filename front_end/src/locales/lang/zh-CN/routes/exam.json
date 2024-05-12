@@ -23,11 +23,18 @@
   "modal": {
     "placeholder": {
       "name": "Nhập tên bộ đề",
-      "content": "Nhập mô tả"
+      "content": "Nhập mô tả",
+      "OpenAI_apikey":"Nhập OpenAI ApiKey"
     },
     "required": {
       "name": "Tên bộ đề không được để trống",
-      "content": "Mô tả không được để trống"
+      "content": "Mô tả không được để trống",
+      "OpenAI_apikey":"OpenAI ApiKey không được để trống"
     }
-  }
+  },
+  "document":"Tài liệu",
+  "require_document":"Yêu cầu tài liệu",
+  "OpenAI_apikey":"OpenAI ApiKey",
+  "success":"Thêm trợ lý bằng OpenAI thành công",
+  "createdAssistant":"Thêm trợ lý bằng OpenAI"
 }

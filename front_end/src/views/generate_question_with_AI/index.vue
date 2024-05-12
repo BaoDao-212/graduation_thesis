@@ -11,8 +11,9 @@
               {{ t('routes.generate_question.title') }}
             </span>
           </div>
-         
-          <Button
+          <AddAssistant />
+          <New :exam="listNameExam"/>
+          <!-- <Button
             v-if="error || (option && option.length > 0) || !done"
             type="primary"
             @click="getOption"
@@ -20,7 +21,7 @@
           >
           <Button v-else type="primary" disabled
             ><DeploymentUnitOutlined /> {{ t('routes.generate_question.new') }}</Button
-          >
+          > -->
         </div>
       </template>
       <div v-if="!error">
@@ -74,13 +75,16 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
-  import { CheckOutlined, DeploymentUnitOutlined, LeftOutlined } from '@ant-design/icons-vue';
-  import axios from 'axios';
-  import { Button, Card, Result, Spin } from 'ant-design-vue';
+  import { onBeforeMount, ref } from 'vue';
+  import { CheckOutlined, LeftOutlined } from '@ant-design/icons-vue';
+  import { Card, Result, Spin, notification } from 'ant-design-vue';
   import ChangeQuestion from './openAI/review.vue';
   import { useI18n } from '@/hooks';
-import Storage from '@/utils/Storage';
+  import Storage from '@/utils/Storage';
+  import New from './component/new.vue';
+  import AddAssistant from './component/assistant.vue';
+  import to from '@/utils/awaitTo';
+  import { getExamNameList } from '@/api/backend/api/exam';
   const { t } = useI18n();
   const error = ref(false);
   const show = ref(true);
@@ -89,7 +93,6 @@ import Storage from '@/utils/Storage';
     content: string;
     isCorrect: boolean;
   }
-  const lang = ref();
 
   interface Question {
     content: string;
@@ -99,30 +102,43 @@ import Storage from '@/utils/Storage';
   const listCategory = ref();
   const option = ref<Question[]>([]);
   const user = ref(Storage.get('PROFILE'));
-  onMounted(async () => {
-    await getOption();
-    // listCategory.value = await getQuestionCategoryInfo();
+  console.log(user.value);
+  onBeforeMount(async () => {
+    await getDataExamName();
+    
   });
+  const listNameExam = ref();
   const abcdefgh = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M']);
-
-  const getOption = async () => {
-    try {
-      option.value = [];
-      error.value = false;
-      done.value = true;
-      const response = await axios.get(
-        `http://localhost:7000/openai/allquestion?language=${lang.value}`,
-      );
-      console.log(response);
-
-      option.value = response.data;
-      console.log(option.value);
-      option.value.forEach((e, index) => (e.index = index + 1));
-    } catch (e) {
-      error.value = true;
-      console.error('Error calling API:', e);
+  const getDataExamName = async () => {
+    // lấy danh sách tên tất cả bộ đê thi
+    const [_err, res] = await to(getExamNameList());
+    if (!res.ok) {
+      notification.error({
+        message: t('common.error'),
+        description: res.error.message,
+      });
+    } else {
+      listNameExam.value = res.exams;
     }
   };
+  // const getOption = async () => {
+  //   try {
+  //     option.value = [];
+  //     error.value = false;
+  //     done.value = true;
+  //     const response = await axios.get(
+  //       `http://localhost:7000/openai/allquestion?language=${lang.value}`,
+  //     );
+  //     console.log(response);
+
+  //     option.value = response.data;
+  //     console.log(option.value);
+  //     option.value.forEach((e, index) => (e.index = index + 1));
+  //   } catch (e) {
+  //     error.value = true;
+  //     console.error('Error calling API:', e);
+  //   }
+  // };
   const updateList = async (newData) => {
     show.value = false;
     option.value = option.value.filter((user) => user.index != newData);
