@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: finalproject
     volumes:
-      - postgres_db:/var/lib/postgresql/data
+      - vdb:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -28,9 +28,10 @@ services:
       - .env
     networks:
       - nest_network
+    command: npm run start:dev
 networks:
   nest_network:
     driver: bridge
 volumes:
-  postgres_db:
+  vdb:
     driver: local    

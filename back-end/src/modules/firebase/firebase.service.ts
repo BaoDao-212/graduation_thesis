@@ -14,7 +14,6 @@ import {
   uploadBytes,
   UploadMetadata,
 } from 'firebase/storage';
-import * as sharp from 'sharp';
 import { v1 } from 'uuid';
 import { FirebaseConfigOption } from './constants/constants';
 import { FIREBASE_CONFIG_OPTIONS } from '../common/constants/constants';
@@ -48,11 +47,12 @@ export class FirebaseService {
           contentType: 'image/webp',
         };
         storageName = `${v1()}.webp`;
-        buffer = await sharp(file.buffer)
-          .webp({
-            quality: 60,
-          })
-          .toBuffer();
+        // buffer = await sharp(file.buffer)
+        //   .webp({
+        //     quality: 60,
+        //   })
+        //   .toBuffer();
+        buffer = file.buffer;
       } else if (storagePath == 'video') {
         metatdata = {
           contentType: 'video/mp4',

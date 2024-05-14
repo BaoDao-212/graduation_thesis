@@ -40,5 +40,5 @@ export class ExamOutput extends CoreOutput {
 }
 export class GenerateQuestionsInput {
   @ApiProperty({ description: 'file' })
-  file: File;
+ file:any;
 }
