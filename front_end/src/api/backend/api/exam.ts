@@ -50,9 +50,8 @@ export async function getExamDetail(id: number, options?: RequestOptions) {
 // cho phép gửi file qua form data để tạo đề thi
 export async function generateQuestions(file: any, examId: number, options?: RequestOptions) {
   const formData = new FormData();
-  console.log(file);
   formData.append('file', file[0]);
-  return request<any>(`/api/openai/generate/${examId}`, {
+  return request<any>(`/exam/generate/${examId}`, {
     method: 'POST',
     data: formData,
     ...(options || {}),

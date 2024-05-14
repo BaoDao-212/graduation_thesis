@@ -8,7 +8,7 @@ import {
 import { Roles } from '../auth/role.decorator';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from 'src/entities/user.entity';
-import {ApikeyService } from './openai.servive';
+import {ApikeyService } from './openai.service';
 import { OpenAiKeyInput, OpenAiKeyOutput } from './openai.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 

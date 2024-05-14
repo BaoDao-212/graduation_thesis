@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {  ApikeyController } from './openai.resolver';
 import { Apikey } from 'src/entities/apikey.entity';
 import { User } from 'src/entities/user.entity';
-import { ApikeyService } from './openai.servive';
+import { ApikeyService } from './openai.service';
 import { Exam } from 'src/entities/exam.entity';
 
 @Module({

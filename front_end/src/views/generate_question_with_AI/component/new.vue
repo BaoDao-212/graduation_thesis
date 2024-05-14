@@ -18,7 +18,7 @@
       autocomplete="off"
       class="d-flex justify-content-center align-items-center"
     >
-      <Form.Item v-if="props.exam && props.exam.length > 0" :label="t('routes.question.table.exam')" name="exam">
+      <Form.Item :label="t('routes.question.table.exam')" name="exam">
         <a-select
           v-if="props.exam && props.exam.length > 0"
           v-model:value="formState.examId"
@@ -31,7 +31,6 @@
           "
         ></a-select>
       </Form.Item>
-      <div v-else style="color:red " class="m-2">Please create new exam before generate a set of question</div>
       <Form.Item
         :label="t('routes.exam.document')"
         name="correct"
@@ -75,6 +74,7 @@
   import { PlusOutlined } from '@ant-design/icons-vue';
   import { Button, Form, Modal, notification, type UploadProps } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
+  import { useRoute } from 'vue-router';
   import { generateQuestions } from '@/api/backend/api/exam';
   const props = defineProps({
     exam: Array,
