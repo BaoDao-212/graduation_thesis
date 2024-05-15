@@ -63,36 +63,6 @@ export class UserService {
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
-  async updateApiKeyOpenAI(
-    currentUser: User,
-    input: OpenAiKeyInput,
-  ): Promise<OpenAiKeyOutput> {
-    try {
-      const { openAiKey } = input;
-      const openai = new OpenAI({
-        apiKey: openAiKey, 
-      });
-      console.log(openai);
-      const assistant = await openai.beta.assistants.create({
-        name: "Data visualizer",
-        description: "You are great at creating beautiful data visualizations. You analyze data present in .csv files, understand trends, and come up with data visualizations relevant to those trends. You also share a brief text summary of the trends observed.",
-        model: "gpt-4-turbo",
-        tools: [{"type": "code_interpreter"}],
-      });
-      console.log(assistant);
-      
-      const apikey = await this.apiKeyRepo.findOne({
-        where: { id: currentUser.id },
-      });
-
-      await this.apiKeyRepo.save(apikey);
-      return {
-        ok: true,
-      };
-    } catch (error) {
-      return createError('Server', 'Lỗi server, thử lại sau');
-    }
-  }
 
   async changePassword(
     currentUser: User,

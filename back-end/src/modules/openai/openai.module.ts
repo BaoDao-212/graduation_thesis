@@ -5,9 +5,13 @@ import { Apikey } from 'src/entities/apikey.entity';
 import { User } from 'src/entities/user.entity';
 import { ApikeyService } from './openai.service';
 import { Exam } from 'src/entities/exam.entity';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Apikey, User,Exam])],
+  imports: [TypeOrmModule.forFeature([Apikey, User,Exam]),
+  MulterModule.register({
+    dest: './uploads',
+  }),],
   providers: [ApikeyService, ApikeyController],
   controllers: [ApikeyController],
 })

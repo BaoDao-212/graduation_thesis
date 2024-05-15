@@ -53,10 +53,4 @@ export class UserResolver {
   ) {
     return this.userService.changePassword(user, input);
   }
-  @Roles(['Any'])
-  @Put('/update-apikey')
-  @ApiOkResponse({ type: OpenAiKeyOutput })
-  async updateApiKey(@CurrentUser() user: User, @Body() input: OpenAiKeyInput) {
-    return this.userService.updateApiKeyOpenAI(user, input);
-  }
 }

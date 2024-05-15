@@ -13,6 +13,7 @@ import { ExamModule } from './modules/exam/exam.module';
 import { QuestionModule } from './modules/question/question.module';
 import { AnswerModule } from './modules/answer/answer.module';
 import { ResultModule } from './modules/result/result.module';
+import { ApikeyModule } from './modules/openai/openai.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ResultModule } from './modules/result/result.module';
     QuestionModule,
     AnswerModule,
     ResultModule,
+    ApikeyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

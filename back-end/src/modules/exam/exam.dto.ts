@@ -38,7 +38,3 @@ export class ExamOutput extends CoreOutput {
   @ApiProperty({ description: 'exam' })
   exam?: Exam;
 }
-export class GenerateQuestionsInput {
-  @ApiProperty({ description: 'file' })
-  file: File;
-}

@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity } from './base.entity';
-import { PrimaryGeneratedColumn, Column, Entity, OneToOne } from 'typeorm';
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 export enum PostStatus {
   PRIVATE = 'PRIVATE',
@@ -21,5 +27,6 @@ export class Apikey extends BaseEntity {
   assistantId?: string;
 
   @OneToOne(() => User, (user) => user.id)
+  @JoinColumn()
   user: User;
 }

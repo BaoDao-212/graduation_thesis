@@ -18,3 +18,9 @@ export class AnswerListOutput extends CoreOutput {
   @ApiProperty({ description: 'answers' })
   answers?: Answer[];
 }
+export class GenerateAnswerInput {
+  @ApiProperty({ description: 'file' })
+  file: any;
+  @ApiProperty({ description: 'storagePath' })
+  storagePath: string;
+}

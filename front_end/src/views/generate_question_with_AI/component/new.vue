@@ -18,7 +18,7 @@
       autocomplete="off"
       class="d-flex justify-content-center align-items-center"
     >
-      <Form.Item :label="t('routes.question.table.exam')" name="exam">
+      <Form.Item  v-if="props.exam && props.exam.length > 0" :label="t('routes.question.table.exam')" name="exam">
         <a-select
           v-if="props.exam && props.exam.length > 0"
           v-model:value="formState.examId"
@@ -30,6 +30,9 @@
             }))
           "
         ></a-select>
+      </Form.Item>
+      <Form.Item v-else>
+        Please create an exam before generating questions
       </Form.Item>
       <Form.Item
         :label="t('routes.exam.document')"
@@ -74,8 +77,7 @@
   import { PlusOutlined } from '@ant-design/icons-vue';
   import { Button, Form, Modal, notification, type UploadProps } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
-  import { useRoute } from 'vue-router';
-  import { generateQuestions } from '@/api/backend/api/exam';
+  import { generateQuestions } from '@/api/backend/api/openai';
   const props = defineProps({
     exam: Array,
   });
