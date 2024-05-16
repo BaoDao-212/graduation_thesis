@@ -6,10 +6,18 @@ import { Repository } from 'typeorm';
 
 import { Apikey } from 'src/entities/apikey.entity';
 import { createError } from '../common/utils/createError';
-import { OpenAiKeyInput, OpenAiKeyOutput } from './openai.dto';
+import { GenerateQuestionsOutput, OpenAiKeyInput, OpenAiKeyOutput, prompt1, prompt2 } from './openai.dto';
 import OpenAI from 'openai';
 import { Exam, ExamStatus } from 'src/entities/exam.entity';
 
+import {
+  createRuns,
+  createThread,
+  getMessages,
+  getStatus,
+} from './openai.method';
+import fs from 'fs';
+import { GoogleGenerativeAI, RequestOptions } from '@google/generative-ai';
 @Injectable()
 export class ApikeyService {
   constructor(
@@ -73,7 +81,11 @@ export class ApikeyService {
       }
 
       const apikey = await this.apikeyRepo.findOne({
-        where: { id: currentUser.id },
+        where: {
+          user: {
+            id: currentUser.id,
+          },
+        },
       });
       console.log(apikey);
       console.log(assistant);
@@ -99,32 +111,191 @@ export class ApikeyService {
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
-  //TODO: tạo ra một bộ đề kết hợp assistant của openai
+  //TODO: tạo ra một bộ đề kết hợp gemini api của google
   async generateQuestions(
-    file: Express.Multer.File,
+    file: any,
     examId: number,
+    currentUser: User,
   ): Promise<any> {
     try {
+      if (!file) {
+        return createError('File', 'File not found');
+      }
+      if (
+        file.mimetype !==
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      )
+        return createError('File', 'File not valid');
+
       const exam = await this.examRepo.findOne({
         where: {
           id: examId,
           status: ExamStatus.ACTIVE,
         },
       });
+
       if (!exam) {
         return createError('Exam', 'Exam not found');
       }
-      // gửi file lên openai để tạo câu hỏi
-      console.log(file.mimetype);
-      console.log(file.buffer);
-      console.log(file.originalname);
-      
-      // code here
-      return {
-        ok: true,
-      };
+
+      const apikey = await this.apikeyRepo.findOne({
+        where: {
+          user: {
+            id: currentUser.id,
+          },
+        },
+        relations: {
+          user: true,
+        },
+      });
+
+      if (!apikey) return createError('Apikey', 'Please update your apikey');
+      const openai = new OpenAI({
+        apiKey: apikey.apikey,
+      });
+      const assistant = await openai.beta.assistants.retrieve(
+        apikey.assistantId,
+      );
+      let file1;
+      try {
+        const blob = new Blob([file.buffer], {
+          type: file.mimetype,
+        });
+        const f = new File([blob], file.originalname);
+        file1 = await openai.files.create({
+          file: f,
+          purpose: 'assistants',
+        });
+        const thread = await createThread(openai, file1.id);
+
+        console.log(thread);
+        let count = 0;
+        while (count === 0) {
+          const run = await createRuns(openai, {
+            threadId: thread.id,
+            assistant_id: assistant.id,
+          });
+          console.log(run);
+          let runStatus;
+          do {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            runStatus = await getStatus(openai, {
+              runId: run.id,
+              threadId: thread.id,
+            });
+            console.log(runStatus);
+            if (runStatus.status === 'failed') {
+              return createError(
+                'File',
+                'Error sending too many requests in a short time',
+              );
+            }
+          } while (runStatus.status !== 'completed');
+          let message = await getMessages(openai, {
+            threadId: thread.id,
+            runId: run.id,
+          });
+          console.log(message);
+
+          message = message
+            ? JSON.parse(message)
+                .map(({ content, answers, explainCorrectAnswer }) => ({
+                  content,
+                  answers,
+                  explainCorrectAnswer,
+                }))
+                .filter(
+                  (element) =>
+                    element.content !== undefined &&
+                    element.answers !== undefined,
+                )
+            : '';
+
+          console.log(message);
+
+          let json;
+          if (message) {
+            json = message;
+          }
+
+          if (json) {
+            console.log(json);
+
+            return {
+              ok: true,
+            };
+          } else {
+            count = 0;
+          }
+        }
+      } catch (error) {
+        return createError('File', 'File not valid');
+      }
     } catch (error) {
-      return createError('Server', 'Lỗi server, thử lại sau');
+      return createError('Server', 'Please update your apikey');
     }
   }
+  //TODO: tạo ra một bộ đề kết hợp assistant của openai
+  async generateQuestionsWithGemini(
+    files: Express.Multer.File[],
+    examId: number,
+    currentUser: User,
+  ): Promise<GenerateQuestionsOutput> {
+    try {
+      if (!files || files.length === 0) {
+        return createError('File', 'File not found');
+      }
+  
+      const exam = await this.examRepo.findOne({
+        where: {
+          id: examId,
+          status: ExamStatus.ACTIVE,
+          user: {
+            id: currentUser.id,
+          },
+        },
+        relations: ['user'],
+      });
+  
+      if (!exam) {
+        return createError('Exam', 'Exam not found');
+      }
+  
+      const genAI = new GoogleGenerativeAI('AIzaSyCLob5fQm05BU4c1VDnCknr6tmxRnylz6Y');
+      const generationConfig = {
+        stopSequences: ['red'],
+        maxOutputTokens: 200,
+        temperature: 0.9,
+        topP: 0.1,
+        topK: 16,
+      };
+  
+      const model = genAI.getGenerativeModel(
+        { model: 'gemini-1.5-pro-latest' },
+        generationConfig as RequestOptions
+      );
+  
+      const fileToGenerativePart = (buffer: Buffer, mimeType: string) => ({
+        inlineData: {
+          data: buffer.toString('base64'),
+          mimeType,
+        },
+      });
+  
+      const imageParts = files.map((file) => fileToGenerativePart(file.buffer, file.mimetype));
+      const res = await model.generateContent(`${prompt1}${exam.name}${prompt2}`);
+      const response = await res.response;
+      const text = response.text().replace(/^```json|\```$/g, '');
+      const questions = JSON.parse(text);
+  
+      return {
+        ok: true,
+        questions,
+      };
+    } catch (error) {
+      return createError('Server', 'Server error, please try again later');
+    }
+  }
+  
 }
+// }

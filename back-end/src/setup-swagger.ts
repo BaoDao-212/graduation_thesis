@@ -19,3 +19,4 @@ export function setupSwagger(app: INestApplication): void {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup(config.get('swagger.path'), app, document);
 }
+ 

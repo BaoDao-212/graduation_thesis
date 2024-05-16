@@ -1,9 +1,8 @@
-<!-- eslint-disable vue/no-unused-components -->
 <template>
   <div class="flex justify-end">
-    <Button type="primary" @click="showModal"
-      ><PlusOutlined /> {{ t('routes.generate_question.new') }}</Button
-    >
+    <Button type="primary" @click="showModal">
+      <PlusOutlined /> {{ t('routes.generate_question.new') }}
+    </Button>
   </div>
   <Modal
     v-model:visible="visible"
@@ -18,7 +17,11 @@
       autocomplete="off"
       class="d-flex justify-content-center align-items-center"
     >
-      <Form.Item  v-if="props.exam && props.exam.length > 0" :label="t('routes.question.table.exam')" name="exam">
+      <Form.Item
+        v-if="props.exam && props.exam.length > 0"
+        :label="t('routes.question.table.exam')"
+        name="exam"
+      >
         <a-select
           v-if="props.exam && props.exam.length > 0"
           v-model:value="formState.examId"
@@ -31,26 +34,20 @@
           "
         ></a-select>
       </Form.Item>
-      <Form.Item v-else>
-        Please create an exam before generating questions
-      </Form.Item>
+      <Form.Item v-else>Please create an exam before generating questions</Form.Item>
       <Form.Item
         :label="t('routes.exam.document')"
         name="correct"
         :rules="[{ required: true, message: '' }]"
       >
-        <a-upload
-          v-model:file-list="fileList"
-          list-type="picture"
-          :max-count="1"
-          :before-upload="beforeUpload"
-          accept=".docx"
-        >
-          <a-button>
-            <upload-outlined></upload-outlined>
-            Upload file
-          </a-button>
-        </a-upload>
+        <div class="file-input">
+          <input type="file" ref="fileInput" id="file-input" required accept=".docx" @change="handleFileChange" />
+          <label for="file-input">
+            <i class="fas fa-upload"></i>
+            <span>{{ fileName || 'Chọn tệp' }}</span>
+          </label>
+          <div class="file-info" v-if="fileName">Tệp được chọn: {{ fileName }}</div>
+        </div>
       </Form.Item>
     </Form>
     <template #footer>
@@ -59,11 +56,12 @@
           {{ $t('common.cancelText') }}
         </a-button>
         <Button
-          v-if="fileList && fileList.length > 0"
+          v-if="fileName"
           html-type="submit"
           type="primary"
           @click="createFunc()"
-          >{{ $t('common.okText') }}
+        >
+          {{ $t('common.okText') }}
         </Button>
         <Button v-else html-type="submit" disabled>
           {{ $t('common.okText') }}
@@ -72,45 +70,54 @@
     </template>
   </Modal>
 </template>
+
 <script lang="ts" setup>
   import { ref, defineEmits, defineProps } from 'vue';
   import { PlusOutlined } from '@ant-design/icons-vue';
-  import { Button, Form, Modal, notification, type UploadProps } from 'ant-design-vue';
+  import { Button, Form, Modal, notification } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
   import { generateQuestions } from '@/api/backend/api/openai';
   const props = defineProps({
     exam: Array,
   });
+
   interface FormState {
     examId: number;
   }
   const formState = ref<FormState>({
     examId: 0,
   });
-  const fileList = ref<UploadProps['fileList']>([]);
+
   const emit = defineEmits(['update-list']);
   const visible = ref<boolean>(false);
   const { t } = useI18n();
+
   const showModal = () => {
     visible.value = true;
     console.log(props.exam);
-    (formState.value.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0),
-      (fileList.value = []);
+    (formState.value.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0);
   };
-  const beforeUpload = (file) => {
-    fileList.value = [file];
-    return false;
+
+  const fileInput = ref<HTMLInputElement | null>(null);
+  const fileName = ref<string | null>(null);
+
+  const handleFileChange = () => {
+    if (fileInput.value?.files && fileInput.value.files.length > 0) {
+      fileName.value = fileInput.value.files[0].name;
+    } else {
+      fileName.value = null;
+    }
   };
 
   const createFunc = async () => {
-    if ((fileList.value ?? []).length === 0) {
+    if (!fileName.value) {
       notification.error({
         message: t('common.error'),
         description: t('routes.exam.require_document'),
       });
       return;
     } else {
-      const res = await generateQuestions(fileList.value, formState.value.examId);
+      const res = await generateQuestions(fileInput.value?.files, formState.value.examId);
       if (!res.ok) {
         notification.success({
           message: t('common.success'),
@@ -125,4 +132,36 @@
   };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="css" scoped>
+  .file-input {
+    position: relative;
+    display: inline-block;
+  }
+
+  .file-input input[type='file'] {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    display: block;
+    width: 0;
+    height: 0;
+  }
+
+  .file-input label {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .file-input label:hover {
+    background-color: #0056b3;
+  }
+
+  .file-input label i {
+    margin-right: 0.5rem;
+  }
+</style>

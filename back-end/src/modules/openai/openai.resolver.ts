@@ -9,6 +9,7 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import {
   ApiOkResponse,
@@ -25,7 +26,7 @@ import {
   OpenAiKeyInput,
   OpenAiKeyOutput,
 } from './openai.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UploadInput } from '../upload/dto/UploadFile.dto';
 
 @ApiTags('Apikey')
@@ -37,35 +38,21 @@ export class ApikeyController {
   @Put('/update-apikey')
   @ApiOkResponse({ type: OpenAiKeyOutput })
   async updateApiKey(@CurrentUser() user: User, @Body() input: OpenAiKeyInput) {
+    console.log(user);
     return this.apikeyService.updateApiKeyOpenAI(user, input);
   }
   // cho phép gửi file qua form data để tạo đề thi
   @ApiOperation({
     summary: 'generate questions',
   })
+  @Roles(['Any'])
   @Post('generate/:examId')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('files'))
   async generateQuestions(
-    // @UploadedFile() file: Express.Multer.File,
-    // @Body('storagePath') storagePath: string,
+    @CurrentUser() user: User,
+    @UploadedFiles() files: Array<Express.Multer.File>,
     @Param('examId') examId: number,
   ) {
-    console.log(storagePath);
-    console.log(file);
-    
-    return this.apikeyService.generateQuestions(file, examId);
+    return this.apikeyService.generateQuestionsWithGemini(files, examId,user);
   }
-  // @Roles(['Any'])
-  // @UseInterceptors(FileInterceptor('file'))
-  // @Post('generate/:id')
-  // async generateQuestions(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @UploadedFile() file: Express.Multer.File,
-  //   @Body('storagePath') storagePath: string,
-  // ) {
-  //   console.log(storagePath);
-  //   console.log(Object.values(file));
-
-  //   return this.apikeyService.generateQuestions(file, id);
-  // }
 }

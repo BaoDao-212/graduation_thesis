@@ -39,6 +39,8 @@ export class FirebaseService {
   }
   async uploadFile(file: Express.Multer.File, storagePath: string) {
     try {
+      console.log(file);
+      
       let storageName;
       let metatdata: UploadMetadata;
       let buffer;

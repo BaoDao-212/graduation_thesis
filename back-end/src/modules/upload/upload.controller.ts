@@ -25,6 +25,7 @@ export class UploadController {
     @UploadedFile() file: Express.Multer.File,
     @Body() { storagePath }: UploadInput,
   ) {
+    console.log(file);
     return this.uploadService.uploadFile(file, storagePath);
   }
 

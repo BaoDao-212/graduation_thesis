@@ -9,9 +9,7 @@ import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Apikey, User,Exam]),
-  MulterModule.register({
-    dest: './uploads',
-  }),],
+ ],
   providers: [ApikeyService, ApikeyController],
   controllers: [ApikeyController],
 })
