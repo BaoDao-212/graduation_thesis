@@ -143,8 +143,9 @@ async getExam(id: number): Promise<ExamOutput> {
     .leftJoinAndSelect('question.answers', 'answer')
     .select(['exam.id','exam.name','exam.level','exam.status','exam.content'])
     .addSelect(['question.id','question.content'])
-    .addSelect(['answer.id', 'answer.answer'])
+    .addSelect(['answer.id', 'answer.answer','answer.isCorrect'])
     .getOne();
+    console.log(exam);
     if (!exam) {
       return createError('Exam', 'Exam not found');
     }

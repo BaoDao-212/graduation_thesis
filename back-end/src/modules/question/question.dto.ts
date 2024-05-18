@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Post, PostStatus } from 'src/entities/post.entity';
 import { Question, QuestionLevel } from 'src/entities/question.entity';
-import { User } from 'src/entities/user.entity';
 import { CoreOutput } from 'src/modules/common/output.dto';
 
 export class QuestionInput {
@@ -29,8 +27,8 @@ export class QuestionOutput extends CoreOutput {
   question?: Question;
 }
 export class AnswerInput {
-  @ApiProperty({ description: 'content' })
-  content: string;
+  @ApiProperty({ description: 'answer' })
+  answer: string;
   @ApiProperty({ description: 'is correct' })
   isCorrect: boolean;
 }
