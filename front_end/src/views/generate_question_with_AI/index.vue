@@ -12,27 +12,12 @@
             </span>
           </div>
           <AddAssistant />
-          <New :exam="listNameExam"/>
-          <!-- <Button
-            v-if="error || (option && option.length > 0) || !done"
-            type="primary"
-            @click="getOption"
-            ><DeploymentUnitOutlined /> {{ t('routes.generate_question.new') }}</Button
-          >
-          <Button v-else type="primary" disabled
-            ><DeploymentUnitOutlined /> {{ t('routes.generate_question.new') }}</Button
-          > -->
+          <New :exam="listNameExam" @update-list="updateList" />
         </div>
       </template>
-      <div v-if="!error">
-        <div
-          v-if="option.length == 0 && done"
-          style="display: flex; justify-content: center; min-height: 700px; align-items: center"
-        >
-          <Spin size="large" tip="Loading..."> </Spin>
-        </div>
+      <div>
         <div>
-          <div v-for="question in option" :key="question.content">
+          <div v-for="question in listQuestion" :key="question.content">
             <Card>
               <div
                 v-if="question && question.content"
@@ -45,13 +30,9 @@
               >
                 <div style="display: flex; flex-direction: row"
                   ><div>{{ question.index }},</div>
-                  <div v-html="question.content"> </div>
+                  <div> {{ question.content }}</div>
                 </div>
-                <ChangeQuestion
-                  :question="question"
-                  :category="listCategory"
-                  @update-list="updateList"
-                />
+                <ChangeQuestion :question="question" :examId="examId" @update-list="updateListAfterReview" />
               </div>
               <div
                 v-for="(answer, aIndex) in question.answers"
@@ -64,21 +45,22 @@
                 </div>
                 <div v-else> {{ abcdefgh[aIndex] }}. {{ answer.content }} </div>
               </div>
+              <div v-if="question.explanation"> </div>
+              <div style="font-weight: 600; margin-top: 10px">Explanation</div>
+              <div>{{ question.explanation }}</div>
             </Card>
           </div>
         </div>
       </div>
-      <div v-else>
-        <Result status="500" title="" :sub-title="t('routes.generate_question.error')"> </Result>
-      </div> </Card
-  ></div>
+    </Card></div
+  >
 </template>
 
 <script setup lang="ts">
   import { onBeforeMount, ref } from 'vue';
   import { CheckOutlined, LeftOutlined } from '@ant-design/icons-vue';
-  import { Card, Result, Spin, notification } from 'ant-design-vue';
-  import ChangeQuestion from './openAI/review.vue';
+  import { Card, notification } from 'ant-design-vue';
+  import ChangeQuestion from './component/review.vue';
   import { useI18n } from '@/hooks';
   import Storage from '@/utils/Storage';
   import New from './component/new.vue';
@@ -86,26 +68,12 @@
   import to from '@/utils/awaitTo';
   import { getExamNameList } from '@/api/backend/api/exam';
   const { t } = useI18n();
-  const error = ref(false);
   const show = ref(true);
-  const done = ref(true);
-  interface Answer {
-    content: string;
-    isCorrect: boolean;
-  }
-
-  interface Question {
-    content: string;
-    answers: Answer[];
-    index: number;
-  }
-  const listCategory = ref();
-  const option = ref<Question[]>([]);
+  const listQuestion = ref();
   const user = ref(Storage.get('PROFILE'));
   console.log(user.value);
   onBeforeMount(async () => {
     await getDataExamName();
-    
   });
   const listNameExam = ref();
   const abcdefgh = ref(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M']);
@@ -121,29 +89,17 @@
       listNameExam.value = res.exams;
     }
   };
-  // const getOption = async () => {
-  //   try {
-  //     option.value = [];
-  //     error.value = false;
-  //     done.value = true;
-  //     const response = await axios.get(
-  //       `http://localhost:7000/openai/allquestion?language=${lang.value}`,
-  //     );
-  //     console.log(response);
-
-  //     option.value = response.data;
-  //     console.log(option.value);
-  //     option.value.forEach((e, index) => (e.index = index + 1));
-  //   } catch (e) {
-  //     error.value = true;
-  //     console.error('Error calling API:', e);
-  //   }
-  // };
+  const examId = ref();
   const updateList = async (newData) => {
-    show.value = false;
-    option.value = option.value.filter((user) => user.index != newData);
-    if (option.value.length == 0) done.value = false;
-    option.value.forEach((e, index) => (e.index = index + 1));
+    listQuestion.value = newData.questions;
+    listQuestion.value.forEach((e, index) => (e.index = index + 1));
+    examId.value = newData.examId;
+    setTimeout(() => {
+      show.value = true;
+    }, 10);
+  };
+  const updateListAfterReview = async (index) => {
+    listQuestion.value =listQuestion.value.filter((e) => e.index !== index);
     setTimeout(() => {
       show.value = true;
     }, 10);

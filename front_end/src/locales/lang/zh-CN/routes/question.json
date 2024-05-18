@@ -10,10 +10,10 @@
   "create": "Thêm câu hỏi",
   "update": "Sửa câu hỏi",
   "delete": "Xóa câu hỏi",
-  "explaination": "Chú giải",
+  "explanation": "Chú giải",
   "placeholder": {
     "name": "Nhập tên câu hỏi",
-    "explaination": "Nhập chú giải",
+    "explanation": "Nhập chú giải",
     "exam": "Chọn bộ đề",
     "level": "Chọn cấp độ"
   },

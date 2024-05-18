@@ -802,10 +802,21 @@ declare namespace API {
   };
   type CreateQuestionDto = {
     content: string;
-    explaination: string;
+    explanation: string;
     level: ExamLevel;
     examId: number;
   };
+  type CreateQuestionAndAnswerDto = {
+    content: string;
+    explanation: string;
+    level: ExamLevel;
+    answers: AnswerDto[];
+  };
+  type AnswerDto = {
+    answer: string;
+    isCorrect: boolean;
+  };
+
   type CreateAnswerDto = {
     answer: string;
     isCorrect: boolean;

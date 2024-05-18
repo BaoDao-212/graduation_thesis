@@ -45,8 +45,8 @@
           <template v-if="column.dataIndex === 'index'">
             <span>{{ $t('routes.exam.table.id') }}</span>
           </template>
-          <template v-else-if="column.dataIndex === 'explaination'">
-            <span>{{ $t('routes.question.explaination') }}</span>
+          <template v-else-if="column.dataIndex === 'explanation'">
+            <span>{{ $t('routes.question.explanation') }}</span>
           </template>
           <template v-else-if="column.dataIndex === 'createdAt'">
             <span>{{ $t('routes.exam.table.createdAt') }}</span>
@@ -175,7 +175,7 @@
         index: listQuestion.value.length + 1,
         id: data.id,
         content: data.content,
-        explaination: data.explaination,
+        explanation: data.explanation,
         level: data.level,
         createdAt: new Date(),
       });
@@ -199,7 +199,7 @@
       minWidth: 180,
     },
     {
-      dataIndex: 'explaination',
+      dataIndex: 'explanation',
       align: 'left',
       width: 250,
     },

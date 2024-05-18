@@ -30,7 +30,6 @@ const baseApiUrl = import.meta.env.VITE_BASE_API_URL;
 const controller = new AbortController();
 const service = axios.create({
   baseURL: baseApiUrl,
-  timeout: 6000,
   signal: controller.signal,
 });
 
@@ -87,8 +86,6 @@ service.interceptors.response.use(
   },
   (error) => {
     if (!(error instanceof CanceledError)) {
-      console.log('err' + error); // for debug
-
       // 处理 422 或者 500 的错误异常提示
       const errMsg = error?.response?.data?.message ?? UNKNOWN_ERROR;
       $message.error({ content: errMsg, key: errMsg });

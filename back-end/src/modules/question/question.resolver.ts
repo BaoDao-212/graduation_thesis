@@ -8,7 +8,7 @@ import {
 import { Roles } from '../auth/role.decorator';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from 'src/entities/user.entity';
-import { QuestionInput, CreateQuestionOutput } from './question.dto';
+import { QuestionInput, CreateQuestionOutput, CreateQuestioAndAnswerInput } from './question.dto';
 import { QuestionService } from './question.servive';
 
 
@@ -50,5 +50,12 @@ export class QuestionController {
   @Put(':id')
   async updateQuestion(@Param('id', ParseIntPipe) id: number, @CurrentUser() currentUser: User,@Body() input: QuestionInput) {
     return this.questionService.updateQuestion(input,currentUser,id );
+  }
+  // thêm bộ câu hỏi và mảng câu trả lời đi kèm
+  @ApiOperation({summary: 'add answer to question'})
+  @Roles(['Any'])
+  @Post('question-answer/:id')
+  async addAnswerToQuestion(@Param('id', ParseIntPipe) id: number, @CurrentUser() currentUser: User,@Body() input: CreateQuestioAndAnswerInput) {
+    return this.questionService.addQuestionAndAnswer(input,currentUser,id );
   }
 }

@@ -19,14 +19,14 @@
       class="d-flex justify-content-center align-items-center"
     >
       <Form.Item
-        :label="t('routes.exam.table.content')"
+      :label="t('routes.exam.table.content')"
         name="answer"
         :rules="[{ required: true, message: t('routes.exam.modal.required.content') }]"
       >
         <Input
-          v-model:value="formState.answer"
-          class="border border-primary rounded-2"
-          :placeholder="t('routes.exam.modal.placeholder.content')"
+        :label="t('routes.answer.table.isCorrect')"
+        name="correct"
+        :rules="[{ required: true, message: '' }]"
         >
         </Input>
       </Form.Item>

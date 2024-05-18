@@ -27,7 +27,7 @@ export class Question extends BaseEntity {
     
     @Column({ nullable: true })
     @ApiProperty()
-    explaination?: string;
+    explanation?: string;
     
     @Column({ nullable: true ,default:QuestionLevel.NORMAL})
     @ApiProperty()

@@ -20,15 +20,16 @@ export class AnswerListOutput extends CoreOutput {
 }
 export class GenerateAnswerInput {
   @ApiProperty({ description: 'file' })
-  file: any;
-  @ApiProperty({ description: 'storagePath' })
-  storagePath: string;
+  file?: any;
+  @ApiProperty({ description: 'idea' })
+  idea?: string;
 }
 export class GenerateQuestionsOutput extends CoreOutput {
   @ApiProperty({ description: 'questions' })
   questions?: any;
 }
-export const prompt1= `Create a set of about 20 questions with answers in json format in English and add it to the file. let me download it. The questions will range from easy, medium, difficult and very difficult. Difficult and very difficult level questions require more in-depth knowledge
+export const prompt0=" From the contents of the file above,"
+export const prompt1= ` Create a set of about 10 questions with answers in json format in English and add it to the file. let me download it. The questions will range from easy(0), medium(1), difficult(2) and very difficult(3). Difficult and very difficult level questions require more in-depth knowledge
 The exam content is to test understanding and application of`;
 export const prompt2 = `
 With output of the questions in json format:
@@ -40,7 +41,8 @@ With output of the questions in json format:
           { "content": "lspci", "isCorrect": true },
           { "content": "uname -a", "isCorrect": false }
         ],
-        "explainCorrectAnswer": "lspci: A command-line tool in Linux designed to display detailed information about PCI (Peripheral Component Interconnect) devices recognized by the kernel, including ID, name, manufacturer, and various other parameters."
+      "level": 1,
+        "explanation": "lspci: A command-line tool in Linux designed to display detailed information about PCI (Peripheral Component Interconnect) devices recognized by the kernel, including ID, name, manufacturer, and various other parameters."
       }
     ]
     Note: The question must have at least 4-5 options, and there should be explanations for the correct answers.

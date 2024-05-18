@@ -51,8 +51,9 @@ export class ApikeyController {
   async generateQuestions(
     @CurrentUser() user: User,
     @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() { idea }: GenerateAnswerInput,
     @Param('examId') examId: number,
   ) {
-    return this.apikeyService.generateQuestionsWithGemini(files, examId,user);
+    return this.apikeyService.generateQuestionsWithGemini(files, examId,user,idea);
   }
 }

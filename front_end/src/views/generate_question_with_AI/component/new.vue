@@ -12,6 +12,7 @@
     @ok="createFunc"
   >
     <Form
+      v-if="!isSuccessful"
       :model="formState"
       layout="vertical"
       autocomplete="off"
@@ -36,12 +37,24 @@
       </Form.Item>
       <Form.Item v-else>Please create an exam before generating questions</Form.Item>
       <Form.Item
+        :label="t('routes.exam.table.content')"
+        name="content"
+        :rules="[{ required: true, message: t('routes.exam.modal.required.content') }]"
+      >
+        <Input
+          v-model:value="formState.content"
+          class="border border-primary rounded-2"
+          :placeholder="t('routes.exam.modal.placeholder.content')"
+        >
+        </Input>
+      </Form.Item>
+      <Form.Item
         :label="t('routes.exam.document')"
         name="correct"
         :rules="[{ required: true, message: '' }]"
       >
         <div class="file-input">
-          <input type="file" ref="fileInput" id="file-input" required accept=".docx" @change="handleFileChange" />
+          <input type="file" ref="fileInput" id="file-input" required @change="handleFileChange" />
           <label for="file-input">
             <i class="fas fa-upload"></i>
             <span>{{ fileName || 'Chọn tệp' }}</span>
@@ -50,20 +63,14 @@
         </div>
       </Form.Item>
     </Form>
+
+    <Spin v-else size="large" tip="Loading..."> </Spin>
     <template #footer>
       <div class="flex justify-end mr-2 mb-3">
         <a-button @click="visible = false">
           {{ $t('common.cancelText') }}
         </a-button>
-        <Button
-          v-if="fileName"
-          html-type="submit"
-          type="primary"
-          @click="createFunc()"
-        >
-          {{ $t('common.okText') }}
-        </Button>
-        <Button v-else html-type="submit" disabled>
+        <Button html-type="submit" type="primary" @click="createFunc()">
           {{ $t('common.okText') }}
         </Button>
       </div>
@@ -74,18 +81,20 @@
 <script lang="ts" setup>
   import { ref, defineEmits, defineProps } from 'vue';
   import { PlusOutlined } from '@ant-design/icons-vue';
-  import { Button, Form, Modal, notification } from 'ant-design-vue';
+  import { Button, Form, Input, Modal, Spin, notification } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
   import { generateQuestions } from '@/api/backend/api/openai';
   const props = defineProps({
     exam: Array,
   });
-
+  const isSuccessful = ref<boolean>(false);
   interface FormState {
     examId: number;
+    content: string;
   }
   const formState = ref<FormState>({
     examId: 0,
+    content: '',
   });
 
   const emit = defineEmits(['update-list']);
@@ -93,9 +102,11 @@
   const { t } = useI18n();
 
   const showModal = () => {
+    isSuccessful.value = false;
     visible.value = true;
     console.log(props.exam);
-    (formState.value.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0);
+    formState.value.content = '';
+    formState.value.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0;
   };
 
   const fileInput = ref<HTMLInputElement | null>(null);
@@ -110,24 +121,36 @@
   };
 
   const createFunc = async () => {
-    if (!fileName.value) {
+    console.log(formState.value.examId);
+    if (!fileName.value && formState.value.content.trim() === '') {
       notification.error({
         message: t('common.error'),
         description: t('routes.exam.require_document'),
       });
-      return;
     } else {
-      const res = await generateQuestions(fileInput.value?.files, formState.value.examId);
-      if (!res.ok) {
+      isSuccessful.value = true;
+      const res = await generateQuestions(
+        fileInput.value?.files as FileList,
+        formState.value.examId,
+        formState.value.content,
+      );
+      if (res.ok) {
         notification.success({
           message: t('common.success'),
           description: t('routes.question.notification.create_success'),
         });
-        emit('update-list', formState.value);
+        emit('update-list', { questions: res.questions, examId: formState.value.examId });
+        formState.value.content = '';
         setTimeout(() => {
           visible.value = false;
         }, 10);
+      } else {
+        notification.error({
+          message: t('common.error'),
+          description: res.error.message,
+        });
       }
+      isSuccessful.value = false;
     }
   };
 </script>

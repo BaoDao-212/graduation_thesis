@@ -57,3 +57,18 @@ export async function generateQuestions(file: any, examId: number, options?: Req
     ...(options || {}),
   });
 }
+// TODO: thêm câu hỏi và đáp án vào 1 đề thi
+export async function createQuestionAndExam(
+  examId: number,
+  body: API.CreateQuestionAndAnswerDto,
+  options?: RequestOptions,
+) {
+  return request<any>(`/api/question/question-answer/${examId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

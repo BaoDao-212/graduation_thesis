@@ -33,14 +33,14 @@
         </Input>
       </Form.Item>
       <Form.Item
-        :label="t('routes.question.explaination')"
-        name="explaination"
-        :rules="[{ required: true, message: t('routes.question.placeholder.explaination') }]"
+        :label="t('routes.question.explanation')"
+        name="explanation"
+        :rules="[{ required: true, message: t('routes.question.placeholder.explanation') }]"
       >
         <Input
-          v-model:value="formState.explaination"
+          v-model:value="formState.explanation"
           class="border border-primary rounded-2"
-          :placeholder="t('routes.question.placeholder.explaination')"
+          :placeholder="t('routes.question.placeholder.explanation')"
         >
         </Input>
       </Form.Item>
@@ -65,7 +65,7 @@
         v-if="
           questionOld &&
           ((questionOld.content && formState.content != questionOld.content) ||
-            (questionOld.explaination && formState.explaination != questionOld.explaination) ||
+            (questionOld.explanation && formState.explanation != questionOld.explanation) ||
             Number(level) != Number(questionOld.level) ||
             (questionOld.exam.id && formState.examId != questionOld.exam.id))
         "
@@ -91,7 +91,7 @@
   import { useRoute } from 'vue-router';
   import ListAnswer from '@/views/answer/index.vue';
   interface FormState {
-    explaination: string;
+    explanation: string;
     content: string;
     level: ExamLevel;
     examId: number;
@@ -104,7 +104,7 @@
     VERY_HARD = 3,
   }
   const formState = ref<FormState>({
-    explaination: '',
+    explanation: '',
     content: '',
     level: ExamLevel.NORMAL,
     examId: 0,
@@ -133,7 +133,7 @@
       formState.value.level = res.question.level;
       level.value = res.question.level.toString() ?? '';
       formState.value.content = res.question.content ?? '';
-      formState.value.explaination = res.question.explaination ?? '';
+      formState.value.explanation = res.question.explanation ?? '';
       formState.value.examId = res.question.exam.id ?? 0;
     } else {
       notification.error({
@@ -143,9 +143,9 @@
     }
   });
   const update = async () => {
-    const { content, explaination } = formState.value;
+    const { content, explanation } = formState.value;
     formState.value.level = Number(level.value);
-    if (content.trim() == '' || explaination.trim() == '') {
+    if (content.trim() == '' || explanation.trim() == '') {
       return notification.warning({
         message: t('common.warning'),
         description: t('common.warn_message_empty'),

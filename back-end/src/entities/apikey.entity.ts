@@ -22,10 +22,6 @@ export class Apikey extends BaseEntity {
   @ApiProperty()
   apikey?: string;
 
-  @Column({ nullable: true })
-  @ApiProperty()
-  assistantId?: string;
-
   @OneToOne(() => User, (user) => user.id)
   @JoinColumn()
   user: User;

@@ -10,10 +10,10 @@
     "create":"Create question",
     "update":"Update question",
     "delete": "Delete question",
-    "explaination": "Explaination",
+    "explanation": "explanation",
     "placeholder": {
       "name": "Please enter question name",
-      "explaination": "Please enter explanation",
+      "explanation": "Please enter explanation",
       "exam": "Please select exam",
       "level": "Please select level"
       },
@@ -29,7 +29,8 @@
     "notification":{
       "create_success": "Created question successfully",
       "update_success": "Updated question successfully",
-      "delete_success": "Deleted question successfully"
+      "delete_success": "Deleted question successfully",
+      "create_fail": "Created question failed"
     },
     "empty":"Currently, there are no exams, please create a new one"
 }

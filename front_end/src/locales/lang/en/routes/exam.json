@@ -33,8 +33,9 @@
     }
   },
   "document": "Document",
-  "require_document": "Document is required",
+  "require_document": "Document or description about exam is required",
   "OpenAI_apikey":"OpenAI ApiKey",
+
   "success":"Created assistant with OpenAI successfully",
   "createdAssistant":"Create assistant with OpenAI"
 }

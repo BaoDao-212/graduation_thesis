@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { createError } from '../common/utils/createError';
 import { Exam } from 'src/entities/exam.entity';
 import { Question } from 'src/entities/question.entity';
-import { QuestionInput, CreateQuestionOutput, ListQuestionOutput, QuestionOutput } from './question.dto';
+import { QuestionInput, CreateQuestionOutput, ListQuestionOutput, QuestionOutput, CreateQuestioAndAnswerInput } from './question.dto';
 
 @Injectable()
 export class QuestionService {
@@ -19,7 +19,7 @@ export class QuestionService {
     currentUser: User,
   ): Promise<CreateQuestionOutput> {
     try {
-      const { examId, content, explaination,level } = input;
+      const { examId, content, explanation,level } = input;
       const exam = await this.examRepo.findOne(
         {
 
@@ -36,7 +36,7 @@ export class QuestionService {
       return createError('Exam', 'You are not allowed to create question in this exam')
       const question = await this.questionRepo.create({
         content,
-        explaination,
+        explanation,
         exam,
         level,
       });
@@ -108,7 +108,7 @@ export class QuestionService {
   // cập nhật dữ liệu cho một câu hỏi
   async updateQuestion(input: QuestionInput, currentUser: User,questionId:number): Promise<QuestionOutput> {
     try {
-      const { examId, content, explaination,level } = input;
+      const { examId, content, explanation,level } = input;
       const question =await this.questionRepo.findOne({
         where:{id:questionId},
         relations:{
@@ -134,7 +134,7 @@ export class QuestionService {
       return createError('Exam', 'You are not allowed to create question in this exam')
       question.exam= exam;
       question.content=content;
-      question.explaination=explaination;
+      question.explanation=explanation;
       question.level=level;
       await this.questionRepo.save(question);
       return {
@@ -146,4 +146,37 @@ export class QuestionService {
       return createError('Server', 'Lỗi server, thử lại sau');
     }
     }
+  // thêm câu hỏi và mảng câu trả lời 
+  async addQuestionAndAnswer(input: CreateQuestioAndAnswerInput, currentUser: User,examId:number): Promise<QuestionOutput> {
+    try {
+      const {answers,content,level,explanation}=input;
+      const exam=await this.examRepo.findOne({
+        where:{id:examId},
+        relations:{
+          user:true,
+        }
+      });
+      if(!exam) return createError('Exam', 'Not found exam');
+      if(exam.user.id!==currentUser.id) return createError('Exam', 'You are not allowed to add question in this exam');
+      const question=await this.questionRepo.create({
+        content,
+        explanation,
+        level,
+        exam,
+      });
+      await this.questionRepo.save(question);
+      for(const answer of answers){
+        await this.questionRepo.createQueryBuilder().relation(Question,'answers').of(question).add({
+          content:answer.content,
+          isCorrect:answer.isCorrect,
+        });
+      }
+      return {
+        ok:true,
+      }
+    }
+    catch (error) {
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
 }

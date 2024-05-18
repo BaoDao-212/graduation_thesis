@@ -44,14 +44,14 @@
         </Input>
       </Form.Item>
       <Form.Item
-        :label="t('routes.question.explaination')"
-        name="explaination"
-        :rules="[{ required: true, message: t('routes.question.placeholder.explaination') }]"
+        :label="t('routes.question.explanation')"
+        name="explanation"
+        :rules="[{ required: true, message: t('routes.question.placeholder.explanation') }]"
       >
         <Input
-          v-model:value="formState.explaination"
+          v-model:value="formState.explanation"
           class="border border-primary rounded-2"
-          :placeholder="t('routes.question.placeholder.explaination')"
+          :placeholder="t('routes.question.placeholder.explanation')"
         >
         </Input>
       </Form.Item>
@@ -74,7 +74,7 @@
           {{ $t('common.cancelText') }}
         </a-button>
         <Button
-          v-if="formState.content.trim() != '' && formState.explaination.trim() != ''"
+          v-if="formState.content.trim() != '' && formState.explanation.trim() != ''"
           html-type="submit"
           type="primary"
           @click="createFunc()"
@@ -98,7 +98,7 @@
     exam: Array,
   });
   interface FormState {
-    explaination: string;
+    explanation: string;
     content: string;
     level: ExamLevel;
     examId: number;
@@ -110,7 +110,7 @@
     VERY_HARD = 3,
   }
   const formState = reactive<FormState>({
-    explaination: '',
+    explanation: '',
     content: '',
     level: ExamLevel.NORMAL,
     examId: ((props.exam ?? [])[0] as { id?: number })?.id ?? 0,
@@ -122,13 +122,13 @@
     visible.value = true;
     formState.level = ExamLevel.NORMAL;
     formState.content = '';
-    formState.explaination = '';
+    formState.explanation = '';
     formState.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0;
   };
 
   const createFunc = async () => {
-    const { content, explaination } = formState;
-    if (content.trim() == '' || explaination.trim() == '') {
+    const { content, explanation } = formState;
+    if (content.trim() == '' || explanation.trim() == '') {
       return notification.warning({
         message: t('common.warning'),
         description: t('common.warn_message_empty'),
@@ -145,7 +145,7 @@
         visible.value = false;
       }, 10);
     }
-    formState.explaination = '';
+    formState.explanation = '';
     formState.content = '';
     formState.level = ExamLevel.NORMAL;
     formState.examId = ((props.exam ?? [])[0] as { id?: number })?.id ?? 0;

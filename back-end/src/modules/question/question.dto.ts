@@ -8,8 +8,8 @@ export class QuestionInput {
   @ApiProperty({ description: 'content' })
   content: string;
 
-  @ApiProperty({ description: 'explaination' })
-  explaination?: string;
+  @ApiProperty({ description: 'explanation' })
+  explanation?: string;
 
   @ApiProperty({ description: 'exam id' })
   examId: number;
@@ -27,4 +27,20 @@ export class ListQuestionOutput extends CoreOutput {
 export class QuestionOutput extends CoreOutput {
   @ApiProperty({ description: 'question' })
   question?: Question;
+}
+export class AnswerInput {
+  @ApiProperty({ description: 'content' })
+  content: string;
+  @ApiProperty({ description: 'is correct' })
+  isCorrect: boolean;
+}
+export class CreateQuestioAndAnswerInput extends CoreOutput {
+ @ApiProperty({ description: 'content' })
+ content: string;
+ @ApiProperty({ description: 'explanation' })
+  explanation?: string;
+  @ApiProperty({ description: 'level' }) 
+  level: QuestionLevel;
+  @ApiProperty({ description: 'answers' })
+  answers: AnswerInput[];
 }

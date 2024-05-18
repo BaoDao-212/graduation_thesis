@@ -16,11 +16,16 @@ export async function updateApiKeyOpenAI(body: API.OpenAIKey, options?: RequestO
   });
 }
 // cho phép gửi file qua form data để tạo đề thi
-export async function generateQuestions(file: FileList, examId: number, options?: RequestOptions) {
+export async function generateQuestions(
+  file: FileList,
+  examId: number,
+  idea: string,
+  options?: RequestOptions,
+) {
   const formData = new FormData();
   formData.append('files', file[0]);
   if (file.length > 1) formData.append('files', file[1]);
-  formData.append('storagePath', 'docx');
+  formData.append('idea', idea);
   return request<any>(`/api/openai/generate/${examId}`, {
     method: 'POST',
     headers: {
@@ -29,10 +34,4 @@ export async function generateQuestions(file: FileList, examId: number, options?
     data: formData,
     ...(options || {}),
   });
-  // const res = await axios.post(`${import.meta.env.VITE_BASE_API_URL}/api/openai/generate/${examId}`, formData, {
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //   },
-  // });
-  // return res.data;
 }
