@@ -40,3 +40,10 @@ export async function finishResult(id: number, options?: RequestOptions) {
     ...(options || {}),
   });
 }
+// hàm xem kết quả của một bài làm
+export async function viewResult(id: number, options?: RequestOptions) {
+  return request<any>(`/api/result/view/${id}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

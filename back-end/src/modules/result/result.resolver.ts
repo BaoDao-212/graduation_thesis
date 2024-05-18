@@ -9,7 +9,7 @@ import { Roles } from '../auth/role.decorator';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from 'src/entities/user.entity';
 import {  ResultService } from './result.servive';
-import { DetailResultInput, ResultInput} from './result.dto';
+import { DetailResultInput, ResultInput, ResultSubmitedOutput} from './result.dto';
 
 
 @ApiTags('Result')
@@ -49,5 +49,14 @@ export class ResultController {
   @Get('finish/:id')
   async finishResult(@Param('id', ParseIntPipe) id: number, @CurrentUser() currentUser: User) {
     return this.resultService.calculateScore(id,currentUser);
+  }
+    // hàm xem kết quả của một bài làm
+  @ApiOperation({
+    summary: 'view result',
+  })
+  @Roles(['Any'])
+  @Get('view/:id')
+  async viewResult(@Param('id', ParseIntPipe) id: number, @CurrentUser() currentUser: User) {
+    return this.resultService.viewResult(id,currentUser);
   }
 }

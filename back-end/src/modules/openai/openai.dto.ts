@@ -29,7 +29,7 @@ export class GenerateQuestionsOutput extends CoreOutput {
   questions?: any;
 }
 export const prompt0=" From the contents of the file above,"
-export const prompt1= ` Create a set of about 5 questions with answers in json format in English and add it to the file. let me download it. The questions will range from easy(0), medium(1), difficult(2) and very difficult(3). Difficult and very difficult level questions require more in-depth knowledge
+export const prompt1= ` Create a set of about 20 questions with answers in json format in English and add it to the file. let me download it. The questions will range from easy(0), medium(1), difficult(2) and very difficult(3). Difficult and very difficult level questions require more in-depth knowledge
 The exam content is to test understanding and application of`;
 export const prompt2 = `
 With output of the questions in json format:

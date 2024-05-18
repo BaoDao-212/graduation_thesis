@@ -32,7 +32,9 @@ export class Exam extends BaseEntity {
     @Column({ nullable: true })
     @ApiProperty()
     content?: string;
-    
+    @Column({ default: 45 })
+    @ApiProperty()
+    time:number;
     @Column({ nullable: true,default : ExamLevel.NORMAL })
     @ApiProperty()
     level?: ExamLevel;

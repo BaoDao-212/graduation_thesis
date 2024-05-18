@@ -18,7 +18,8 @@
     "content": "Description",
     "action": "Action",
     "createAt": "Created at",
-    "room": "Room examination"
+    "room": "Room examination",
+    "result_exam":"Result exam"
   },
   "modal": {
     "placeholder": {

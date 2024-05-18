@@ -5,9 +5,10 @@
         <div class="flex" style="justify-content: space-between; align-items: center">
           <div v-if="result">{{ result.exam.name }}</div>
           <div>
-            <a-statistic-countdown v-if="result"
+            <a-statistic-countdown
+              v-if="result"
               title="Countdown"
-                :value="dealine"
+              :value="dealine"
               style="margin-right: 50px"
               @finish="onFinish"
             />
@@ -21,14 +22,21 @@
             :question="q"
             :answers="
               result.detailResult.filter((dr) => dr.question.id == q.id).length > 0
-                ? result.detailResult.filter((dr) => dr.question.id == q.id)[0].answer.map(a=>a.id)
+                ? result.detailResult
+                    .filter((dr) => dr.question.id == q.id)[0]
+                    .answer.map((a) => a.id)
                 : []
             "
           />
         </div>
         <div style="margin-top: 10px; display: flex; justify-content: end">
-          <a-popconfirm :title="t('routes.exam.confirm_submited')" @confirm="finishExamFunc" :okText="t('common.okText')" :cancelText="t('common.cancelText')">
-            <Button type="primary" style="margin-top: 10px; width: 160px" >
+          <a-popconfirm
+            :title="t('routes.exam.confirm_submited')"
+            @confirm="finishExamFunc"
+            :okText="t('common.okText')"
+            :cancelText="t('common.cancelText')"
+          >
+            <Button type="primary" style="margin-top: 10px; width: 160px">
               {{ t('routes.exam.finish') }}
             </Button>
           </a-popconfirm>
@@ -58,7 +66,7 @@
   const exam = ref();
   const { t } = useI18n();
   const route = useRoute();
-  const finishExamFunc = async() => {
+  const finishExamFunc = async () => {
     const [_err, res] = await to(finishResult(Number(route.params.id)));
     if (!res.ok) {
       notification.error({
@@ -74,7 +82,7 @@
     console.log('finished!');
   };
   // const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30;
-  const dealine= ref(0);
+  const dealine = ref();
   const getExam = async () => {
     const [_err, res] = await to(getExamDetail(Number(result.value.exam.id)));
     if (!res.ok) {
@@ -97,14 +105,21 @@
         message: t('common.error'),
         description: res.error.message,
       });
-      router.push('/post/list');
+
+      if (res.error.mainReason == 'ER') router.push('/exam/result/view/' + route.params.id);
+      else router.push('/post/list');
     } else {
+      if (res.result.score !== -1) {
+        router.push('/post/list');
+      }
       result.value = res.result;
     }
   };
   onBeforeMount(async () => {
     await getResult();
     await getExam();
-    dealine.value= new Date(result.value.createdAt).getTime() + 1000 * 60 * 60;
+    console.log(result.value.createdAt);
+    dealine.value =
+      new Date(result.value.createdAt).getTime() + 1000 * 60 * result.value.time + 7 * 1000 * 3600;
   });
 </script>

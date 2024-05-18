@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exam } from 'src/entities/exam.entity';
 import { Result } from 'src/entities/result.entity';
 import { CoreOutput } from 'src/modules/common/output.dto';
 
@@ -12,6 +13,12 @@ export class ResultInput {
 export class ResultOutput extends CoreOutput {
   @ApiProperty()
   result?: Result;
+}
+export class ResultSubmitedOutput extends CoreOutput {
+  @ApiProperty()
+  result?: Result;
+  @ApiProperty()
+  exam?: Exam;
 }
 export class DetailResultInput {
   @ApiProperty({description: 'question id'})

@@ -18,7 +18,8 @@
     "content": "Mô tả",
     "action": "Hành động",
     "createAt": "Ngày tạo",
-    "room": "Phòng thi"
+    "room": "Phòng thi",
+    "result_exam": "Kết quả bài thi"
   },
   "modal": {
     "placeholder": {

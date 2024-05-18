@@ -145,7 +145,6 @@ async getExam(id: number): Promise<ExamOutput> {
     .addSelect(['question.id','question.content'])
     .addSelect(['answer.id', 'answer.answer','answer.isCorrect'])
     .getOne();
-    console.log(exam);
     if (!exam) {
       return createError('Exam', 'Exam not found');
     }
