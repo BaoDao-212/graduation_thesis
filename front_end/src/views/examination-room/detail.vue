@@ -7,6 +7,7 @@
         </div>
       </template>
       <div v-if="exam" class="flex" style="flex-direction: column; justify-content: center">
+        <DetailExam :detail="result" :question="exam.questions"/>
         <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; overflow-y: auto">
           <QuestionCard
             v-for="q in exam.questions"
@@ -35,7 +36,8 @@
   import to from '@/utils/awaitTo';
   import { useRoute } from 'vue-router';
   import QuestionCard from './component/question-submited.vue';
-import { viewResult } from '@/api/backend/api/room';
+  import DetailExam from './component/detail-exam.vue';
+  import { viewResult } from '@/api/backend/api/room';
   const exam = ref();
   const { t } = useI18n();
   const route = useRoute();

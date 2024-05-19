@@ -116,6 +116,8 @@ export class ResultService {
   ): Promise<ResultOutput> {
     try {
       const { answerId, resultId, questionId } = input;
+      console.log(input);
+      
       const result = await this.resultRepo.findOne({
         where: {
           id: resultId,
@@ -152,7 +154,9 @@ export class ResultService {
         },
         relations: ['question'],
       });
-      if (!answer) {
+      console.log(answer);
+      
+      if (answer.length==0) {
         return createError('Answer', 'Answer not found');
       }
 
@@ -236,8 +240,8 @@ export class ResultService {
           'result.time',
         ])
         .addSelect(['exam.id', 'exam.name', 'exam.level', 'exam.status'])
-        .addSelect(['detailResult.id', 'detailResult.question'])
-        .addSelect(['question.id', 'question.content'])
+        .addSelect(['detailResult.id', 'detailResult.question','detailResult.score'])
+        .addSelect(['question.id', 'question.content','question.level'])
         .addSelect(['answer.id', 'answer.answer'])
         .getOne();
       if (!result) {
@@ -259,7 +263,7 @@ export class ResultService {
           'exam.status',
           'exam.content',
         ])
-        .addSelect(['question.id', 'question.content'])
+        .addSelect(['question.id', 'question.content','question.explanation','question.level'])
         .addSelect(['answer.id', 'answer.answer', 'answer.isCorrect'])
         .getOne();
       if (!exam) {

@@ -7,6 +7,7 @@ import { setupIcons } from './components/basic/icon';
 import { setupStore } from '@/store';
 import { setupI18n } from '@/locales';
 import { setupAntd, setupAssets, setupGlobalMethods } from '@/plugins';
+import VueApexCharts from "vue3-apexcharts";
 const app = createApp(App);
 
 function setupPlugins() {
@@ -35,6 +36,7 @@ async function setupApp() {
   app.use(vue3GoogleLogin, {
     clientId: import.meta.env.VITE_APP_BASE_GOOGLE_LOGIN,
   });
+  app.use(VueApexCharts);
   app.mount('#app');
 }
 

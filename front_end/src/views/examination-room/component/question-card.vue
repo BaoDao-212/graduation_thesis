@@ -66,6 +66,7 @@
     resultId: Number(route.params.id),
   });
   const submit = async () => {
+    form.value.questionId = props.question.id;
     const res = await submitAnswer(form.value);
     if (!res.ok) {
       notification.error({

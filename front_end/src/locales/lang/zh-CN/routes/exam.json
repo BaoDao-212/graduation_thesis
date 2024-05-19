@@ -9,6 +9,9 @@
   "submit":"Nộp",
   "finish":"Kết thúc bài làm",
   "confirm_submited": "Bạn có chắc chắn muốn nộp bài?",
+  "score": "Điểm",
+  "time":"Thời gian đã sử dụng",
+  "minute":"phút",
   "table": {
     "id": "No",
     "status": "Trạng thái",

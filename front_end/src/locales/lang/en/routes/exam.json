@@ -9,6 +9,9 @@
   "finish": "Finish exam",
   "total": "Total",
   "confirm_submited": "Are you sure you want to submit the exam?",
+  "score": "Score",
+  "time":"Time used",
+  "minute":"minutes",
   "table": {
     "id": "No",
     "status": "Status",
