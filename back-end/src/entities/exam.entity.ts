@@ -3,7 +3,7 @@ import { BaseEntity } from './base.entity';
 import {
   PrimaryGeneratedColumn,
   Column,
-  Entity,ManyToOne,JoinColumn,OneToMany
+  Entity,ManyToOne,JoinColumn,OneToMany,ManyToMany,JoinTable
 } from 'typeorm';
 import { User } from './user.entity';
 import { Question } from './question.entity';
@@ -32,9 +32,11 @@ export class Exam extends BaseEntity {
     @Column({ nullable: true })
     @ApiProperty()
     content?: string;
+
     @Column({ default: 45 })
     @ApiProperty()
     time:number;
+
     @Column({ nullable: true,default : ExamLevel.NORMAL })
     @ApiProperty()
     level?: ExamLevel;
@@ -52,11 +54,16 @@ export class Exam extends BaseEntity {
     @ApiProperty()
     questions: Question
     
-    @ApiProperty()
+     @ApiProperty()
     @Column({ default: 0 })
     numberReviews?: number;
 
     @ApiProperty()
     @Column({ default: 0 })
     averageRating?: number;
+
+    @ManyToMany(()=>User)
+    @JoinTable()
+    @ApiProperty()
+    usersReviewed?:User[]
 }

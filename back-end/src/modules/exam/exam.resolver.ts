@@ -8,7 +8,7 @@ import {
 import { Roles } from '../auth/role.decorator';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from 'src/entities/user.entity';
-import {CreateExamOutput, ExamInput, ExamOutput, ListExamOutput} from './exam.dto';
+import {CreateExamOutput, ExamInput, ExamOutput, ListExamOutput, ReviewExamInput} from './exam.dto';
 import { ExamService } from './exam.servive';
 
 
@@ -72,5 +72,16 @@ export class ExamController {
   @Post('generate/:id')
   async generateQuestions(@Param('id', ParseIntPipe) id: number, @Body() input: any) {
     return this.examService.generateQuestions(input.file, id);
+  }
+  //đánh giá đề thi
+  @ApiOperation({
+    summary: 'review exam',
+  })
+  @Roles(['Any'])
+  @Patch('review')
+  async reviewExam(@Body() input: ReviewExamInput, @CurrentUser() currentUser: User){
+    console.log(input);
+    
+    return this.examService.reviewExam(input,currentUser);
   }
 }

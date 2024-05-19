@@ -12,6 +12,12 @@
   "score": "Điểm",
   "time":"Thời gian đã sử dụng",
   "minute":"phút",
+  "amount":"% câu trả lời đúng",
+  "review":"Đánh giá về  kết quả bài làm",
+  "review_exam":"Bạn cảm thấy đề thi này như nào?",
+  "review_title":"Đánh giá đề thi",
+  "review_success":"Cảm ơn bạn đã đánh giá đề thi",
+  "generate_review":"Tạo đánh giá bài làm với Gemini",
   "table": {
     "id": "No",
     "status": "Trạng thái",

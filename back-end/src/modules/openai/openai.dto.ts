@@ -28,6 +28,16 @@ export class GenerateQuestionsOutput extends CoreOutput {
   @ApiProperty({ description: 'questions' })
   questions?: any;
 }
+export class GenerateReviewInput {
+  @ApiProperty({ description: 'questionIncorrect' })
+  questionIncorrect?: number[];
+  @ApiProperty({ description: 'questionCorrect' })
+  questionCorrect?: number[];
+}
+export class GenerateReviewOutput extends CoreOutput {
+  @ApiProperty({ description: 'eview' })
+  review?: string;
+}
 export const prompt0=" From the contents of the file above,"
 export const prompt1= ` Create a set of about 20 questions with answers in json format in English and add it to the file. let me download it. The questions will range from easy(0), medium(1), difficult(2) and very difficult(3). Difficult and very difficult level questions require more in-depth knowledge
 The exam content is to test understanding and application of`;

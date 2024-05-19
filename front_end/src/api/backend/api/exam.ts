@@ -72,3 +72,19 @@ export async function createQuestionAndExam(
     ...(options || {}),
   });
 }
+//TODO: đánh giá đề thi
+export async function reviewExam(body: API.ReviewExamDto, options?: RequestOptions) {
+  return request<any>(`/api/exam/review`, {
+    method: 'PATCH',
+    data: body,
+    ...(options || {}),
+  });
+}
+// TODO: tạo ra đánh giá tổng quan về bài làm của mình bằng gemini
+export async function generateReviewGemini(body: API.GenerateReviewGeminiDto, options?: RequestOptions) {
+  return request<any>(`/api/openai/review`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}

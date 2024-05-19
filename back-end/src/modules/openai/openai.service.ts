@@ -39,9 +39,7 @@ export class ApikeyService {
       const { openAiKey } = input;
       console.log(openAiKey);
       try {
-        const genAI = new GoogleGenerativeAI(
-          'AIzaSyCLob5fQm05BU4c1VDnCknr6tmxRnylz6Y',
-        );
+        const genAI = new GoogleGenerativeAI(openAiKey);
         const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
         const res = await model.generateContent([{ text: 'Hello' }]);
         const apikey = await this.apikeyRepo.findOne({
@@ -355,13 +353,9 @@ export class ApikeyService {
       const text = response.text();
       let match = text.match(/```json([\s\S]*?)```/);
       let extractedString = match && match[1] ? match[1].trim() : '';
-      console.log(extractedString);
-
       return {
         ok: true,
-        questions: JSON.parse(
-          extractedString
-        ),
+        questions: JSON.parse(extractedString),
       };
     } catch (error) {
       console.log(error);

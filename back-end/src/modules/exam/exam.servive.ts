@@ -4,8 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository,In } from 'typeorm';
 import { createError } from '../common/utils/createError';
-import { ExamInput, CreateExamOutput, ListExamInput, ListExamOutput, ExamOutput} from './exam.dto';
+import { ExamInput, CreateExamOutput, ListExamInput, ListExamOutput, ExamOutput, ReviewExamInput} from './exam.dto';
 import { Exam, ExamStatus } from 'src/entities/exam.entity';
+import { CoreOutput } from '../common/output.dto';
 
 @Injectable()
 export class ExamService {
@@ -180,4 +181,29 @@ async generateQuestions(file: any, examId: number): Promise<any> {
     return createError('Server', 'Lỗi server, thử lại sau');
   }
 }
+// đánh giá đề thi
+async reviewExam(input: ReviewExamInput,currentUser:User): Promise<CoreOutput> {
+  try {
+    const { examId, amount } = input;
+    const exam = await this.examRepo.findOne({
+      where: {
+        id: examId,
+        status: ExamStatus.ACTIVE,
+      },
+      relations: ['usersReviewed'],
+    });
+    if (!exam) {
+      return createError('Exam', 'Không tìm thấy đề thi');
+    }
+    exam.numberReviews = exam.numberReviews + 1;
+    exam.averageRating = exam.averageRating + amount;
+    exam.usersReviewed = [...exam.usersReviewed,currentUser];
+    await this.examRepo.save(exam);
+    return {
+      ok: true,
+    };
+  } catch (error) {
+    return createError('Server', 'Lỗi server, thử lại sau');
+  }
+  }
 }

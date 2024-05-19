@@ -11,6 +11,12 @@
   "confirm_submited": "Are you sure you want to submit the exam?",
   "score": "Score",
   "time":"Time used",
+  "amount":"% of correct answers",
+  "review":"Evaluate the results of the assignment",
+  "review_exam":"How do you feel about this exam?",
+  "review_title":"Review exam",
+  "review_success":"Thank you for your review",
+  "generate_review":"Generate review with Gemini",
   "minute":"minutes",
   "table": {
     "id": "No",

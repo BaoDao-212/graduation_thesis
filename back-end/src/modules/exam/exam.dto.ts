@@ -38,3 +38,10 @@ export class ExamOutput extends CoreOutput {
   @ApiProperty({ description: 'exam' })
   exam?: Exam;
 }
+export class ReviewExamInput {
+  @ApiProperty({ description: 'examId' })
+  examId: number;
+
+  @ApiProperty({ description: 'amount' })
+  amount: number;
+}

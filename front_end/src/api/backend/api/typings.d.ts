@@ -816,7 +816,14 @@ declare namespace API {
     answer: string;
     isCorrect: boolean;
   };
-
+  type ReviewExamDto = {
+    examId: number;
+    amount: number;
+  };
+  type GenerateReviewGeminiDto= {
+    questionCorrect: number[];
+    questionIncorrect: number[];
+  };
   type CreateAnswerDto = {
     answer: string;
     isCorrect: boolean;

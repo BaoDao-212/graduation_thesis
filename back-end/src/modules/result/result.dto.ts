@@ -19,6 +19,10 @@ export class ResultSubmitedOutput extends CoreOutput {
   result?: Result;
   @ApiProperty()
   exam?: Exam;
+  @ApiProperty()
+  isReviewed?: boolean;
+  @ApiProperty()
+  isGeminiKey?: boolean;
 }
 export class DetailResultInput {
   @ApiProperty({description: 'question id'})

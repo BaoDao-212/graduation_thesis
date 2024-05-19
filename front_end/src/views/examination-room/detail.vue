@@ -7,7 +7,7 @@
         </div>
       </template>
       <div v-if="exam" class="flex" style="flex-direction: column; justify-content: center">
-        <DetailExam :detail="result" :question="exam.questions"/>
+        <DetailExam :detail="result" :question="exam.questions" :isGemini="isGeminiKey"/>
         <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; overflow-y: auto">
           <QuestionCard
             v-for="q in exam.questions"
@@ -21,11 +21,9 @@
             "
           />
         </div>
-        <div style="margin-top: 10px; display: flex; justify-content: end">
-          <Button type="primary" style="margin-top: 10px; width: 160px"> Xem đánh giá </Button>
-        </div>
       </div>
     </Card>
+    <ReviewExam v-if="exam"  :is-reviewed="isReviewed" :examId="exam.id"/>
   </div>
 </template>
 
@@ -37,11 +35,15 @@
   import { useRoute } from 'vue-router';
   import QuestionCard from './component/question-submited.vue';
   import DetailExam from './component/detail-exam.vue';
+  import ReviewExam from './component/review-exam.vue';
   import { viewResult } from '@/api/backend/api/room';
   const exam = ref();
   const { t } = useI18n();
   const route = useRoute();
   const result = ref();
+  const isReviewed=ref();
+  const isGeminiKey=ref();
+  
   const getResult = async () => {
     const [_err, res] = await to(viewResult(Number(route.params.id)));
     if (!res.ok) {
@@ -52,6 +54,8 @@
     } else {
       result.value = res.result;
       exam.value = res.exam;
+      isReviewed.value = res.isReviewed;
+      isGeminiKey.value = res.isGeminiKey;
     }
   };
   onBeforeMount(async () => {

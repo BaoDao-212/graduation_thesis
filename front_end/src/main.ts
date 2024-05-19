@@ -1,13 +1,12 @@
 import { createApp } from 'vue';
 import vue3GoogleLogin from 'vue3-google-login';
-import { setupMock } from '../mocks/';
+// import { setupMock } from '../mocks/';
 import App from './App.vue';
 import { setupRouter } from './router';
 import { setupIcons } from './components/basic/icon';
 import { setupStore } from '@/store';
 import { setupI18n } from '@/locales';
 import { setupAntd, setupAssets, setupGlobalMethods } from '@/plugins';
-import VueApexCharts from "vue3-apexcharts";
 const app = createApp(App);
 
 function setupPlugins() {
@@ -23,7 +22,7 @@ function setupPlugins() {
 
 async function setupApp() {
   // 启用 mock
-  await setupMock();
+  // await setupMock();
   fetch(`${import.meta.env.VITE_BASE_API_URL}/user/1`).then((r) => r.json());
 
   // 挂载vuex状态管理
@@ -36,7 +35,6 @@ async function setupApp() {
   app.use(vue3GoogleLogin, {
     clientId: import.meta.env.VITE_APP_BASE_GOOGLE_LOGIN,
   });
-  app.use(VueApexCharts);
   app.mount('#app');
 }
 

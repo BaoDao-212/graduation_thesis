@@ -7,9 +7,10 @@ import { ResultService } from './result.servive';
 import { DetailResult } from 'src/entities/detail-result.entity';
 import { Answer } from 'src/entities/answer.entity';
 import { Question } from 'src/entities/question.entity';
+import { Apikey } from 'src/entities/apikey.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Result,Exam,DetailResult,Question,Answer])],
+  imports: [TypeOrmModule.forFeature([Result,Exam,DetailResult,Question,Answer,Apikey])],
   providers: [ResultService, ResultController],
   controllers: [ResultController],
 })

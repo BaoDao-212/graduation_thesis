@@ -15,6 +15,8 @@ import {
 import { DetailResult } from 'src/entities/detail-result.entity';
 import { Question } from 'src/entities/question.entity';
 import { Answer } from 'src/entities/answer.entity';
+import { Apikey } from 'src/entities/apikey.entity';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 @Injectable()
 export class ResultService {
@@ -26,6 +28,7 @@ export class ResultService {
     @InjectRepository(Question)
     private readonly questionRepo: Repository<Question>,
     @InjectRepository(Answer) private readonly answerRepo: Repository<Answer>,
+    @InjectRepository(Apikey) private readonly apikeyRepo: Repository<Apikey>,
     private dataSource: DataSource,
   ) {}
   async createResult(
@@ -117,7 +120,7 @@ export class ResultService {
     try {
       const { answerId, resultId, questionId } = input;
       console.log(input);
-      
+
       const result = await this.resultRepo.findOne({
         where: {
           id: resultId,
@@ -155,8 +158,8 @@ export class ResultService {
         relations: ['question'],
       });
       console.log(answer);
-      
-      if (answer.length==0) {
+
+      if (answer.length == 0) {
         return createError('Answer', 'Answer not found');
       }
 
@@ -240,8 +243,12 @@ export class ResultService {
           'result.time',
         ])
         .addSelect(['exam.id', 'exam.name', 'exam.level', 'exam.status'])
-        .addSelect(['detailResult.id', 'detailResult.question','detailResult.score'])
-        .addSelect(['question.id', 'question.content','question.level'])
+        .addSelect([
+          'detailResult.id',
+          'detailResult.question',
+          'detailResult.score',
+        ])
+        .addSelect(['question.id', 'question.content', 'question.level'])
         .addSelect(['answer.id', 'answer.answer'])
         .getOne();
       if (!result) {
@@ -263,17 +270,55 @@ export class ResultService {
           'exam.status',
           'exam.content',
         ])
-        .addSelect(['question.id', 'question.content','question.explanation','question.level'])
+        .addSelect([
+          'question.id',
+          'question.content',
+          'question.explanation',
+          'question.level',
+        ])
         .addSelect(['answer.id', 'answer.answer', 'answer.isCorrect'])
         .getOne();
+      const examUser = await this.examRepo.findOne({
+        where: {
+          id: result.exam.id,
+        },
+        relations: ['usersReviewed'],
+      });
+      let isReviewed = false;
+      if (examUser.usersReviewed.map((u) => u.id).includes(currentUser.id)) {
+        isReviewed = true;
+      }
+      const apiKey = await this.apikeyRepo.findOne({
+        where: {
+          user: {
+            id: currentUser.id,
+          },
+        },
+      });
+      if(apiKey){
+        try{
+          const genAI= new GoogleGenerativeAI(apiKey.apikey);
+          const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+          const res = await model.generateContent([{ text: 'Hello' }]);
+        }catch(err){
+         return {
+          ok: true,
+          result,
+          exam,
+          isReviewed,
+          isGeminiKey: false,
+         }
+        }
+      }
       if (!exam) {
         return createError('Exam', 'Exam not found');
       }
-
       return {
         ok: true,
         result,
         exam,
+        isReviewed,
+        isGeminiKey: true,
       };
     } catch (error) {
       console.log(error);
