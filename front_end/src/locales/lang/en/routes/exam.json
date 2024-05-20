@@ -17,6 +17,13 @@
   "review_title":"Review exam",
   "review_success":"Thank you for your review",
   "generate_review":"Generate review with Gemini",
+  "analysis_and_evaluation":"Analysis and evaluation",
+  "positive":"Positive",
+  "negative":"Need to improve",
+  "suggestion":"Suggestion",
+  "reference":"Reference",
+  "overview_exam":"Overview exam",
+  "detail_exam":"Detail exam",
   "minute":"minutes",
   "table": {
     "id": "No",

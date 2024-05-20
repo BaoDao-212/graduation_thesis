@@ -35,3 +35,10 @@ export async function generateQuestions(
     ...(options || {}),
   });
 }
+// TODO: tạo ra đánh giá tổng quan về bài làm của mình bằng gemini
+export async function generateReviewGemini(examId: number, options?: RequestOptions) {
+  return request<any>(`/api/openai/review/${examId}`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

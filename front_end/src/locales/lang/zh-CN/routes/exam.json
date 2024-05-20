@@ -6,18 +6,25 @@
   "list": "Danh sách",
   "exam": "Bộ đề",
   "total": "Tổng",
-  "submit":"Nộp",
-  "finish":"Kết thúc bài làm",
+  "submit": "Nộp",
+  "finish": "Kết thúc bài làm",
   "confirm_submited": "Bạn có chắc chắn muốn nộp bài?",
   "score": "Điểm",
-  "time":"Thời gian đã sử dụng",
-  "minute":"phút",
-  "amount":"% câu trả lời đúng",
-  "review":"Đánh giá về  kết quả bài làm",
-  "review_exam":"Bạn cảm thấy đề thi này như nào?",
-  "review_title":"Đánh giá đề thi",
-  "review_success":"Cảm ơn bạn đã đánh giá đề thi",
-  "generate_review":"Tạo đánh giá bài làm với Gemini",
+  "time": "Thời gian đã sử dụng",
+  "minute": "phút",
+  "amount": "% câu trả lời đúng",
+  "review": "Đánh giá về  kết quả bài làm",
+  "review_exam": "Bạn cảm thấy đề thi này như nào?",
+  "review_title": "Đánh giá đề thi",
+  "review_success": "Cảm ơn bạn đã đánh giá đề thi",
+  "generate_review": "Tạo đánh giá bài làm với Gemini",
+  "analysis_and_evaluation": "Phân tích và đánh giá",
+  "positive": "Tích cực",
+  "negative": "Cần cải thiện",
+  "suggestion": "Đề xuất",
+  "reference": "Tham khảo",
+  "overview_exam": "Tổng quan bài làm",
+  "detail_exam": "Chi tiết bài làm",
   "table": {
     "id": "No",
     "status": "Trạng thái",
@@ -34,17 +41,17 @@
     "placeholder": {
       "name": "Nhập tên bộ đề",
       "content": "Nhập mô tả",
-      "OpenAI_apikey":"Nhập  ApiKey"
+      "OpenAI_apikey": "Nhập  ApiKey"
     },
     "required": {
       "name": "Tên bộ đề không được để trống",
       "content": "Mô tả không được để trống",
-      "OpenAI_apikey":" ApiKey không được để trống"
+      "OpenAI_apikey": " ApiKey không được để trống"
     }
   },
-  "document":"Tài liệu",
-  "require_document":"Yêu cầu tài liệu hoặc mô tả về đề thi",
-  "OpenAI_apikey":" ApiKey",
-  "success":"Thêm trợ lý bằng  thành công",
-  "createdAssistant":"Thêm api key"
+  "document": "Tài liệu",
+  "require_document": "Yêu cầu tài liệu hoặc mô tả về đề thi",
+  "OpenAI_apikey": " ApiKey",
+  "success": "Thêm trợ lý bằng  thành công",
+  "createdAssistant": "Thêm api key"
 }

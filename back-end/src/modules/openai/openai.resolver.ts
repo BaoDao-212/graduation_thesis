@@ -23,6 +23,7 @@ import { User } from 'src/entities/user.entity';
 import { ApikeyService } from './openai.service';
 import {
   GenerateAnswerInput,
+  GenerateReviewInput,
   OpenAiKeyInput,
   OpenAiKeyOutput,
 } from './openai.dto';
@@ -55,5 +56,14 @@ export class ApikeyController {
     @Param('examId') examId: number,
   ) {
     return this.apikeyService.generateQuestionsWithGemini(files, examId,user,idea);
+  }
+  // đánh gía kết qua của bộ đề thi
+  @ApiOperation({
+    summary: 'review exam',
+  })
+  @Roles(['Any'])
+  @Get('review/:examId')
+  async reviewExam(@CurrentUser() user: User,  @Param('examId') examId: number,){
+    return this.apikeyService.reviewExam(user,examId);
   }
 }

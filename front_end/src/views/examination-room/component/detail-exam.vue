@@ -29,17 +29,19 @@
           :series="series"
         />
       </div>
-      <a-popconfirm placement="top" ok-text="Yes" cancel-text="No" :title="t('routes.exam.review')">
+      <Button v-if="props.detail.review" @click="review">{{ t('routes.exam.review') }}</Button>
+      <a-popconfirm v-else placement="top" ok-text="Yes" cancel-text="No" :title="t('routes.exam.review')">
         <template #description>
           <Assistant v-if="!props.isGemini" />
           <div v-else>
             <Button @click="handleGenerateReview">{{ t('routes.exam.generate_review') }}</Button>
           </div>
         </template>
-        <Button @click="review">{{ t('routes.exam.review') }}</Button>
+        <Button >{{ t('routes.exam.review') }}</Button>
       </a-popconfirm>
       <div v-if="showReview">
-        {{ props.detail.review }}
+        <ReviewCard :review ="reviewExam"/>
+       
       </div>
     </Card>
   </div>
@@ -49,34 +51,22 @@
   import { useI18n } from '@/hooks';
   import VueApexCharts from 'vue3-apexcharts';
   import Assistant from './assistant.vue';
+  import ReviewCard from './review-card.vue';
   import { ref } from 'vue';
-  import { generateReviewGemini } from '@/api/backend/api/exam';
+  import { generateReviewGemini } from '@/api/backend/api/openai';
   const { t } = useI18n();
   const review = () => {
-    if (!props.detail.review) {
-      showReview.value = true;
+    if (reviewExam.value) {
+      showReview.value = !showReview.value;
     }
   };
-  interface FomState {
-    questionCorrect: number[];
-    questionIncorrect: number[];
-  }
-  const formState = ref<FomState>({
-    questionCorrect: [],
-    questionIncorrect: [],
-  });
   const handleGenerateReview = async () => {
-    formState.value.questionCorrect = props.detail.detailResult
-      .filter((dr) => dr.score == 1)
-      .map((dr) => dr.question.id);
-    formState.value.questionIncorrect = props.question
-      .filter((q) => !formState.value.questionCorrect.includes(q.id))
-      .map((q) => q.id);
     // call api to generate review
-    const res = await generateReviewGemini(formState.value);
+    const res = await generateReviewGemini(props.detail.id);
     if (res.ok) {
       showReview.value = true;
-    }else{
+      reviewExam.value= JSON.parse(res.data.review);
+    } else {
       notification.error({
         message: t('common.error'),
         description: res.error.message,
@@ -84,7 +74,7 @@
     }
   };
   const showReview = ref(false);
-
+  
   const props = defineProps({
     detail: {
       type: Object,
@@ -99,6 +89,7 @@
       required: true,
     },
   });
+  const reviewExam=ref(JSON.parse(props.detail.review));
   const series = ref([
     {
       name: t('routes.exam.amount'),

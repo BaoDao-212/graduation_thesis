@@ -8,28 +8,31 @@ import { Apikey } from 'src/entities/apikey.entity';
 import { createError } from '../common/utils/createError';
 import {
   GenerateQuestionsOutput,
+  GenerateReviewInput,
+  GenerateReviewOutput,
   OpenAiKeyInput,
   OpenAiKeyOutput,
   prompt0,
   prompt1,
   prompt2,
+  prompt3,
+  prompt4,
+  prompt5,
+  prompt6,
+  prompt7,
 } from './openai.dto';
-import OpenAI from 'openai';
 import { Exam, ExamStatus } from 'src/entities/exam.entity';
 import { uploadFile } from './gemini.methods';
-import {
-  createRuns,
-  createThread,
-  getMessages,
-  getStatus,
-} from './openai.method';
+
 import { GoogleGenerativeAI, RequestOptions } from '@google/generative-ai';
+import { Result } from 'src/entities/result.entity';
 
 @Injectable()
 export class ApikeyService {
   constructor(
     @InjectRepository(Apikey) private readonly apikeyRepo: Repository<Apikey>,
     @InjectRepository(Exam) private readonly examRepo: Repository<Exam>,
+    @InjectRepository(Result) private readonly resultRepo: Repository<Result>,
   ) {}
   async updateApiKeyOpenAI(
     currentUser: User,
@@ -363,6 +366,97 @@ export class ApikeyService {
       return createError('Server', 'Server error, please try again later');
     }
   }
-}
+  //TODO: đánh giá đề thi
+  async reviewExam(
+    user: User,
+    resultId: number,
+  ): Promise<GenerateReviewOutput> {
+    try {
+      const result = await this.resultRepo.findOne({
+        where: {
+          id: resultId,
+          user: {
+            id: user.id,
+          },
+        },
+        relations: {
+          detailResult: {
+            question: true,
+          },
+          exam: {
+            questions: true,
+          },
+          user: true,
+        },
+      });
+      if (!result) {
+        return createError('Result', 'Result not found');
+      }
+      if (result.review) {
+        return createError('Result', 'Result already reviewed');
+      }
+      let questionCorrect = [];
+      let questionIncorrect = [];
+      result.detailResult.forEach((dr) => {
+        if (dr.score == 1) {
+          questionCorrect.push(dr.question.content);
+        } else {
+          questionIncorrect.push(dr.question.content);
+        }
+      });
+      let review = '';
+      const apikey = await this.apikeyRepo.findOne({
+        where: {
+          user: {
+            id: user.id,
+          },
+        },
+      });
+      if (!apikey) {
+        return createError('Apikey', 'Please update your apikey');
+      }
+      const generationConfig = {
+        stopSequences: ['red'],
+        maxOutputTokens: 200,
+        temperature: 0.9,
+        topP: 0.1,
+        topK: 16,
+        responseMimeType: 'application/json',
+      };
+      const genAI = new GoogleGenerativeAI(apikey.apikey);
+      const model = genAI.getGenerativeModel(
+        { model: 'gemini-1.5-pro-latest' },
+        generationConfig as RequestOptions,
+      );
+      try {
+        const res = await model.generateContent([
+          {
+            text: `${prompt3} ${result.exam.name}( ${
+              result.exam.content
+            }) ${prompt4} ${questionCorrect.join(
+              ', ',
+            )} ${prompt5} ${questionIncorrect.join(
+              ', ',
+            )} ${prompt6} ${prompt7}`,
+          },
+        ]);
+        const response = await res.response;
+        const text = response.text();
+        let match = text.match(/```json([\s\S]*?)```/);
+        let extractedString = match && match[1] ? match[1].trim() : '';
+        result.review = extractedString;
+        await this.resultRepo.save(result);
+        return {
+          ok: true,
+          review: extractedString,
+        };
+      } catch (error) {
+        return createError('ER', 'Please check your apikey');
+      }
+    } catch (error) {
+      console.log(error);
 
-// }
+      return createError('Server', 'Server error, please try again later');
+    }
+  }
+}

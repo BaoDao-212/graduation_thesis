@@ -820,7 +820,7 @@ declare namespace API {
     examId: number;
     amount: number;
   };
-  type GenerateReviewGeminiDto= {
+  type GenerateReviewGeminiDto = {
     questionCorrect: number[];
     questionIncorrect: number[];
   };

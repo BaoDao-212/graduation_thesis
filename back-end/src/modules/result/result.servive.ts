@@ -241,6 +241,7 @@ export class ResultService {
           'result.createdAt',
           'result.updatedAt',
           'result.time',
+          'result.review',
         ])
         .addSelect(['exam.id', 'exam.name', 'exam.level', 'exam.status'])
         .addSelect([
@@ -295,31 +296,32 @@ export class ResultService {
           },
         },
       });
-      if(apiKey){
-        try{
-          const genAI= new GoogleGenerativeAI(apiKey.apikey);
-          const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-          const res = await model.generateContent([{ text: 'Hello' }]);
-        }catch(err){
-         return {
+      if (!exam) {
+        return createError('Exam', 'Exam not found');
+      }
+    
+        return {
           ok: true,
           result,
           exam,
           isReviewed,
-          isGeminiKey: false,
-         }
-        }
-      }
-      if (!exam) {
-        return createError('Exam', 'Exam not found');
-      }
-      return {
-        ok: true,
-        result,
-        exam,
-        isReviewed,
-        isGeminiKey: true,
-      };
+          isGeminiKey: apiKey ? true : false,
+        };
+      // if(apiKey){
+      //   try{
+      //     const genAI= new GoogleGenerativeAI(apiKey.apikey);
+      //     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      //     const res = await model.generateContent([{ text: 'Hello' }]);
+      //   }catch(err){
+      //    return {
+      //     ok: true,
+      //     result,
+      //     exam,
+      //     isReviewed,
+      //     isGeminiKey: false,
+      //    }
+      //   }
+      // }
     } catch (error) {
       console.log(error);
       return createError('Server', 'Lỗi server, thử lại sau');

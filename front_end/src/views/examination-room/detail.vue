@@ -7,23 +7,29 @@
         </div>
       </template>
       <div v-if="exam" class="flex" style="flex-direction: column; justify-content: center">
-        <DetailExam :detail="result" :question="exam.questions" :isGemini="isGeminiKey"/>
-        <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; overflow-y: auto">
-          <QuestionCard
-            v-for="q in exam.questions"
-            :question="q"
-            :answers="
-              result.detailResult.filter((dr) => dr.question.id == q.id).length > 0
-                ? result.detailResult
-                    .filter((dr) => dr.question.id == q.id)[0]
-                    .answer.map((a) => a.id)
-                : []
-            "
-          />
-        </div>
+        <a-tabs v-model:activeKey="activeKey">
+          <a-tab-pane key="1" :tab="t('routes.exam.overview_exam')">
+            <DetailExam :detail="result" :question="exam.questions" :isGemini="isGeminiKey" />
+          </a-tab-pane>
+          <a-tab-pane key="2" :tab="t('routes.exam.detail_exam')" force-render>
+            <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; overflow-y: auto">
+              <QuestionCard
+                v-for="q in exam.questions"
+                :question="q"
+                :answers="
+                  result.detailResult.filter((dr) => dr.question.id == q.id).length > 0
+                    ? result.detailResult
+                        .filter((dr) => dr.question.id == q.id)[0]
+                        .answer.map((a) => a.id)
+                    : []
+                "
+              />
+            </div>
+          </a-tab-pane>
+        </a-tabs>
       </div>
     </Card>
-    <ReviewExam v-if="exam"  :is-reviewed="isReviewed" :examId="exam.id"/>
+    <ReviewExam v-if="exam" :is-reviewed="isReviewed" :examId="exam.id" />
   </div>
 </template>
 
@@ -41,9 +47,9 @@
   const { t } = useI18n();
   const route = useRoute();
   const result = ref();
-  const isReviewed=ref();
-  const isGeminiKey=ref();
-  
+  const isReviewed = ref();
+  const isGeminiKey = ref();
+  const activeKey = ref('1');
   const getResult = async () => {
     const [_err, res] = await to(viewResult(Number(route.params.id)));
     if (!res.ok) {

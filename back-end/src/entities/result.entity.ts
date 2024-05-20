@@ -38,7 +38,7 @@ export class Result extends BaseEntity {
   @ApiProperty()
   score?: number;
   
-  @Column({ default: '' })
+  @Column({ default:null })
   @ApiProperty()
   review?: string;
 
