@@ -52,7 +52,7 @@ export class Exam extends BaseEntity {
     
     @OneToMany(()=> Question, question => question.exam)
     @ApiProperty()
-    questions: Question
+    questions: Question[]
     
      @ApiProperty()
     @Column({ default: 0 })

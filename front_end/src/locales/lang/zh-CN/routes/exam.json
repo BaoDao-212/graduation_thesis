@@ -25,6 +25,7 @@
   "reference": "Tham khảo",
   "overview_exam": "Tổng quan bài làm",
   "detail_exam": "Chi tiết bài làm",
+  "unanwsered":"Chưa trả lời",
   "table": {
     "id": "No",
     "status": "Trạng thái",

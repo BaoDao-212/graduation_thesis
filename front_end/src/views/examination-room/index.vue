@@ -73,9 +73,9 @@
         message: t('common.error'),
         description: res.error.message,
       });
-      // router.push('/post/list');
     } else {
       exam.value = res.exam;
+      router.push('/exam/result/view/' + route.params.id);
     }
   };
   const onFinish = () => {

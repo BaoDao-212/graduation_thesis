@@ -20,6 +20,10 @@
             <span class="mr-1" style="font-weight: bold"> {{ t('routes.exam.score') }}: </span>
             {{ props.detail.score }}/{{ props.question.length }}
           </div>
+          <div class="mb-2">
+            <span class="mr-1" style="font-weight: bold"> {{ t('routes.exam.unanwsered') }}: </span>
+            {{ props.question.length- props.detail.detailResult.length }}/{{ props.question.length }}
+          </div>
         </div>
         <VueApexCharts
           type="radar"
@@ -29,19 +33,24 @@
           :series="series"
         />
       </div>
-      <Button v-if="props.detail.review" @click="review">{{ t('routes.exam.review') }}</Button>
-      <a-popconfirm v-else placement="top" ok-text="Yes" cancel-text="No" :title="t('routes.exam.review')">
+      <Button v-if="reviewExam" @click="review">{{ t('routes.exam.review') }}</Button>
+      <a-popconfirm
+        v-else
+        placement="top"
+        :title="t('routes.exam.review')"
+      >
         <template #description>
           <Assistant v-if="!props.isGemini" />
           <div v-else>
             <Button @click="handleGenerateReview">{{ t('routes.exam.generate_review') }}</Button>
           </div>
         </template>
-        <Button >{{ t('routes.exam.review') }}</Button>
+        <template #cancelButton> </template>
+        <template #okButton> </template>
+        <Button>{{ t('routes.exam.review') }}</Button>
       </a-popconfirm>
       <div v-if="showReview">
-        <ReviewCard :review ="reviewExam"/>
-       
+        <ReviewCard :review="reviewExam" />
       </div>
     </Card>
   </div>
@@ -65,7 +74,9 @@
     const res = await generateReviewGemini(props.detail.id);
     if (res.ok) {
       showReview.value = true;
-      reviewExam.value= JSON.parse(res.data.review);
+      reviewExam.value = JSON.parse(res.review);
+      console.log(reviewExam.value);
+      
     } else {
       notification.error({
         message: t('common.error'),
@@ -74,7 +85,7 @@
     }
   };
   const showReview = ref(false);
-  
+
   const props = defineProps({
     detail: {
       type: Object,
@@ -89,7 +100,7 @@
       required: true,
     },
   });
-  const reviewExam=ref(JSON.parse(props.detail.review));
+  const reviewExam = ref(JSON.parse(props.detail.review));
   const series = ref([
     {
       name: t('routes.exam.amount'),

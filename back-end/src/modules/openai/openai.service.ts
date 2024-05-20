@@ -404,7 +404,9 @@ export class ApikeyService {
           questionIncorrect.push(dr.question.content);
         }
       });
-      let review = '';
+      if(result.detailResult.length/result.exam.questions.length < 0.8){
+        return createError('Result', 'Result not enough question to evaluate');
+      }
       const apikey = await this.apikeyRepo.findOne({
         where: {
           user: {
