@@ -64,15 +64,6 @@ export class ExamController {
   async getExamDetail(@Param('id', ParseIntPipe) id: number) {
     return this.examService.getExam(id);
   }
-  // cho phép gửi file qua form data để tạo đề thi
-  @ApiOperation({
-    summary: 'generate questions',
-  })
-  @Roles(['Any'])
-  @Post('generate/:id')
-  async generateQuestions(@Param('id', ParseIntPipe) id: number, @Body() input: any) {
-    return this.examService.generateQuestions(input.file, id);
-  }
   //đánh giá đề thi
   @ApiOperation({
     summary: 'review exam',
@@ -83,5 +74,23 @@ export class ExamController {
     console.log(input);
     
     return this.examService.reviewExam(input,currentUser);
+  }
+  // cập nhật trạng thái đề thi thành deleted
+  @ApiOperation({
+    summary: 'delete exam',
+  })
+  @Roles(['Any'])
+  @Delete(':id')
+  async deleteExam(@Param('id', ParseIntPipe) id: number,@CurrentUser() currentUser: User){
+    return this.examService.deleteExam(id,currentUser);
+  }
+  // cập nhật trạng thái đề thi thành active hoặc inactive
+  @ApiOperation({
+    summary: 'active or inactive exam',
+  })
+  @Roles(['Any'])
+  @Patch(':id')
+  async activeOrInactiveExam(@Param('id', ParseIntPipe) id: number,@CurrentUser() currentUser: User){
+    return this.examService.restoreExam(id,currentUser);
   }
 }

@@ -307,21 +307,6 @@ export class ResultService {
           isReviewed,
           isGeminiKey: apiKey ? true : false,
         };
-      // if(apiKey){
-      //   try{
-      //     const genAI= new GoogleGenerativeAI(apiKey.apikey);
-      //     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-      //     const res = await model.generateContent([{ text: 'Hello' }]);
-      //   }catch(err){
-      //    return {
-      //     ok: true,
-      //     result,
-      //     exam,
-      //     isReviewed,
-      //     isGeminiKey: false,
-      //    }
-      //   }
-      // }
     } catch (error) {
       console.log(error);
       return createError('Server', 'Lỗi server, thử lại sau');

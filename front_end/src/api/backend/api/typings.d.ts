@@ -799,6 +799,8 @@ declare namespace API {
     content: string;
     name: string;
     level: ExamLevel;
+    time: number;
+    numberQuestions: number;
   };
   type CreateQuestionDto = {
     content: string;

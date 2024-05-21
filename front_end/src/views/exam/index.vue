@@ -53,6 +53,12 @@
           <template v-else-if="column.dataIndex === 'action'">
             <span>{{ $t('routes.exam.table.action') }}</span>
           </template>
+          <template v-else-if="column.dataIndex === 'time'">
+            <span>{{ $t('routes.exam.table.time') }}</span>
+          </template>
+          <template v-else-if="column.dataIndex === 'numberQuestions'">
+            <span>{{ $t('routes.exam.table.number_question') }}</span>
+          </template>
         </template>
         <template #customFilterIcon>
           <search-outlined
@@ -66,7 +72,9 @@
           <template v-if="column.dataIndex === 'status'">
             <span>
               <Tag :color="record.status !== 0 ? 'red' : 'green'">
-                {{ record.status == '0' ? 'ACTICE' : 'INACTIVE' }}
+                {{
+                  record.status == '0' ? 'ACTIVE' : record.status == '2' ? 'DELETED' : 'INACTIVE'
+                }}
               </Tag>
             </span>
           </template>
@@ -96,6 +104,12 @@
                   <Menu.Item>
                     <Update :exam="record" @update-list="updateListAfterUpdate" />
                   </Menu.Item>
+                  <Menu.Item v-if="record.status!=2">
+                    <Delete :exam="record" @update-list="updateListAfterDelete" />
+                  </Menu.Item>
+                  <Menu.Item v-if="record.status==2">
+                    <Restore :exam="record" @update-list="updateListAfterRestore" />
+                  </Menu.Item>
                 </Menu>
               </template>
             </Dropdown>
@@ -117,6 +131,8 @@
   import { getExamList } from '@/api/backend/api/exam';
   import { formatToDate } from '@/utils/dateUtil';
   import Update from './crud/update.vue';
+  import Delete from './crud/delete.vue';
+  import Restore from './crud/restore.vue';
   const listExam = ref();
   const showTable = ref(true);
   const { t } = useI18n();
@@ -176,6 +192,20 @@
       createdAt: data.createdAt,
     });
   };
+  const updateListAfterDelete = (id) => {
+    listExam.value.forEach((e, index) => {
+      if (e.id === id) {
+        e.status = 2;
+      }
+    });
+  };
+  const updateListAfterRestore = (id) => {
+    listExam.value.forEach((e, index) => {
+      if (e.id === id) {
+        e.status = 1;
+      }
+    });
+  };
   const columns: TableProps['columns'] = [
     {
       dataIndex: 'index',
@@ -196,6 +226,16 @@
     },
     {
       dataIndex: 'content',
+      align: 'left',
+      width: 250,
+    },
+    {
+      dataIndex: 'time',
+      align: 'left',
+      width: 250,
+    },
+    {
+      dataIndex: 'numberQuestions',
       align: 'left',
       width: 250,
     },

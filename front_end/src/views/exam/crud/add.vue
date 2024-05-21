@@ -43,6 +43,30 @@
         </Input>
       </Form.Item>
       <Form.Item
+        :label="t('routes.exam.table.number_question')"
+        name="numberQuestions"
+        :rules="[{ required: true, message: t('routes.exam.modal.required.number_question') }]"
+      >
+        <Input
+          v-model:value="formState.numberQuestions"
+          class="border border-primary rounded-2"
+          :placeholder="t('routes.exam.modal.placeholder.number_question')"
+        >
+        </Input>
+      </Form.Item>
+      <Form.Item
+        :label="t('routes.exam.table.time')"
+        name="time"
+        :rules="[{ required: true, message: t('routes.exam.modal.required.time') }]"
+      >
+        <Input
+          v-model:value="formState.time"
+          class="border border-primary rounded-2"
+          :placeholder="t('routes.exam.modal.placeholder.time')"
+        >
+        </Input>
+      </Form.Item>
+      <Form.Item
         :label="t('routes.exam.table.level')"
         name="correct"
         :rules="[{ required: true, message: '' }]"
@@ -86,6 +110,8 @@
     name: string;
     content: string;
     level: ExamLevel;
+    time: number;
+    numberQuestions: number;
   }
   enum ExamLevel {
     EASY = 0,
@@ -97,6 +123,8 @@
     name: '',
     content: '',
     level: ExamLevel.NORMAL,
+    time: 0,
+    numberQuestions: 0,
   });
   const emit = defineEmits(['update-list']);
   const visible = ref<boolean>(false);
@@ -120,13 +148,15 @@
         message: t('routes.error.success'),
         description: t('routes.management.success_message_add'),
       });
-      emit('update-list', res);
+      emit('update-list', formState);
       setTimeout(() => {
         visible.value = false;
       }, 10);
     }
     formState.name = '';
     formState.content = '';
+    formState.time = 0;
+    formState.numberQuestions = 0;
     formState.level = ExamLevel.NORMAL;
   };
 </script>

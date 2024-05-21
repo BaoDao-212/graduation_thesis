@@ -80,3 +80,17 @@ export async function reviewExam(body: API.ReviewExamDto, options?: RequestOptio
     ...(options || {}),
   });
 }
+//TODO: cập nhật trạng thái của đề thi thành deleted
+export async function deleteExam(id: number, options?: RequestOptions) {
+  return request<any>(`/api/exam/${id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}
+//TODO: cập nhật trạng thái của đề thi
+export async function restoreExam(id: number,  options?: RequestOptions) {
+  return request<any>(`/api/exam/${id}`, {
+    method: 'PATCH',
+    ...(options || {}),
+  });
+}

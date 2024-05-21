@@ -15,6 +15,10 @@ export class ExamInput {
 
   @ApiProperty({description: 'status'})
   status: ExamStatus;
+  @ApiProperty({description: 'time'})
+  time?: number;
+  @ApiProperty({description: 'numberQuestions'})
+  numberQuestions?: number;
 
 }
 export class CreateExamOutput extends CoreOutput {

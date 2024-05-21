@@ -3,7 +3,7 @@
     <Card style="margin: 0 6px 0px 6px; min-width: fit-content">
       <template #title>
         <div class="flex" style="justify-content: space-between; align-items: center">
-          <AddPost :exam="listExamName" />
+          <AddPost :exam="listExamName.map(e=>e.status==0)" />
         </div>
       </template>
       <div

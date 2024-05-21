@@ -42,7 +42,7 @@
         <div class="reference-list">
           <div v-for="ele in props.review.links" class="reference-item">
             <div class="reference-content">{{ ele.content }}:</div>
-            <a class="reference-link" target="_blank">{{ ele.url }}</a>
+            <a class="reference-link"  >{{ ele.url }}</a>
           </div>
         </div>
       </div>

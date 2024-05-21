@@ -4,14 +4,19 @@
       <div
         class="flex flex-row"
         style="
-          margin-top: 10px;
           margin-bottom: 10px;
           align-items: center;
           justify-content: space-between;
         "
       >
         <div class="flex" style="flex-direction: column">
-          <div class="ml-2" style="font-size: 18px; font-weight: bold">{{ props.exam.name }}</div>
+         <div class="flex flex-row justify-between mb-2">
+           <div class="ml-2" style="font-size: 18px; font-weight: bold">{{ props.exam.name }}</div>
+           <div class="ml-4">
+             <span class="ml-2">{{ props.exam.numberReviews }} {{ t('routes.post.reviews') }}</span>
+             <a-rate class="ml-4" v-model:value="props.exam.averageRating" disabled />
+            </div>
+          </div>
           <span class="ml-2">{{ props.exam.content }}</span>
         </div>
         <Tag v-if="level" color="green">
@@ -53,7 +58,7 @@
       router.push(`/exam/room/${result.value.id}`);
     }
   };
-  const handleCreateResult =async () => {
+  const handleCreateResult = async () => {
     await createResultForExam();
   };
   const level = ref(

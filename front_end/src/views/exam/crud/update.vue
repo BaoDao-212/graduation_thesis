@@ -1,10 +1,8 @@
 <!-- eslint-disable vue/no-unused-components -->
 <template>
-  <div class="flex justify-end">
-    <Button type="primary" @click="showModal"
-      ><PlusOutlined /> {{ t('routes.exam.edit_exam') }}</Button
-    >
-  </div>
+  <div class="text-decoration-none" @click="showModal"
+    ><EditOutlined  /> {{ $t('routes.exam.edit_exam') }}</div
+  >
   <Modal
     v-model:visible="visible"
     :cancel-text="$t('common.cancelText')"
@@ -43,6 +41,30 @@
         </Input>
       </Form.Item>
       <Form.Item
+        :label="t('routes.exam.table.number_question')"
+        name="numberQuestions"
+        :rules="[{ required: true, message: t('routes.exam.modal.required.number_question') }]"
+      >
+        <Input
+          v-model:value="formState.numberQuestions"
+          class="border border-primary rounded-2"
+          :placeholder="t('routes.exam.modal.placeholder.number_question')"
+        >
+        </Input>
+      </Form.Item>
+      <Form.Item
+        :label="t('routes.exam.table.time')"
+        name="time"
+        :rules="[{ required: true, message: t('routes.exam.modal.required.time') }]"
+      >
+        <Input
+          v-model:value="formState.time"
+          class="border border-primary rounded-2"
+          :placeholder="t('routes.exam.modal.placeholder.time')"
+        >
+        </Input>
+      </Form.Item>
+      <Form.Item
         :label="t('routes.exam.table.level')"
         name="correct"
         :rules="[{ required: true, message: '' }]"
@@ -65,7 +87,10 @@
             examOld &&
             ((examOld.content && examOld.content != formState.content) ||
               (examOld.name && examOld.name != formState.name) ||
-              (examOld.level && examOld.level != formState.level))
+              (examOld.level && examOld.level != formState.level)||
+              (examOld.time && examOld.time != formState.time)||
+              (examOld.numberQuestions && examOld.numberQuestions != formState.numberQuestions)
+            )
           "
           html-type="submit"
           type="primary"
@@ -81,7 +106,7 @@
 </template>
 <script lang="ts" setup>
   import { ref, defineEmits, defineProps } from 'vue';
-  import { PlusOutlined } from '@ant-design/icons-vue';
+  import {  EditOutlined } from '@ant-design/icons-vue';
   import { Button, Form, Input, Modal, notification } from 'ant-design-vue';
   import { to } from '@/utils/awaitTo';
   import { useI18n } from '@/hooks';
@@ -91,6 +116,8 @@
     name: string;
     content: string;
     level: ExamLevel | string;
+    time: number;
+    numberQuestions: number;
   }
   enum ExamLevel {
     EASY = 0,
@@ -109,6 +136,8 @@
     name: '',
     content: '',
     level: ExamLevel.NORMAL,
+    time: 0,
+    numberQuestions: 0,
   });
   const emit = defineEmits(['update-list']);
   const visible = ref<boolean>(false);
@@ -118,6 +147,8 @@
     formState.value.level = String(props.exam?.level);
     formState.value.name = props.exam?.name;
     formState.value.content = props.exam?.content;
+    formState.value.time = props.exam?.time;
+    formState.value.numberQuestions = props.exam?.numberQuestions;
     visible.value = true;
   };
 

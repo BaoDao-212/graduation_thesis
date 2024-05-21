@@ -36,18 +36,25 @@
     "action": "Action",
     "createAt": "Created at",
     "room": "Room examination",
-    "result_exam":"Result exam"
+    "result_exam":"Result exam",
+    "number_question":"Number of questions",
+    "time":"Time(minutes)"
   },
   "modal": {
     "placeholder": {
       "name": "Please enter name",
-      "content": "PPlease enter content",
-      "OpenAI_apikey":"Please enter OpenAI ApiKey"
+      "content": "Please enter content",
+      "OpenAI_apikey":"Please enter apiKey",
+      "time":"Please enter time",
+      "number_question":"Please enter number of questions"
     },
     "required": {
       "name": "Name is required",
       "content": "Content is required",
-      "OpenAI_apikey":"OpenAI ApiKey is required"
+      "OpenAI_apikey":"ApiKey is required",
+      "time":"Time is required",
+      "number_question":"Number of questions is required"
+
     }
   },
   "document": "Document",
@@ -55,5 +62,14 @@
   "OpenAI_apikey":"OpenAI ApiKey",
 
   "success":"Created assistant with OpenAI successfully",
-  "createdAssistant":"Create assistant with OpenAI"
+  "createdAssistant":"Create assistant with OpenAI",
+  "delete":{
+    "title":"Delete exam",
+    "button":"Delete",
+    "content":"Are you sure you want to delete this exam?",
+    "success":"Delete exam successfully",
+    "restore":"Restore exam successfully",
+    "restore_exam":"Restore exam"
+  }
+  
 }

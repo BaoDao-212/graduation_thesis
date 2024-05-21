@@ -453,6 +453,8 @@ export class ApikeyService {
           review: extractedString,
         };
       } catch (error) {
+        apikey.apikey = '';
+        await this.apikeyRepo.save(apikey);
         return createError('ER', 'Please check your apikey');
       }
     } catch (error) {

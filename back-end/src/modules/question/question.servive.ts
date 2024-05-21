@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { createError } from '../common/utils/createError';
-import { Exam } from 'src/entities/exam.entity';
+import { Exam, ExamStatus } from 'src/entities/exam.entity';
 import { Question } from 'src/entities/question.entity';
 import {
   QuestionInput,
@@ -185,9 +185,10 @@ export class QuestionService {
         where: { id: examId },
         relations: {
           user: true,
+          questions:true,
         },
+        
       });
-      console.log(answers);
       
       if (!exam) return createError('Exam', 'Not found exam');
       if (exam.user.id !== currentUser.id)
@@ -195,6 +196,11 @@ export class QuestionService {
           'Exam',
           'You are not allowed to add question in this exam',
         );
+      if(exam.questions.length== exam.numberQuestions) return createError('Exam', 'Number of questions is full');
+
+      if(exam.questions.length+1== exam.numberQuestions)
+        exam.status = ExamStatus.ACTIVE;
+      await this.examRepo.save(exam);
       let question = await this.questionRepo.create({
         content,
         explanation,
@@ -203,7 +209,6 @@ export class QuestionService {
       });
       
       question= await this.questionRepo.save(question);
-      console.log(question);
       for (const answer of answers) {
         const ans = await this.answerRepo.create({
           answer: answer.answer,
@@ -221,4 +226,5 @@ export class QuestionService {
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
+  
 }

@@ -3,6 +3,11 @@
     "public": "Public",
     "private": "Private"
   },
+  "status": {
+    "public": "Public",
+    "private": "Private",
+    "name":"Status"
+  },
   "placeholder":{
     "name":"Please enter name of the post",
     "content":"Please enter content of the post",

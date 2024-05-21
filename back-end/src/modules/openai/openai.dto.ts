@@ -123,7 +123,5 @@ With output of the questions in json format:
     ],
   }
   correctly_answered_questions will rely on correctly answered questions to evaluate and vice versa incorrectly_answered_questions will rely on incorrectly answered questions to evaluate.
-  Note: Analysis and evaluation must include detailed analysis of correct and incorrect answers, along with suggestions for improvement and related resources, but must be concise and not lengthy.
+  Note: Analysis and evaluation must include detailed analysis of correct and incorrect answers, along with suggestions for improvement and related resources, but must be concise and not lengthy.If the number of correct answers is less than 4 and the number of incorrect answers is greater than 10, there will be no content in the correctly_answered_questions section.
 `;
-
-

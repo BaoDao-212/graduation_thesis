@@ -41,7 +41,7 @@ export class Exam extends BaseEntity {
     @ApiProperty()
     level?: ExamLevel;
 
-    @Column({ nullable: true,default : ExamStatus.ACTIVE })
+    @Column({ nullable: true,default : ExamStatus.INACTIVE })
     @ApiProperty()
     status?: ExamStatus;
 
@@ -49,6 +49,10 @@ export class Exam extends BaseEntity {
     @JoinColumn ({name:'user_id'})
     @ApiProperty()
     user: User
+    
+    @ApiProperty()
+    @Column({ default: 40 })
+    numberQuestions?: number;
     
     @OneToMany(()=> Question, question => question.exam)
     @ApiProperty()

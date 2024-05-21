@@ -10,7 +10,7 @@
     "create":"Create question",
     "update":"Update question",
     "delete": "Delete question",
-    "explanation": "explanation",
+    "explanation": "Explanation",
     "placeholder": {
       "name": "Please enter question name",
       "explanation": "Please enter explanation",
