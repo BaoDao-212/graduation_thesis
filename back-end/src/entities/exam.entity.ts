@@ -70,4 +70,8 @@ export class Exam extends BaseEntity {
     @JoinTable()
     @ApiProperty()
     usersReviewed?:User[]
+    
+    @ApiProperty()
+    @Column({ default: 0 })
+    numberUserTest?: number;
 }

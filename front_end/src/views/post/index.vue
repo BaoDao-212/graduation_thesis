@@ -3,7 +3,8 @@
     <Card style="margin: 0 6px 0px 6px; min-width: fit-content">
       <template #title>
         <div class="flex" style="justify-content: space-between; align-items: center">
-          <AddPost :exam="listExamName.map(e=>e.status==0)" />
+          <!-- <AddPost v-if="listExamName" :exam="listExamName.filter(e=>e.status==0)" /> -->
+          <SearchSortCard v-if="listExamName" :exams="listExamName" />
         </div>
       </template>
       <div
@@ -14,10 +15,11 @@
           align-items: center;
           margin-bottom: 4px;
         "
-      >
+        >
         <div v-for="item in listPost" style="display: flex; align-items: center; width: 100%">
           <CardPost :post="item" />
         </div>
+        <a-pagination @change="onChange"  />
       </div>
     </Card>
   </div>
@@ -28,11 +30,12 @@
   import { Card, notification } from 'ant-design-vue';
   import { useI18n } from '@/hooks';
   import to from '@/utils/awaitTo';
-  import { listPublicPostAll } from '@/api/backend/api/post';
   import CardPost from './component/card-post.vue';
-  import AddPost from './crud/add.vue';
+  import SearchSortCard from './component/search-sort-card.vue';
   import { getExamNameList } from '@/api/backend/api/exam';
-  const listPost = ref();
+  import { usePostStore } from '@/store/modules/post';
+import { storeToRefs } from 'pinia';
+  // const listPost = ref();
   const listExamName = ref();
   const { t } = useI18n();
   type PageSetting = {
@@ -45,22 +48,9 @@
     page: 1,
     pageSize: 10,
   });
-  const getListExam = async () => {
-    const [err, res] = await to(
-      listPublicPostAll({
-        page: pageSetting.value.page,
-        pageSize: pageSetting.value.pageSize,
-      }),
-    );
-    if (err) {
-      notification.error({
-        message: t('common.error'),
-        description: err.message,
-      });
-    } else {
-      listPost.value = res.posts;
-    }
-  };
+  const usePost = usePostStore();
+  const { listPost } = storeToRefs(usePost);
+
   const getListExamName = async () => {
     const [err, res] = await to(getExamNameList());
     if (err) {
@@ -72,8 +62,13 @@
       listExamName.value = res.exams;
     }
   };
+  const changePage = async (page: number) => {
+    pageSetting.value.page = page;
+    await usePost.getListExam(page, pageSetting.value.pageSize, '', '');
+  };
   onBeforeMount(async () => {
-    await getListExam();
+    await usePost.getListExam(1, 10, '', '');
     await getListExamName();
+    // listPost.value = getListPost();
   });
 </script>

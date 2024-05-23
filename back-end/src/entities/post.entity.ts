@@ -25,18 +25,7 @@ export class Post extends BaseEntity {
     @ApiProperty()
     content?: string;
 
-    @ApiProperty()
-    @Column({ default: 0 })
-    numberReviews?: number;
 
-    @ApiProperty()
-    @Column({ default: 0 })
-    averageRating?: number;
-
-    @ManyToMany(()=>User)
-    @JoinTable()
-    @ApiProperty()
-    usersReviewed?:User[]
 
     @ManyToOne(() => User, user => user.posts)
     @JoinColumn ({ name: 'user_id' })

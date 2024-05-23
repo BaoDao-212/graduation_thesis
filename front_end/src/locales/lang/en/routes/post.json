@@ -6,34 +6,34 @@
   "status": {
     "public": "Public",
     "private": "Private",
-    "name":"Status"
+    "name": "Status"
   },
-  "placeholder":{
-    "name":"Please enter name of the post",
-    "content":"Please enter content of the post",
-    "exam":"Please select exam of the post"
+  "placeholder": {
+    "name": "Please enter name of the post",
+    "content": "Please enter content of the post",
+    "exam": "Please select exam of the post"
   },
-  "require":{
-    "name":"Name is required",
-    "content":"Content is required",
-    "exam":"Exam is required"
+  "require": {
+    "name": "Name is required",
+    "content": "Content is required",
+    "exam": "Exam is required"
   },
   "notification": {
     "create_success": "Created post successfully",
     "update_success": "Updated post successfully",
     "delete_success": "Deleted post successfully"
   },
-  "create":"Create post",
-  "update":"Update post",
-  "delete":"Delete post",
-  "reviews":"reviews",
-  "post":"Post",
-  "list_post":"List post",
-  "detail":"Detail post",
-  "easy":"Easy",
-  "normal":"Normal",
-  "hard":"Hard",
-  "very_hard":"Very Hard",
-  "start":"Start exam"
-  
+  "create": "Create post",
+  "update": "Update post",
+  "delete": "Delete post",
+  "reviews": "reviews",
+  "post": "Post",
+  "list_post": "List post",
+  "detail": "Detail post",
+  "easy": "Easy",
+  "normal": "Normal",
+  "hard": "Hard",
+  "very_hard": "Very Hard",
+  "start": "Start exam",
+  "interaction": "interactions"
 }

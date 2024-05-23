@@ -19,10 +19,20 @@ const routes: Array<RouteRecordRaw> = [
         path: 'welcome',
         name: `${moduleName}-welcome`,
         meta: {
-          title: t('routes.dashboard.workbench'),
+          title: t('routes.post.post'),
           icon: 'ant-design:home-filled',
         },
-        component: () => import('@/views/dashboard/welcome/index.vue'),
+        component: () => import('@/views/post/index.vue'),
+      },
+      {
+        path: 'detail/:id',
+        name: `${moduleName}-detail`,
+        meta: {
+          title: t('routes.post.detail'),
+          keepAlive: true,
+          hideInMenu: true,
+        },
+        component: () => import('@/views/post/crud/detail.vue'),
       },
     ],
   },

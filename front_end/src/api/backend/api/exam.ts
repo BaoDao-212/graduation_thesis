@@ -88,7 +88,7 @@ export async function deleteExam(id: number, options?: RequestOptions) {
   });
 }
 //TODO: cập nhật trạng thái của đề thi
-export async function restoreExam(id: number,  options?: RequestOptions) {
+export async function restoreExam(id: number, options?: RequestOptions) {
   return request<any>(`/api/exam/${id}`, {
     method: 'PATCH',
     ...(options || {}),

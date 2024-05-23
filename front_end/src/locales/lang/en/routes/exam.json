@@ -26,6 +26,13 @@
   "detail_exam":"Detail exam",
   "unanwsered":"Unanswered question",
   "minute":"minutes",
+  "average_rating":"Best rating",
+  "interaction":"Best interaction",
+  "reviews":"Best review",
+  "search_placeholder":"Search",
+  "sort_by":"Sort by",
+  "normal":"Normal",
+  "require_exam":"Please create exam to can create post",
   "table": {
     "id": "No",
     "status": "Status",
@@ -59,10 +66,10 @@
   },
   "document": "Document",
   "require_document": "Document or description about exam is required",
-  "OpenAI_apikey":"OpenAI ApiKey",
+  "OpenAI_apikey":" ApiKey",
 
-  "success":"Created assistant with OpenAI successfully",
-  "createdAssistant":"Create assistant with OpenAI",
+  "success":"Created assistant with Gemini successfully",
+  "createdAssistant":"Create assistant with Gemini",
   "delete":{
     "title":"Delete exam",
     "button":"Delete",

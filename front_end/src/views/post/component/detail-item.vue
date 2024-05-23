@@ -1,8 +1,6 @@
 <template>
   <div style="width: 100%">
     <div class="flex" style="align-items: center;">
-      <span class="ml-2">{{ props.post.numberReviews }} {{ t('routes.post.reviews') }}</span>
-      <a-rate class="ml-4" v-model:value="props.post.averageRating" disabled />
       <span class="ml-4">{{ formatToDateTime(props.post.createdAt) }}</span>
     </div>
   </div>

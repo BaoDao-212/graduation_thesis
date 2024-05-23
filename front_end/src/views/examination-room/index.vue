@@ -90,7 +90,7 @@
         message: t('common.error'),
         description: res.error.message,
       });
-      router.push('/post/list');
+      router.push('/dashboard/list');
     } else {
       exam.value = res.exam;
     }
@@ -107,10 +107,10 @@
       });
 
       if (res.error.mainReason == 'ER') router.push('/exam/result/view/' + route.params.id);
-      else router.push('/post/list');
+      else router.push('/dashboard/list');
     } else {
       if (res.result.score !== -1) {
-        router.push('/post/list');
+        router.push('/dashboard/list');
       }
       result.value = res.result;
     }

@@ -911,6 +911,8 @@ declare namespace API {
   type PostListParams = {
     page?: number;
     pageSize?: number;
+    sortBy?: string;
+    search?: string;
   };
 
   type TaskListParams = {

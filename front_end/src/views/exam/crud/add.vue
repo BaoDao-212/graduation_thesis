@@ -89,10 +89,10 @@
           html-type="submit"
           type="primary"
           @click="createUserFunc()"
-        >{{$t('common.okText')}}
+          >{{ $t('common.okText') }}
         </Button>
         <Button v-else html-type="submit" disabled>
-          {{$t('common.okText')}}
+          {{ $t('common.okText') }}
         </Button>
       </div>
     </template>
@@ -142,7 +142,7 @@
         description: t('routes.management.warn_message_empty'),
       });
     }
-    const [err, res] = await to(createExam(formState));
+    const [err, _res] = await to(createExam(formState));
     if (!err) {
       notification.success({
         message: t('routes.error.success'),

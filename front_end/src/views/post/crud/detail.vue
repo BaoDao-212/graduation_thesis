@@ -13,8 +13,6 @@
             <div style="font-size: 20px">{{ post.user.username }}/{{ post.name }}</div>
           </div>
           <div>
-            <span class="ml-2">{{ post.numberReviews }} {{ t('routes.post.reviews') }}</span>
-            <a-rate class="ml-4" v-model:value="post.averageRating" disabled />
             <span class="ml-4">{{ formatToDateTime(post.createdAt) }}</span>
           </div>
         </div>

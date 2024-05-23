@@ -37,15 +37,6 @@ export class PostController {
     return this.postService.updatePost(id, input, currentUser);
   }
   @ApiOperation({
-    summary: 'update review post',
-  })
-  @Roles(['Any'])
-  @Patch('update/review/:id')
-  @ApiOkResponse({ type: UpdateReviewPostOutput })
-  async updateReviewPost(@Param('id', ParseIntPipe) id: number, @Body() input: UpdateReviewPostInput, @CurrentUser() currentUser: User) {
-    return this.postService.updateReviewPost(id, input, currentUser);
-  }
-  @ApiOperation({
     summary: 'get post',
   })
   @Roles(['Any'])
@@ -69,8 +60,8 @@ export class PostController {
   @Roles(['Any'])
   @Get('list-all')
   @ApiOkResponse({ type: ListPostOutput })
-  async listPublicPostsAll( @Query('pageSize') pageSize: number = 10,@Query('page') page: number = 1) {
-    return this.postService.listPublicPostsAll( { size:pageSize, page });
+  async listPublicPostsAll( @Query('pageSize') pageSize: number = 10,@Query('page') page: number = 1,@Query('search') search:string='',@Query('sortBy') sortBy: string='') {
+    return this.postService.listPublicPostsAll( { size:pageSize, page ,search,sortBy});
   }
   @ApiOperation({
     summary: 'details post',

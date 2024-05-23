@@ -50,7 +50,20 @@ export class ListPostInput{
 
   @ApiProperty({ description: 'size' })
   size: number;  
+
 }
+export class ListPostPublicInput{
+  @ApiProperty({ description: 'page' })
+  page: number;
+
+  @ApiProperty({ description: 'size' })
+  size: number;  
+  @ApiProperty({ description: 'sortBy' })
+  sortBy?: string;
+  @ApiProperty({ description: 'search' })
+  search?: string;
+}
+
 
 export class ListPostOutput extends CoreOutput {
   @ApiProperty({ description: 'list post' })

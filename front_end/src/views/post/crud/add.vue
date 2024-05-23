@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-unused-components -->
 <template>
-  <div class="flex justify-end">
+  <div class="flex justify-end align-start">
     <Button type="primary" @click="showModal"
       ><PlusOutlined /> {{ t('routes.post.create') }}</Button
     >
@@ -70,6 +70,7 @@
           "
           :placeholder="t('routes.post.placeholder.exam')"
         ></a-select>
+        <div v-esle style="color: red">{{ t('routes.exam.require_exam') }}</div>
       </Form.Item>
     </Form>
     <template #footer>

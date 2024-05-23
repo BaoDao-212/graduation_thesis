@@ -40,18 +40,20 @@ export class ResultService {
       const exam = await this.examRepo.findOne({
         where: {
           id: examId,
-          status: In([ExamStatus.ACTIVE, ExamStatus.INACTIVE]),
+          status: In([ExamStatus.ACTIVE]),
         },
       });
       if (!exam) {
         return createError('Exam', 'Exam not found');
       }
+      exam.numberUserTest=exam.numberUserTest+1;
       const result = await this.resultRepo.create({
         exam,
         user: currentUser,
         time: exam.time,
       });
       await this.resultRepo.save(result);
+      await this.examRepo.save(exam);
       return {
         ok: true,
         result,
