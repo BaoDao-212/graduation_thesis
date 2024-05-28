@@ -24,6 +24,7 @@
         :rules="[{ required: true, message: t('routes.exam.modal.required.content') }]"
       >
         <Input
+        v-model:value="formState.answer"
         :label="t('routes.answer.table.isCorrect')"
         name="correct"
         :rules="[{ required: true, message: '' }]"

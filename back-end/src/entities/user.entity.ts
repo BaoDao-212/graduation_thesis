@@ -8,7 +8,6 @@ import {
   Column,
   Entity,OneToMany,Relation,OneToOne
 } from 'typeorm';
-import { AccessTokenEntity } from './access-token.entity';
 import { Post } from './post.entity';
 import { Apikey } from './apikey.entity';
 export enum Position {
@@ -61,10 +60,6 @@ export class User extends BaseEntity {
   apiKey?: Apikey;
 
 
-  @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
-    cascade: true,
-  })
-  accessTokens?: Relation<AccessTokenEntity[]>
 
   @OneToMany(type=>Post, post =>post.user)
   @ApiProperty()

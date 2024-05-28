@@ -3,7 +3,6 @@
     <Card style="margin: 0 6px 0px 6px; min-width: fit-content">
       <template #title>
         <div class="flex" style="justify-content: space-between; align-items: center">
-          <!-- <AddPost v-if="listExamName" :exam="listExamName.filter(e=>e.status==0)" /> -->
           <SearchSortCard v-if="listExamName" :exams="listExamName" />
         </div>
       </template>
@@ -15,11 +14,11 @@
           align-items: center;
           margin-bottom: 4px;
         "
-        >
+      >
         <div v-for="item in listPost" style="display: flex; align-items: center; width: 100%">
-          <CardPost :post="item" />
+          <CardPost :post="item" :exam="listExamName"/>
         </div>
-        <a-pagination @change="onChange"  />
+        <a-pagination @change="changePage" />
       </div>
     </Card>
   </div>
@@ -34,22 +33,11 @@
   import SearchSortCard from './component/search-sort-card.vue';
   import { getExamNameList } from '@/api/backend/api/exam';
   import { usePostStore } from '@/store/modules/post';
-import { storeToRefs } from 'pinia';
-  // const listPost = ref();
+  import { storeToRefs } from 'pinia';
   const listExamName = ref();
   const { t } = useI18n();
-  type PageSetting = {
-    total?: number;
-    page: number;
-    pageSize: number;
-  };
-  const pageSetting = ref<PageSetting>({
-    total: 0,
-    page: 1,
-    pageSize: 10,
-  });
   const usePost = usePostStore();
-  const { listPost } = storeToRefs(usePost);
+  const { listPost, pageSetting } = storeToRefs(usePost);
 
   const getListExamName = async () => {
     const [err, res] = await to(getExamNameList());
@@ -63,11 +51,11 @@ import { storeToRefs } from 'pinia';
     }
   };
   const changePage = async (page: number) => {
-    pageSetting.value.page = page;
-    await usePost.getListExam(page, pageSetting.value.pageSize, '', '');
+  usePost.setPageSetting(page, 10,pageSetting.value.search,pageSetting.value.sort);
+    await usePost.getListExam();
   };
   onBeforeMount(async () => {
-    await usePost.getListExam(1, 10, '', '');
+    await usePost.getListExam();
     await getListExamName();
     // listPost.value = getListPost();
   });

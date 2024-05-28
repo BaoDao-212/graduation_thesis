@@ -12,20 +12,33 @@ export const usePostStore = defineStore('post', () => {
     total?: number;
     page: number;
     pageSize: number;
+    search: string;
+    sort: string;
   };
   const pageSetting = ref<PageSetting>({
     total: 0,
     page: 1,
     pageSize: 10,
+    search: '',
+    sort: 'normal',
   });
+  const setPageSetting = (page, pageSize, search, sort) => {
+    pageSetting.value = {
+      ...pageSetting.value,
+      page,
+      pageSize,
+      search,
+      sort,
+    };
+  };
   const { t } = useI18n();
-  const getListExam = async (page, pageSize, search, sortBy) => {
+  const getListExam = async () => {
     const [err, res] = await to(
       listPublicPostAll({
-        page,
-        pageSize,
-        search,
-        sortBy,
+        page: pageSetting.value.page,
+        pageSize: pageSetting.value.pageSize,
+        search: pageSetting.value.search,
+        sortBy: pageSetting.value.sort,
       }),
     );
     if (err) {
@@ -38,14 +51,19 @@ export const usePostStore = defineStore('post', () => {
       console.log(listPost.value);
     }
   };
-const getListPost=()=>{
-  return listPost.value;
-}
+  const getListPost = () => {
+    return listPost.value;
+  };
+  const deletePost = async (id: number) => { 
+    listPost.value = listPost.value.filter((item: { id: number }) => item.id !== id); // Add type annotation for 'item'
+  }
   return {
     getListExam,
     getListPost,
     listPost,
-    pageSetting
+    setPageSetting,
+    deletePost,
+    pageSetting,
   };
 });
 

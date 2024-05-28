@@ -134,8 +134,8 @@
         description: t('common.warn_message_empty'),
       });
     }
-    const [err, _res] = await to(createQuestion(formState));
-    if (!err) {
+    const [_err, res] = await to(createQuestion(formState));
+    if (res.ok) {
       notification.success({
         message: t('common.success'),
         description: t('routes.question.notification.create_success'),
@@ -144,6 +144,11 @@
       setTimeout(() => {
         visible.value = false;
       }, 10);
+    } else {
+      notification.error({
+        message: t('common.error'),
+        description: res.error.message,
+      });
     }
     formState.explanation = '';
     formState.content = '';

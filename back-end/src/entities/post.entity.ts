@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Exam } from './exam.entity';
+import { Category } from './category.entity';
 export enum PostStatus {
     PRIVATE = 'PRIVATE',
     PUBLISHED = 'PUBLISHED',
@@ -24,9 +25,6 @@ export class Post extends BaseEntity {
     @Column({ nullable: true })
     @ApiProperty()
     content?: string;
-
-
-
     @ManyToOne(() => User, user => user.posts)
     @JoinColumn ({ name: 'user_id' })
     user: User
@@ -40,4 +38,10 @@ export class Post extends BaseEntity {
     @JoinTable()
     @ApiProperty()
     exams?:Exam[]
+    
+    // thêm cột liên kết với category
+    @ManyToMany(()=>Category)
+    @JoinTable()
+    @ApiProperty()
+    categories?:Category[]
 }

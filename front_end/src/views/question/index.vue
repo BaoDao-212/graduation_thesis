@@ -95,8 +95,11 @@
                 <Menu>
                   <Menu.Item>
                     <router-link :to="`/question/update/${record.id}`">
-                      <edit-two-tone />{{ $t('routes.question.update') }}
+                      <EditTwoTone />{{ $t('routes.question.update') }}
                     </router-link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Delete :question="record" @update-list="updateListAfterDelete" />
                   </Menu.Item>
                 </Menu>
               </template>
@@ -113,7 +116,7 @@
 
 <script lang="ts" setup>
   import { onBeforeMount, ref } from 'vue';
-  import { AppstoreTwoTone, SearchOutlined } from '@ant-design/icons-vue';
+  import { AppstoreTwoTone, EditTwoTone, SearchOutlined } from '@ant-design/icons-vue';
   import { Card, Tag, Menu, Dropdown, notification } from 'ant-design-vue';
   import Add from './crud/add.vue';
   import type { TableProps } from 'ant-design-vue';
@@ -122,6 +125,7 @@
   import { getExamNameList } from '@/api/backend/api/exam';
   import { formatToDate } from '@/utils/dateUtil';
   import { getQuestionList } from '@/api/backend/api/question';
+  import Delete from './crud/delete.vue';
   const exam = ref();
   const listQuestion = ref();
   const listNameExam = ref();
@@ -168,7 +172,9 @@
   // const handleChange: TableProps['onChange'] = async (_pagination, _filters, _sorter) => {
   //   await getDataExamName();
   // };
-
+  const updateListAfterDelete = (id) => {
+    listQuestion.value = listQuestion.value.filter((e) => e.id != id);
+  };
   const updateListAfterCreate = (data) => {
     if (exam.value == data.examId)
       listQuestion.value.push({

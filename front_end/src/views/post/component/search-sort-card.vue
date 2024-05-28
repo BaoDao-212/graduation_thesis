@@ -10,7 +10,12 @@
     </div>
     <div class="sort-container">
       <span class="sort-label" style="margin-top: 20px">{{ t('routes.exam.sort_by') }}:</span>
-      <Select v-model:value="sortBy" @change="handleSort" class="sort-select" style="margin-top: 20px">
+      <Select
+        v-model:value="sortBy"
+        @change="handleSort"
+        class="sort-select"
+        style="margin-top: 20px"
+      >
         <a-select-option value="normal">{{ t('routes.exam.normal') }}</a-select-option>
         <a-select-option value="numberUserTest">{{ t('routes.exam.interaction') }}</a-select-option>
         <a-select-option value="numberReviews">{{ t('routes.exam.reviews') }}</a-select-option>
@@ -30,7 +35,8 @@
   import CardExam from './card-overview-card.vue';
   import AddPost from './../crud/add.vue';
   import { listPublicPostAll } from '@/api/backend/api/post';
-import { usePostStore } from '@/store/modules/post';
+  import { usePostStore } from '@/store/modules/post';
+  import { storeToRefs } from 'pinia';
 
   const { t } = useI18n();
   const props = defineProps({
@@ -39,7 +45,8 @@ import { usePostStore } from '@/store/modules/post';
       required: true,
     },
   });
-
+  const usePost = usePostStore();
+  const { pageSetting } = storeToRefs(usePost);
   const searchTerm = ref('');
   const sortBy = ref('normal');
 
@@ -47,15 +54,26 @@ import { usePostStore } from '@/store/modules/post';
     search: '',
     sort: '',
   });
-  const usePost= usePostStore();
   const onSearch = async () => {
     formState.value.search = searchTerm.value;
     console.log(formState.value.search);
-    await usePost.getListExam(1,10,formState.value.search,formState.value.sort);
+    usePost.setPageSetting(
+      pageSetting.value.page,
+      pageSetting.value.pageSize,
+      formState.value.search,
+      formState.value.sort,
+    );
+    await usePost.getListExam();
   };
 
   const handleSort = async () => {
     formState.value.sort = sortBy.value;
+    usePost.setPageSetting(
+      pageSetting.value.page,
+      pageSetting.value.pageSize,
+      formState.value.search,
+      formState.value.sort,
+    );
     await usePost.getListExam();
   };
 </script>

@@ -14,6 +14,7 @@ import { QuestionModule } from './modules/question/question.module';
 import { AnswerModule } from './modules/answer/answer.module';
 import { ResultModule } from './modules/result/result.module';
 import { ApikeyModule } from './modules/openai/openai.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -40,6 +41,8 @@ import { ApikeyModule } from './modules/openai/openai.module';
     AnswerModule,
     ResultModule,
     ApikeyModule,
+    AdminModule
+    
   ],
   controllers: [AppController],
   providers: [AppService],

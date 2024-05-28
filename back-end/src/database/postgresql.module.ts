@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AccessTokenEntity } from 'src/entities/access-token.entity';
 import { Answer } from 'src/entities/answer.entity';
 import { Apikey } from 'src/entities/apikey.entity';
+import { Category } from 'src/entities/category.entity';
 import { DetailResult } from 'src/entities/detail-result.entity';
 import { Exam } from 'src/entities/exam.entity';
 import { Post } from 'src/entities/post.entity';
 import { Question } from 'src/entities/question.entity';
-import { RefreshTokenEntity } from 'src/entities/refresh-token.entity';
 import { Result } from 'src/entities/result.entity';
 import { User } from 'src/entities/user.entity';
 @Module({
@@ -25,7 +24,7 @@ import { User } from 'src/entities/user.entity';
       password: 'omcA2eK2VXbrqHgXUK7ARGcOzMAft5gG',
       database: 'finalproject_k2pi',
       ssl: true,
-      entities: [User,AccessTokenEntity,RefreshTokenEntity,Post,Exam,Question,Answer,Result,DetailResult,Apikey],
+      entities: [User,Post,Exam,Question,Answer,Result,DetailResult,Apikey],
       synchronize: true,
       ...(process.env.NODE_ENV === 'production'
         ? {
