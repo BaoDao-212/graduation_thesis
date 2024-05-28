@@ -32,3 +32,21 @@ export async function detailPost(id: number, options?: RequestOptions) {
     ...(options || {}),
   });
 }
+//TODO: cập nhật thông tin bài viết
+export async function updatePost(id: number, body: API.PostDto, options?: RequestOptions) {
+  return request<any>(`/api/post/update/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+//TODO: xóa bài viết
+export async function deletePost(id: number, options?: RequestOptions) {
+  return request<any>(`/api/post/delete/${id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}

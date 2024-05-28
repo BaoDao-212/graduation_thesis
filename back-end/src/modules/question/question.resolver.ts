@@ -58,4 +58,11 @@ export class QuestionController {
   async addAnswerToQuestion(@Param('id', ParseIntPipe) id: number, @CurrentUser() currentUser: User,@Body() input: CreateQuestioAndAnswerInput) {
     return this.questionService.addQuestionAndAnswer(input,currentUser,id );
   }
+  // xóa câu hỏi
+  @ApiOperation({summary: 'delete question'})
+  @Roles(['Any'])
+  @Delete(':id')
+  async deleteQuestion(@Param('id', ParseIntPipe) id: number, @CurrentUser() currentUser: User) {
+    return this.questionService.deleteQuestion(id,currentUser);
+  }
 }

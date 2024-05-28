@@ -61,7 +61,7 @@ export class PostController {
   @Get('list-all')
   @ApiOkResponse({ type: ListPostOutput })
   async listPublicPostsAll( @Query('pageSize') pageSize: number = 10,@Query('page') page: number = 1,@Query('search') search:string='',@Query('sortBy') sortBy: string='') {
-    return this.postService.listPublicPostsAll( { size:pageSize, page ,search,sortBy});
+    return this.postService.listPostByRating( { size:pageSize, page ,search,sortBy});
   }
   @ApiOperation({
     summary: 'details post',

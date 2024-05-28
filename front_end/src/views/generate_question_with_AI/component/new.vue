@@ -7,7 +7,7 @@
   <Modal
     v-model:visible="visible"
     :cancel-text="$t('common.cancelText')"
-    :title="$t('routes.answer.add_answer')"
+    :title="$t('routes.generate_question.title')"
     :width="1000"
     @ok="createFunc"
   >

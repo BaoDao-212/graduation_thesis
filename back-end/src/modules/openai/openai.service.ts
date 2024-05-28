@@ -8,12 +8,12 @@ import { Apikey } from 'src/entities/apikey.entity';
 import { createError } from '../common/utils/createError';
 import {
   GenerateQuestionsOutput,
-  GenerateReviewInput,
   GenerateReviewOutput,
   OpenAiKeyInput,
   OpenAiKeyOutput,
   prompt0,
   prompt1,
+  prompt11,
   prompt2,
   prompt3,
   prompt4,
@@ -304,18 +304,19 @@ export class ApikeyService {
       const exam = await this.examRepo.findOne({
         where: {
           id: examId,
-          status: ExamStatus.ACTIVE,
           user: {
             id: currentUser.id,
           },
         },
-        relations: ['user'],
+        relations: ['user', 'questions'],
       });
 
       if (!exam) {
         return createError('Exam', 'Exam not found');
       }
-
+      if (exam.questions.length == exam.numberQuestions)
+        return createError('Exam', 'Exam already have enough questions');
+      const count= exam.numberQuestions - exam.questions.length<20 ? exam.numberQuestions - exam.questions.length : 20;
       const genAI = new GoogleGenerativeAI(apikey.apikey);
       let fileupload;
       if (files.length == 1)
@@ -335,9 +336,9 @@ export class ApikeyService {
       );
       let data;
       if (files.length > 0) {
-        data = `${prompt0}${prompt1} ${exam.name}(${exam.content}) focus on the following contents: ${idea} ${prompt2}`;
+        data = `${prompt0}${prompt1} ${count} ${prompt11} ${exam.name}(${exam.content}) focus on the following contents: ${idea} ${prompt2}`;
       } else {
-        data = `${prompt1} ${exam.name}(${exam.content}) focus on the following contents: ${idea} ${prompt2}`;
+        data = `${prompt1} ${count} ${prompt11} ${exam.name}(${exam.content}) focus on the following contents: ${idea} ${prompt2}`;
       }
       let res;
       if (files.length == 1)
@@ -404,7 +405,7 @@ export class ApikeyService {
           questionIncorrect.push(dr.question.content);
         }
       });
-      if(result.detailResult.length/result.exam.questions.length < 0.8){
+      if (result.detailResult.length / result.exam.questions.length < 0.8) {
         return createError('Result', 'Result not enough question to evaluate');
       }
       const apikey = await this.apikeyRepo.findOne({

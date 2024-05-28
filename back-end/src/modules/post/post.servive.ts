@@ -13,7 +13,6 @@ import {
   ListPostPublicInput,
   UpdatePostInput,
   UpdatePostOutput,
-  UpdateReviewPostInput,
 } from './post.dto';
 import { Post, PostStatus } from 'src/entities/post.entity';
 import { Exam, ExamStatus } from 'src/entities/exam.entity';
@@ -205,6 +204,92 @@ export class PostService {
         skip: (page - 1) * size,
       });
 
+      return {
+        ok: true,
+        posts,
+      };
+    } catch (error) {
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
+
+  // hàm tìm tất cả các bài viết có đề thi có lượt đánh giá cao nhất
+  async listPostByRating(input: ListPostPublicInput): Promise<ListPostOutput> {
+    try {
+      const { page, size, search, sortBy } = input;
+      let posts;
+      if (sortBy === 'numberUserTest') {
+         posts = await this.postRepo.find({
+          relations: {
+            exams: true,
+            user: true,
+          },
+          where: {
+            status: PostStatus.PUBLISHED, name: Like(`%${search}%`),
+          },
+          order: {
+            exams: {
+              numberUserTest: 'DESC',
+            },
+          },
+          take: size,
+          skip: (page - 1) * size,
+        });
+      } else if (sortBy === 'averageRating') {
+        posts = await this.postRepo.find({
+          relations: {
+            exams: true,
+            user: true,
+          },
+          where: {
+            status: PostStatus.PUBLISHED,
+            name: Like(`%${search}%`),
+          },
+          order: {
+            exams: {
+              averageRating: 'ASC',
+            },
+          },
+          take: size,
+          skip: (page - 1) * size,
+        });
+      }
+      else if(sortBy === 'numberReviews'){
+        posts = await this.postRepo.find({
+          relations: {
+            exams: true,
+            user: true,
+          },
+          where: {
+            status: PostStatus.PUBLISHED,
+            name: Like(`%${search}%`),
+          },
+          order: {
+            exams: {
+              numberReviews: 'ASC',
+            },
+          },
+          take: size,
+          skip: (page - 1) * size,
+        });  
+      }
+      else {
+      posts = await this.postRepo.find({
+        relations: {
+          exams: true,
+          user: true,
+        },
+        where: {
+          status: PostStatus.PUBLISHED,
+          name: Like(`%${search}%`),
+        },
+        order: {
+            createdAt: 'DESC',
+        },
+        take: size,
+        skip: (page - 1) * size,
+      });  
+      }
       return {
         ok: true,
         posts,

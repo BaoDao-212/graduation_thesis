@@ -33,6 +33,7 @@ export class QuestionService {
         where: { id: examId },
         relations: {
           user: true,
+          questions: true,
         },
       });
       if (!exam) {
@@ -43,12 +44,18 @@ export class QuestionService {
           'Exam',
           'You are not allowed to create question in this exam',
         );
+      if (exam.questions.length == exam.numberQuestions)
+        return createError('Exam', 'Number of questions is full');
       const question = await this.questionRepo.create({
         content,
         explanation,
         exam,
         level,
       });
+      if (exam.questions.length + 1 == exam.numberQuestions) {
+        exam.status = ExamStatus.ACTIVE;
+        await this.examRepo.save(exam);
+      }
       await this.questionRepo.save(question);
       return {
         ok: true,
@@ -185,20 +192,20 @@ export class QuestionService {
         where: { id: examId },
         relations: {
           user: true,
-          questions:true,
+          questions: true,
         },
-        
       });
-      
+
       if (!exam) return createError('Exam', 'Not found exam');
       if (exam.user.id !== currentUser.id)
         return createError(
           'Exam',
           'You are not allowed to add question in this exam',
         );
-      if(exam.questions.length== exam.numberQuestions) return createError('Exam', 'Number of questions is full');
+      if (exam.questions.length == exam.numberQuestions)
+        return createError('Exam', 'Number of questions is full');
 
-      if(exam.questions.length+1== exam.numberQuestions)
+      if (exam.questions.length + 1 == exam.numberQuestions)
         exam.status = ExamStatus.ACTIVE;
       await this.examRepo.save(exam);
       let question = await this.questionRepo.create({
@@ -207,8 +214,8 @@ export class QuestionService {
         level,
         exam,
       });
-      
-      question= await this.questionRepo.save(question);
+
+      question = await this.questionRepo.save(question);
       for (const answer of answers) {
         const ans = await this.answerRepo.create({
           answer: answer.answer,
@@ -222,9 +229,41 @@ export class QuestionService {
       };
     } catch (error) {
       console.log(error);
-      
+
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }
-  
+  // xóa câu hỏi
+  async deleteQuestion(
+    questionId: number,
+    currentUser: User,
+  ): Promise<CreateQuestionOutput> {
+    try {
+      const question = await this.questionRepo.findOne({
+        where: { id: questionId },
+        relations: {
+          exam: {
+            user: true,
+          },
+          answers: true,
+        },
+      });
+
+      if (!question) return createError('Question', 'Not found question');
+      if (question.exam.user.id !== currentUser.id)
+        return createError(
+          'Question',
+          'You are not allowed to delete this question',
+        );
+      for (const answer of question.answers) {
+        await this.answerRepo.delete(answer.id);
+      }
+      await this.questionRepo.delete(questionId);
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
 }

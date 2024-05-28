@@ -1,16 +1,16 @@
 <!-- eslint-disable vue/no-unused-components -->
 <template>
   <div class="flex justify-end align-start">
-    <Button type="primary" @click="showModal"
-      ><PlusOutlined /> {{ t('routes.post.create') }}</Button
+    <Button type="text" @click="showModal"
+      ><EditOutlined /> {{ t('routes.post.update') }}</Button
     >
   </div>
   <Modal
     v-model:visible="visible"
     :cancel-text="$t('common.cancelText')"
-    :title="$t('routes.post.create')"
+    :title="$t('routes.post.update')"
     :width="1000"
-    @ok="createFunc"
+    @ok="updateFunction"
   >
     <Form
       :model="formState"
@@ -56,7 +56,11 @@
           }}</a-radio-button>
         </a-radio-group>
       </Form.Item>
-      <Form.Item :label="t('routes.question.table.exam')" name="exam"  v-if="props.exam && props.exam.length > 0">
+      <Form.Item
+        :label="t('routes.question.table.exam')"
+        name="exam"
+        v-if="props.exam && props.exam.length > 0"
+      >
         <a-select
           v-model:value="formState.examIds"
           mode="tags"
@@ -70,7 +74,9 @@
           :placeholder="t('routes.post.placeholder.exam')"
         ></a-select>
       </Form.Item>
-      <div  v-if="props.exam && props.exam.length == 0" style="color: red">{{ t('routes.exam.require_exam') }}</div>
+      <div v-if="props.exam && props.exam.length == 0" style="color: red">{{
+        t('routes.exam.require_exam')
+      }}</div>
     </Form>
     <template #footer>
       <div class="flex justify-end mr-2 mb-3">
@@ -81,7 +87,7 @@
           v-if="formState.content.trim() != ''"
           html-type="submit"
           type="primary"
-          @click="createFunc()"
+          @click="updateFunction()"
           >{{ $t('common.okText') }}
         </Button>
         <Button v-else html-type="submit" disabled>
@@ -93,14 +99,19 @@
 </template>
 <script lang="ts" setup>
   import { ref, defineEmits, defineProps } from 'vue';
-  import { PlusOutlined } from '@ant-design/icons-vue';
+  import { EditOutlined } from '@ant-design/icons-vue';
   import { Button, Form, Input, Modal, notification } from 'ant-design-vue';
   import { to } from '@/utils/awaitTo';
   import { useI18n } from '@/hooks';
-  import { createPost } from '@/api/backend/api/post';
+  import { updatePost } from '@/api/backend/api/post';
   const props = defineProps({
+    post: {
+      type: Object,
+      required: true,
+    },
     exam: Array,
   });
+  const postOld = ref();
   interface FormState {
     name: string;
     content: string;
@@ -117,18 +128,20 @@
     status: PostStatus.PUBLISHED,
     examIds: [],
   });
+  const showModal = () => {
+    visible.value = true;
+
+    postOld.value = props.post;
+    formState.value.name = postOld.value.name;
+    formState.value.content = postOld.value.content;
+    formState.value.status = postOld.value.status;
+    formState.value.examIds = postOld.value.exam.map((t: { id: number }) => t.id);
+  };
+
   const emit = defineEmits(['update-list']);
   const visible = ref<boolean>(false);
   const { t } = useI18n();
-  const showModal = () => {
-    visible.value = true;
-    formState.value.status = PostStatus.PUBLISHED;
-    formState.value.content = '';
-    formState.value.name = '';
-    formState.value.examIds = [];
-  };
-
-  const createFunc = async () => {
+  const updateFunction = async () => {
     const { content, name } = formState.value;
     if (content.trim() == '' || name.trim() == '') {
       return notification.warning({
@@ -136,11 +149,11 @@
         description: t('common.warn_message_empty'),
       });
     }
-    const [_err, _res] = await to(createPost(formState.value));
+    const [_err, _res] = await to(updatePost(props.post.id,formState.value));
     if (_res.ok) {
       notification.success({
         message: t('common.success'),
-        description: t('routes.post.notification.create_success'),
+        description: t('routes.post.notification.update_success'),
       });
       emit('update-list', formState.value);
       setTimeout(() => {

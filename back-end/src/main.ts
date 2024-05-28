@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { setupSwagger } from './setup-swagger';
 import { ApiTransformInterceptor } from './common/api.transform';
 import { ConfigService } from '@nestjs/config';
-const SERVER_PORT = process.env.SERVER_PORT;
+const SERVER_PORT = process.env.PORT;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {

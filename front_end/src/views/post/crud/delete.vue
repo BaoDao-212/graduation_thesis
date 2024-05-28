@@ -1,10 +1,12 @@
 <template>
-  <div class="text-decoration-none" style="color: rgb(255, 0, 0)" @click="showModal"
-    ><DeleteTwoTone two-tone-color="#ff0000" /> {{ $t('routes.question.delete') }}</div
-  >
+  <div class="text-decoration-none" style="color: rgb(255, 0, 0)">
+    <Button type="text" @click="showModal">
+      <DeleteTwoTone two-tone-color="#ff0000" /> {{ $t('routes.post.delete') }}</Button
+    >
+  </div>
   <a-modal
     v-model:visible="visible"
-    :title="$t('routes.question.delete')"
+    :title="$t('routes.post.delete')"
     :confirm-loading="confirmLoading"
     @ok="handleOk"
   >
@@ -15,48 +17,54 @@
           {{ $t('common.cancelText') }}
         </a-button>
         <a-button html-type="submit" type="primary" danger @click="handleOk()">
-          {{ $t('routes.question.delete') }}
+          {{ $t('routes.post.delete') }}
         </a-button>
       </div>
     </template>
   </a-modal>
 </template>
 <script lang="ts" setup>
-  import { ref, defineEmits } from 'vue';
+  import { ref } from 'vue';
   import { DeleteTwoTone } from '@ant-design/icons-vue';
   import { useI18n } from '@/hooks';
-  import { deleteQuestion } from '@/api/backend/api/question';
-  import { notification } from 'ant-design-vue';
   import to from '@/utils/awaitTo';
+  import { deletePost } from '@/api/backend/api/post';
+  import { usePostStore } from '@/store/modules/post';
+  import { notification } from 'ant-design-vue';
+  const  usePost  = usePostStore();
   const props = defineProps({
-    question: {
+    post: {
       type: Object,
       required: true,
     },
   });
   const { t } = useI18n();
-  const modalText = ref<string>(`${t('routes.question.delete')}: ${props.question.content}`);
+  const modalText = ref<string>(`${t('routes.post.post')}: ${props.post.post}`);
   const visible = ref<boolean>(false);
   const confirmLoading = ref<boolean>(false);
   const showModal = () => {
     visible.value = true;
   };
-  const emit = defineEmits(['update-list']);
   const handleOk = async () => {
     confirmLoading.value = true;
-    const [err] = await to(deleteQuestion(props.question.id));
-    if (!err) {
+    const [_err, res] = await to(deletePost(props.post.id));
+    if (res.ok) {
       modalText.value += ' has removed';
-      emit('update-list', props.question.id);
       notification.success({
         message: t('common.success'),
-        description: t('routes.question.notification.delete_success'),
+        description: t('routes.post.notification.delete_success'),
+      });
+      usePost.deletePost(props.post.id);
+    } else {
+      notification.error({
+        message: t('common.error'),
+        description: res.error.message,
       });
     }
     setTimeout(() => {
       visible.value = false;
       confirmLoading.value = false;
-    }, 2000);
+    }, 2);
   };
 </script>
 

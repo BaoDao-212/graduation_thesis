@@ -108,7 +108,7 @@ export class ExamService {
           },
           status: In([ExamStatus.ACTIVE, ExamStatus.INACTIVE]),
         },
-        select: ['id', 'name', 'content','status'],
+        select: ['id', 'name', 'content', 'status'],
         order: {
           createdAt: 'DESC',
         },
@@ -205,8 +205,12 @@ export class ExamService {
       if (!exam) {
         return createError('Exam', 'Không tìm thấy đề thi');
       }
+      exam.averageRating = Math.round(
+        ((exam.averageRating * exam.numberReviews + amount) /
+          (exam.numberReviews + 1)) *
+          100,
+      );
       exam.numberReviews = exam.numberReviews + 1;
-      exam.averageRating = exam.averageRating + amount;
       exam.usersReviewed = [...exam.usersReviewed, currentUser];
       await this.examRepo.save(exam);
       return {

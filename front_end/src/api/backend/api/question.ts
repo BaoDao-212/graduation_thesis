@@ -51,3 +51,10 @@ export async function updateQuestion(
     ...(options || {}),
   });
 }
+// TODO: xóa câu hỏi
+export async function deleteQuestion(id: number, options?: RequestOptions) {
+  return request<any>(`/api/question/${id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}
