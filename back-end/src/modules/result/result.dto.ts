@@ -14,6 +14,10 @@ export class ResultOutput extends CoreOutput {
   @ApiProperty()
   result?: Result;
 }
+export class ResultListOutput extends CoreOutput {
+  @ApiProperty()
+  results?: Result[];
+}
 export class ResultSubmitedOutput extends CoreOutput {
   @ApiProperty()
   result?: Result;

@@ -22,9 +22,7 @@
         v-model:data-source="listExam"
         :columns="columns"
         :pagination="{
-          showSizeChanger: true,
           showLessItems: true,
-          pageSizeOptions: ['10', '20', '50', '100', '150', '200', '300'],
           total: pageSetting.total,
         }"
         :scroll="{ x: 1180 }"

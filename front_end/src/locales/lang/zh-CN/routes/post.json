@@ -1,35 +1,44 @@
 {
+  "level": {
+  "public": "Công khai",
+  "private": "Riêng tư"
+  },
   "status": {
-    "public": "Công khai",
-    "private": "Cá nhân",
-    "name":"Trạng thái"
+  "public": "Công khai",
+  "private": "Riêng tư",
+  "name": "Trạng thái"
   },
-  "placeholder":{
-    "name":"Vui lòng nhập tên của bài viết này",
-    "content":"Vui lòng nhập nội dung của bài viết này",
-    "exam":"Vui lòng chọn bộ đề cho bài viết này"
+  "placeholder": {
+  "name": "Vui lòng nhập tên của bài đăng",
+  "content": "Vui lòng nhập nội dung của bài đăng",
+  "exam": "Vui lòng chọn kỳ thi của bài đăng"
   },
-  "require":{
-    "name":"Tên không được bỏ trống",
-    "content":"Nội dung không được bỏ trống",
-    "exam":"Bộ đề không được bỏ trống"
+  "require": {
+  "name": "Tên bắt buộc phải nhập",
+  "content": "Nội dung bắt buộc phải nhập",
+  "exam": "Kỳ thi bắt buộc phải chọn"
   },
   "notification": {
-    "create_success": "Tạo bài viết thành công",
-    "update_success": "Cập nhật bài viết thành công",
-    "delete_success": "Xóa bài viết thành công"
+  "create_success": "Đã tạo bài đăng thành công",
+  "update_success": "Đã cập nhật bài đăng thành công",
+  "delete_success": "Đã xóa bài đăng thành công"
   },
-  "create":"Thêm bài viết",
-  "update":"Cập nhật bài viết",
-  "delete":"Xóa bài viết",
-  "reviews":"đánh giá",
-  "post":"Bài viết",
-  "list_post":"Danh sách bài viết",
-  "detail":"Chi tiết bài viết",
-  "easy":"Dễ",
-  "normal":"Trung bình",
-  "hard":"Khó",
-  "very_hard":"Rất khó",
-  "start":"Bắt đầu làm đề thi",
-  "end":"Kết thúc"
-}
+  "create": "Tạo bài đăng",
+  "update": "Cập nhật bài đăng",
+  "delete": "Xóa bài đăng",
+  "reviews": "đánh giá",
+  "post": "Bài đăng",
+  "list_post": "Danh sách bài đăng",
+  "detail": "Chi tiết bài đăng",
+  "easy": "Dễ",
+  "normal": "Bình thường",
+  "hard": "Khó",
+  "very_hard": "Rất khó",
+  "start": "Bắt đầu kỳ thi",
+  "interaction": "tương tác",
+  "not_found": "Không có bài đăng nào",
+  "list_result": "Danh sách kết quả",
+  "score": "Điểm số",
+  "time": "Thời gian (phút)",
+  "details": "Chi tiết"
+  }

@@ -51,6 +51,7 @@
           </Menu>
         </template>
       </Dropdown>
+      <!-- <ProjectSetting /> -->
     </Space>
   </Layout.Header>
 </template>
@@ -123,7 +124,7 @@
         {
           name: '__index',
           meta: {
-            title: t("common.home"),
+            title: t('common.home'),
           },
           children: userStore.menus,
         },

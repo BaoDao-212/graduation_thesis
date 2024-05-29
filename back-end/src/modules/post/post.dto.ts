@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Post, PostStatus } from 'src/entities/post.entity';
+import { User } from 'src/entities/user.entity';
 import { CoreOutput } from 'src/modules/common/output.dto';
 
 export class CreatePostInput {
@@ -68,6 +69,10 @@ export class ListPostPublicInput{
 export class ListPostOutput extends CoreOutput {
   @ApiProperty({ description: 'list post' })
   posts?: Post[];
+  @ApiProperty({ description: 'total post' })
+  total?: number;
+  @ApiProperty({ description: 'user' })
+  user?: User;
 }
 // get details a post
 export class DetailPostOutput extends CoreOutput {

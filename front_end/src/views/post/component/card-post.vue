@@ -6,14 +6,15 @@
           {{ props.post.user.username.slice(0, 1) }}
         </Avatar>
         <div class="author-details">
-          <router-link :to="`/dashboard/detail/${props.post.id}`" class="author-name">
+          <router-link :to="`/dashboard/detail-user/${props.post.user.id}`" class="author-name">
             {{ props.post.user.username }}
           </router-link>
           <div class="post-name">{{ props.post.name }}</div>
         </div>
       </div>
       <div class="header-right">
-        <a-dropdown trigger="click">
+        <div class="post-date">{{ formatToDateTime(props.post.createdAt) }}</div>
+        <a-dropdown trigger="click" v-if="uId == props.post.user.id">
           <a class="ant-dropdown-link" @click.prevent>
             <MoreOutlined class="more-icon" />
           </a>
@@ -28,7 +29,6 @@
             </a-menu>
           </template>
         </a-dropdown>
-        <div class="post-date">{{ formatToDateTime(props.post.createdAt) }}</div>
       </div>
     </div>
     <div class="post-content">
@@ -50,6 +50,7 @@
   import { MoreOutlined } from '@ant-design/icons-vue';
   import UpdatePost from './../crud/update.vue';
   import DeletePost from './../crud/delete.vue';
+  import Storage from '@/utils/Storage';
   const { t } = useI18n();
   const props = defineProps({
     post: {
@@ -61,6 +62,7 @@
       required: true,
     },
   });
+  const uId = ref(Storage.get('PROFILE').id);
 </script>
 
 <style scoped>

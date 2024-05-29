@@ -185,8 +185,9 @@ export class PostService {
           id: idUser,
         },
       });
+      
       if (!user) return createError('User', 'User not found');
-      const posts = await this.postRepo.find({
+      const [posts,total] = await this.postRepo.findAndCount({
         relations: {
           exams: true,
           user: true,
@@ -207,6 +208,8 @@ export class PostService {
       return {
         ok: true,
         posts,
+        user,
+        total
       };
     } catch (error) {
       return createError('Server', 'Lỗi server, thử lại sau');
@@ -218,8 +221,9 @@ export class PostService {
     try {
       const { page, size, search, sortBy } = input;
       let posts;
+      let total;
       if (sortBy === 'numberUserTest') {
-         posts = await this.postRepo.find({
+        [ posts,total] = await this.postRepo.findAndCount({
           relations: {
             exams: true,
             user: true,
@@ -236,7 +240,7 @@ export class PostService {
           skip: (page - 1) * size,
         });
       } else if (sortBy === 'averageRating') {
-        posts = await this.postRepo.find({
+         [ posts,total] = await this.postRepo.findAndCount({
           relations: {
             exams: true,
             user: true,
@@ -247,7 +251,7 @@ export class PostService {
           },
           order: {
             exams: {
-              averageRating: 'ASC',
+              averageRating: 'DESC',
             },
           },
           take: size,
@@ -255,7 +259,7 @@ export class PostService {
         });
       }
       else if(sortBy === 'numberReviews'){
-        posts = await this.postRepo.find({
+         [ posts,total] = await this.postRepo.findAndCount({
           relations: {
             exams: true,
             user: true,
@@ -266,7 +270,7 @@ export class PostService {
           },
           order: {
             exams: {
-              numberReviews: 'ASC',
+              numberReviews: 'DESC',
             },
           },
           take: size,
@@ -274,7 +278,7 @@ export class PostService {
         });  
       }
       else {
-      posts = await this.postRepo.find({
+       [ posts,total] = await this.postRepo.findAndCount({
         relations: {
           exams: true,
           user: true,
@@ -293,6 +297,7 @@ export class PostService {
       return {
         ok: true,
         posts,
+        total
       };
     } catch (error) {
       return createError('Server', 'Lỗi server, thử lại sau');

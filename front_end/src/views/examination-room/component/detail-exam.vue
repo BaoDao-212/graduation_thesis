@@ -22,7 +22,9 @@
           </div>
           <div class="mb-2">
             <span class="mr-1" style="font-weight: bold"> {{ t('routes.exam.unanwsered') }}: </span>
-            {{ props.question.length- props.detail.detailResult.length }}/{{ props.question.length }}
+            {{ props.question.length - props.detail.detailResult.length }}/{{
+              props.question.length
+            }}
           </div>
         </div>
         <VueApexCharts
@@ -34,11 +36,7 @@
         />
       </div>
       <Button v-if="reviewExam" @click="review">{{ t('routes.exam.review') }}</Button>
-      <a-popconfirm
-        v-else
-        placement="top"
-        :title="t('routes.exam.review')"
-      >
+      <a-popconfirm v-else placement="top" :title="t('routes.exam.review')">
         <template #description>
           <Assistant v-if="!props.isGemini" />
           <div v-else>
@@ -74,9 +72,9 @@
     const res = await generateReviewGemini(props.detail.id);
     if (res.ok) {
       showReview.value = true;
-      reviewExam.value = JSON.parse(res.review);
+      // nếu res.review không có thì không hiển thị
+      if (res.review) reviewExam.value = JSON.parse(res.review);
       console.log(reviewExam.value);
-      
     } else {
       notification.error({
         message: t('common.error'),
@@ -100,7 +98,9 @@
       required: true,
     },
   });
-  const reviewExam = ref(JSON.parse(props.detail.review));
+  const reviewExam = ref();
+  if (!props.detail.review) reviewExam.value = '';
+  else reviewExam.value = JSON.parse(props.detail.review);
   const series = ref([
     {
       name: t('routes.exam.amount'),

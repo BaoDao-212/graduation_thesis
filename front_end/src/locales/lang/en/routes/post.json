@@ -35,5 +35,11 @@
   "hard": "Hard",
   "very_hard": "Very Hard",
   "start": "Start exam",
-  "interaction": "interactions"
+  "interaction": "interactions",
+  "not_found": "No posts exist",
+  "list_result":"List result",
+  "score":"Score",
+  "time":"Time(minites)",
+  "details":"Details"
+
 }

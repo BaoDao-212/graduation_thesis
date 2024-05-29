@@ -1,6 +1,6 @@
 <template>
   <Layout class="layout">
-    <Layout.Sider
+    <!-- <Layout.Sider
       v-if="layoutSetting.layout === 'sidemenu'"
       v-model:collapsed="collapsed"
       :width="asiderWidth"
@@ -11,7 +11,7 @@
     >
       <Logo :collapsed="collapsed" />
       <AsideMenu :collapsed="collapsed" :theme="getTheme" />
-    </Layout.Sider>
+    </Layout.Sider> -->
     <Layout>
       <PageHeader v-model:collapsed="collapsed" :theme="getTheme">
         <template v-if="layoutSetting.layout === 'topmenu'" #default>
@@ -42,7 +42,6 @@
   const { layoutSetting } = storeToRefs(layoutSettingStore);
   const collapsed = ref<boolean>(false);
   // 自定义侧边栏菜单收缩和展开时的宽度
-  const asiderWidth = computed(() => (collapsed.value ? 80 : 220));
   const getTheme = computed(() => (layoutSetting.value.navTheme === 'light' ? 'light' : 'dark'));
 </script>
 

@@ -13,7 +13,7 @@
             <span class="detail-value">{{ props.exam.numberReviews }}</span>
           </div>
           <div class="detail">
-            <a-rate class="rating" :value="props.exam.averageRating" disabled />
+            <a-rate class="rating" :value="props.exam.averageRating/100" disabled />
           </div>
         </div>
       </div>

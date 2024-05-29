@@ -16,8 +16,8 @@ const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
-        path: 'welcome',
-        name: `${moduleName}-welcome`,
+        path: 'post',
+        name: `${moduleName}-post`,
         meta: {
           title: t('routes.post.post'),
           icon: 'ant-design:home-filled',
@@ -33,6 +33,16 @@ const routes: Array<RouteRecordRaw> = [
           hideInMenu: true,
         },
         component: () => import('@/views/post/crud/detail.vue'),
+      },
+      {
+        path: 'detail-user/:id',
+        name: `${moduleName}-detail-user`,
+        meta: {
+          title: t('routes.post.detail_user'),
+          keepAlive: true,
+          hideInMenu: true,
+        },
+        component: () => import('@/views/post/profile-owner.vue'),
       },
     ],
   },

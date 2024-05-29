@@ -48,15 +48,16 @@ export const usePostStore = defineStore('post', () => {
       });
     } else {
       listPost.value = res.posts;
+      pageSetting.value.total = res.total;
       console.log(listPost.value);
     }
   };
   const getListPost = () => {
     return listPost.value;
   };
-  const deletePost = async (id: number) => { 
+  const deletePost = async (id: number) => {
     listPost.value = listPost.value.filter((item: { id: number }) => item.id !== id); // Add type annotation for 'item'
-  }
+  };
   return {
     getListExam,
     getListPost,

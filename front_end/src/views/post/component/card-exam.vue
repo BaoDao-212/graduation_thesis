@@ -12,11 +12,7 @@
           <span class="detail-value">{{ props.exam.numberReviews }}</span>
         </div>
         <div class="detail">
-          <a-rate
-            class="rating"
-            :value="props.exam.averageRating / props.exam.numberReviews"
-            disabled
-          />
+          <a-rate class="rating" :value="props.exam.averageRating / 100" disabled />
         </div>
       </div>
     </div>
@@ -66,7 +62,7 @@
         message: t('common.error'),
         description: err.message,
       });
-      router.push('/dashboard/list');
+      router.push('/dashboard/post');
     } else {
       result.value = res.result;
       router.push(`/exam/room/${result.value.id}`);
@@ -76,11 +72,11 @@
     await createResultForExam();
   };
   const level = ref(
-    props.exam.level === '0'
+    props.exam.level === 0
       ? t('routes.post.easy')
-      : props.exam.level === '1'
+      : props.exam.level === 1
         ? t('routes.post.normal')
-        : props.exam.level === '2'
+        : props.exam.level === 2
           ? t('routes.post.hard')
           : t('routes.post.very_hard'),
   );

@@ -59,4 +59,13 @@ export class ResultController {
   async viewResult(@Param('id', ParseIntPipe) id: number, @CurrentUser() currentUser: User) {
     return this.resultService.viewResult(id,currentUser);
   }
+  // danh sách tất cả bài làm
+  @ApiOperation({
+    summary: 'list result',
+  })
+  @Roles(['Any'])
+  @Get()
+  async listResult(@CurrentUser() currentUser: User) {
+    return this.resultService.listResult(currentUser);
+  }
 }

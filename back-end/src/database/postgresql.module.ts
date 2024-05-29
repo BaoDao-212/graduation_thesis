@@ -18,13 +18,13 @@ import { User } from 'src/entities/user.entity';
     }),
     TypeOrmModule.forRoot({
        type: 'postgres',
-      host: 'dpg-cpaq05kf7o1s73ako4m0-a.singapore-postgres.render.com',//
+      host: '127.0.0.1',//
       port: 5432,
-      username: 'postgres1',
-      password: 'omcA2eK2VXbrqHgXUK7ARGcOzMAft5gG',
-      database: 'finalproject_k2pi',
-      ssl: true,
-      entities: [User,Post,Exam,Question,Answer,Result,DetailResult,Apikey],
+      username: 'postgres',
+      password: 'password',
+      database: 'finalproject',
+      // ssl: true,
+      entities: [User,Post,Exam,Question,Answer,Result,DetailResult,Apikey,Category],
       synchronize: true,
       ...(process.env.NODE_ENV === 'production'
         ? {

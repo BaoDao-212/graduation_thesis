@@ -60,8 +60,10 @@
     } else {
       result.value = res.result;
       exam.value = res.exam;
+      console.log(res);
       isReviewed.value = res.isReviewed;
       isGeminiKey.value = res.isGeminiKey;
+      
     }
   };
   onBeforeMount(async () => {

@@ -4,6 +4,7 @@ import { request, type RequestOptions } from '@/utils/request';
 
 export async function listPublicPostAll(params: API.PostListParams, options?: RequestOptions) {
   return request<{
+    total: number | undefined;
     posts: any;
     items?: API.TaskEntity[];
   }>('/api/post/list-all', {
@@ -47,6 +48,23 @@ export async function updatePost(id: number, body: API.PostDto, options?: Reques
 export async function deletePost(id: number, options?: RequestOptions) {
   return request<any>(`/api/post/delete/${id}`, {
     method: 'DELETE',
+    ...(options || {}),
+  });
+}
+//TODO: danh sách bài viết của người dùng khác với id
+export async function listPublicPost(id: number, params: API.PostListParams, options?: RequestOptions) {
+  return request<any>(`/api/post/list/${id}`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+//TODO: lấy danh sách kết quả bài thi của nguời này
+export async function listResult(options?: RequestOptions) {
+  return request<any>('/api/result', {
+    method: 'GET',
     ...(options || {}),
   });
 }

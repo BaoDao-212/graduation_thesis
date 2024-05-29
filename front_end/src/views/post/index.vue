@@ -16,9 +16,14 @@
         "
       >
         <div v-for="item in listPost" style="display: flex; align-items: center; width: 100%">
-          <CardPost :post="item" :exam="listExamName"/>
+          <CardPost :post="item" :exam="listExamName" />
         </div>
-        <a-pagination @change="changePage" />
+        <a-pagination
+          @change="changePage"
+          :simple="true"
+          :current="pageSetting.page"
+          :total="pageSetting.total"
+        />
       </div>
     </Card>
   </div>
@@ -51,7 +56,7 @@
     }
   };
   const changePage = async (page: number) => {
-  usePost.setPageSetting(page, 10,pageSetting.value.search,pageSetting.value.sort);
+    usePost.setPageSetting(page, 10, pageSetting.value.search, pageSetting.value.sort);
     await usePost.getListExam();
   };
   onBeforeMount(async () => {

@@ -9,6 +9,7 @@ import { Result } from 'src/entities/result.entity';
 import {
   DetailResultInput,
   ResultInput,
+  ResultListOutput,
   ResultOutput,
   ResultSubmitedOutput,
 } from './result.dto';
@@ -348,7 +349,10 @@ export class ResultService {
       }, 0);
       // tính thời gian nguời chơi làm bài theo phút
       const now = Date.now();
-      const time = now - result.createdAt.getTime() - 7 * 60 * 60 * 1000;
+      let time = now - result.createdAt.getTime() - 7 * 60 * 60 * 1000;
+      if(time>result.exam.time*60000){
+        time=result.exam.time*60000;
+      }
       // làm tròn thời gian làm bài với 0 chữ số thập phân
       result.time = Math.round(time / 60000);
       result.score = score;
@@ -360,6 +364,25 @@ export class ResultService {
     } catch (error) {
       console.log(error);
 
+      return createError('Server', 'Lỗi server, thử lại sau');
+    }
+  }
+  // danh sách tất cả các bài làm của một người dùng
+  async listResult(currentUser: User): Promise<ResultListOutput> {
+    try {
+      const results = await this.resultRepo.find({
+        where: {
+          user: {
+            id: currentUser.id,
+          },
+        },
+        relations: ['exam','user'],
+      });
+      return {
+        ok: true,
+        results,
+      };
+    } catch (error) {
       return createError('Server', 'Lỗi server, thử lại sau');
     }
   }

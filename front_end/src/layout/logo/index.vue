@@ -1,7 +1,7 @@
 <template>
   <div class="logo">
-    <img src="~@/assets/images/logo.png" alt="" />
-    <h2 v-show="!collapsed" class="title">One Piece</h2>
+    <img src="~@/assets/images/logo0.png" alt="" />
+    <div v-show="!collapsed" class="title">Study Quiz Center</div>
   </div>
 </template>
 
@@ -27,7 +27,7 @@
     }
 
     .title {
-      @apply mb-0 text-xl;
+      @apply mb-0 text-lg;
 
       color: @primary-color;
     }
