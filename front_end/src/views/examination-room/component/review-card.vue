@@ -61,7 +61,7 @@
 </script>
 <style lang="css">
   .container {
-    max-width: 800px;
+    width: 100%;
     margin: 0 5px;
     font-family: Arial, sans-serif;
   }

@@ -135,18 +135,11 @@
   };
 
   const createUserFunc = async () => {
-    const { content, name } = formState;
-    if (content.trim() == '' || name.trim() == '') {
-      return notification.warning({
-        message: t('routes.common.warning'),
-        description: t('routes.management.warn_message_empty'),
-      });
-    }
     const [err, _res] = await to(createExam(formState));
     if (!err) {
       notification.success({
-        message: t('routes.error.success'),
-        description: t('routes.management.success_message_add'),
+        message: t('common.success'),
+        description: t('routes.exam.create_success'),
       });
       emit('update-list', formState);
       setTimeout(() => {

@@ -259,6 +259,7 @@ export class ResultService {
         return createError('Result', 'Result not found');
       }
       if (result.score == -1) {
+        this.calculateScore(result.id, currentUser);
         return createError('Result', 'Result not submitted');
       }
       const exam = await this.examRepo

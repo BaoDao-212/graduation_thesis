@@ -16,6 +16,7 @@
   "review_exam":"How do you feel about this exam?",
   "review_title":"Review exam",
   "review_success":"Thank you for your review",
+  "create_success":"Create exam successfully",
   "generate_review":"Generate review with Gemini",
   "analysis_and_evaluation":"Analysis and evaluation",
   "positive":"Positive",
@@ -70,6 +71,7 @@
 
   "success":"Created assistant with Gemini successfully",
   "createdAssistant":"Create assistant with Gemini",
+  
   "delete":{
     "title":"Delete exam",
     "button":"Delete",

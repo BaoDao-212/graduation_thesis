@@ -16,6 +16,7 @@
   "review": "Đánh giá về kết quả bài làm",
   "review_exam": "Bạn cảm thấy đề thi này như nào?",
   "review_title": "Đánh giá đề thi",
+  "create_success": "Tạo bộ đề thành công",
   "review_success": "Cảm ơn bạn đã đánh giá đề thi",
   "generate_review": "Tạo đánh giá bài làm với Gemini",
   "analysis_and_evaluation": "Phân tích và đánh giá",
@@ -44,7 +45,8 @@
     "createAt": "Ngày tạo",
     "room": "Phòng thi",
     "result_exam": "Kết quả bài thi",
-    "number_question": "Số câu hỏi"
+    "number_question": "Số câu hỏi",
+    "time": "Thời gian thi"
   },
   "modal": {
     "placeholder": {
@@ -62,5 +64,13 @@
   "require_document": "Yêu cầu tài liệu hoặc mô tả về đề thi",
   "OpenAI_apikey": "ApiKey",
   "success": "Thêm trợ lý bằng Gemini thành công",
-  "createdAssistant": "Thêm api key"
+  "createdAssistant": "Thêm api key",
+  "delete":{
+    "title":"Xóa bộ đề",
+    "button":"Xóa",
+    "content":"Bạn có chắc chắn muốn xóa bộ đề này?",
+    "success":"Xóa bộ đề thành công",
+    "restore":"Khôi phục",
+    "restore_exam":"Khôi phục bộ đề"
+  }
 }

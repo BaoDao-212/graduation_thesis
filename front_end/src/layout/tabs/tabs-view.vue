@@ -182,7 +182,7 @@
   // 关闭当前页面
   const removeTab = (route) => {
     if (tabsList.value.length === 1) {
-      return message.warning('这已经是最后一页，不能再关闭了！');
+      return message.warning('You cannot close all tabs.');
     }
     // tabsViewMutations.closeCurrentTabs(route)
     tabsViewStore.closeCurrentTab(route);

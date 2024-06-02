@@ -132,6 +132,9 @@
   series.value[0].data[4] = Math.round(
     (series.value[0].data[4] / props.question.filter((q) => q.level == 3).length) * 100,
   );
+  for (let i = 0; i < series.value[0].data.length; i++) {
+    if (isNaN(series.value[0].data[i])) series.value[0].data[i] = 100;
+  }
   const chartOptions = {
     chart: {
       height: 350,
