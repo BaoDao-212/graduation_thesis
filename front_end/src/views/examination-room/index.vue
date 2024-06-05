@@ -17,17 +17,19 @@
       </template>
       <div v-if="exam" class="flex" style="flex-direction: column; justify-content: center">
         <div style="width: 100%; margin-top: 10px; margin-bottom: 10px; overflow-y: auto">
-          <QuestionCard
-            v-for="q in exam.questions.slice((current - 1) * 2, current * 2)"
+          <div v-for="(q,index) in exam.questions">
+            <QuestionCard v-if="index<current*2 && index>=(current-1)*2"
             :question="q"
             :answers="
               result.detailResult.filter((dr) => dr.question.id == q.id).length > 0
-                ? result.detailResult
-                    .filter((dr) => dr.question.id == q.id)[0]
-                    .answer.map((a) => a.id)
-                : []
-            "
-          />
+              ? result.detailResult
+              .filter((dr) => dr.question.id == q.id)[0]
+              .answer.map((a) => a.id)
+              : []
+              "
+            :detail-result="result.detailResult"
+            />
+          </div>
         </div>
         <div style="margin-top: 10px; display: flex; justify-content: end">
           <a-popconfirm

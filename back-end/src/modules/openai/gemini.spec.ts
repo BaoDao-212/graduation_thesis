@@ -1,125 +1,226 @@
+
 import { Test, TestingModule } from '@nestjs/testing';
-import { Express } from 'express';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { ApikeyController } from './openai.resolver';
-import { ApikeyService } from './openai.service';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Apikey } from 'src/entities/apikey.entity';
+import { Exam } from 'src/entities/exam.entity';
 import { User } from 'src/entities/user.entity';
+import { Result } from 'src/entities/result.entity';
+import { Repository } from 'typeorm';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ApikeyService } from './openai.service';
+import { Readable } from 'stream';
 
-describe('ExamController', () => {
-  let controller: ApikeyController;
-  let apikeyService: ApikeyService;
+// Mock các dependencies (Apikey, Exam, User, Result repositories)
+const mockApikeyRepository = () => ({
+  findOne: jest.fn(),
+  create: jest.fn(),
+  save: jest.fn(),
+});
 
-  const mockUser: User = {
-      id: 1,
-      email: 'test@example.com',
-      password: 'password',
-      name: 'Test User',
-      username: '',
-      createdAt: undefined,
-      updatedAt: undefined,
-      hashPassword: function (): Promise<void> {
-          throw new Error('Function not implemented.');
-      },
-      checkPassword: function (password: string): Promise<boolean> {
-          throw new Error('Function not implemented.');
-      }
-  };
+const mockExamRepository = () => ({
+  findOne: jest.fn(),
+});
 
-  
-const mockFiles: Array<Express.Multer.File> = [
-    {
-        fieldname: 'file',
-        originalname: 'document.docx',
-        encoding: 'utf8',
-        mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        buffer: Buffer.from('test content'),
-        size: 1024,
-        stream: null,
-        destination: null,
-        filename: null,
-        path: null,
-    },
-];
+const mockResultRepository = () => ({
+  findOne: jest.fn(),
+});
 
+// Mock GoogleGenerativeAI và các phương thức của nó
+jest.mock('@google/generative-ai', () => ({
+  GoogleGenerativeAI: jest.fn().mockReturnValue({
+    getGenerativeModel: jest.fn().mockReturnValue({
+      generateContent: jest.fn().mockResolvedValue({
+        response: {
+          text: jest
+            .fn()
+            .mockResolvedValue(
+              '```json[{"content": "Câu hỏi 1"}, {"content": "Câu hỏi 2"}]```',
+            ),
+        },
+      }),
+    }),
+  }),
+}));
 
-  const mockGeneratedQuestions = [
-    'What is the capital of France?',
-    'Who wrote the book "Pride and Prejudice"?',
-  ];
+describe('ApikeyService', () => {
+  let service: ApikeyService;
+  let apikeyRepository: Repository<Apikey>;
+  let examRepository: Repository<Exam>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ApikeyController],
       providers: [
+        ApikeyService,
         {
-          provide: ApikeyService,
-          useValue: {
-            generateQuestionsWithGemini: jest.fn(),
-          },
+          provide: getRepositoryToken(Apikey),
+          useFactory: mockApikeyRepository,
+        },
+        {
+          provide: getRepositoryToken(Exam),
+          useFactory: mockExamRepository,
+        },
+        {
+          provide: getRepositoryToken(Result),
+          useFactory: mockResultRepository,
         },
       ],
     }).compile();
-    controller = module.get<ApikeyController>(ApikeyController);
-    apikeyService = module.get<ApikeyService>(ApikeyService);
-  });
 
-  it('should generate questions successfully', async () => {
-    const idea = 'Create questions based on this document';
-    const examId = 123;
-
-    jest.spyOn(apikeyService, 'generateQuestionsWithGemini').mockResolvedValue(mockGeneratedQuestions);
-
-    const result = await controller.generateQuestions(mockUser, mockFiles, { idea }, examId);
-
-    expect(result).toEqual(mockGeneratedQuestions);
-    expect(apikeyService.generateQuestionsWithGemini).toHaveBeenCalledWith(
-      mockFiles,
-      examId,
-      mockUser,
-      idea,
+    service = module.get<ApikeyService>(ApikeyService);
+    apikeyRepository = module.get<Repository<Apikey>>(
+      getRepositoryToken(Apikey),
     );
+    examRepository = module.get<Repository<Exam>>(getRepositoryToken(Exam));
   });
 
-  it('should throw an error if no files are provided', async () => {
-    const idea = 'Create questions based on this document';
-    const examId = 123;
-
-    try {
-      await controller.generateQuestions(mockUser, [], { idea }, examId);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpException);
-      expect(error.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(error.message).toContain('No files provided');
-    }
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
 
-  it('should throw an error if invalid examId is provided', async () => {
-    const idea = 'Create questions based on this document';
-    const examId = -1; // Invalid examId
+  describe('generateQuestionsWithGemini', () => {
+    it('should return an error if no apikey found', async () => {
+      // Mock apikeyRepository.findOne để trả về null
+      jest.spyOn(apikeyRepository, 'findOne').mockResolvedValue(null);
 
-    try {
-      await controller.generateQuestions(mockUser, mockFiles, { idea }, examId);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpException);
-      expect(error.status).toBe(HttpStatus.BAD_REQUEST);
-      expect(error.message).toContain('Invalid exam ID');
-    }
-  });
+      const result = await service.generateQuestionsWithGemini(
+        [],
+        1,
+        new User(),
+        'idea',
+      );
+      expect(result).toEqual({
+        ok: false,
+        error: { mainReason: 'Apikey', message: 'Please update your apikey' },
+      });
+    });
 
-  it('should throw an error if an error occurs from Gemini API', async () => {
-    const idea = 'Create questions based on this document';
-    const examId = 123;
+    it('should return an error if exam not found', async () => {
+      // Mock apikeyRepository.findOne để trả về api key
+      jest
+        .spyOn(apikeyRepository, 'findOne')
+        .mockResolvedValue({ apikey: 'test-apikey' } as Apikey);
+      // Mock examRepository.findOne để trả về null
+      jest.spyOn(examRepository, 'findOne').mockResolvedValue(null);
 
-    jest.spyOn(apikeyService, 'generateQuestionsWithGemini').mockRejectedValue(
-      new HttpException('Error from Gemini API', HttpStatus.INTERNAL_SERVER_ERROR),
-    );
+      const result = await service.generateQuestionsWithGemini(
+        [],
+        1,
+        new User(),
+        'idea',
+      );
 
-    try {
-      await controller.generateQuestions(mockUser, mockFiles, { idea }, examId);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpException);
-      expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
-      expect(error.message).toContain('Error from Gemini API');
-    }
+      expect(result).toEqual({
+        ok: false,
+        error: { mainReason: 'Exam', message: 'Exam not found' },
+      });
+    });
+
+    it('should return an error if exam already have enough questions', async () => {
+      // Mock apikeyRepository.findOne để trả về api key
+      jest
+        .spyOn(apikeyRepository, 'findOne')
+        .mockResolvedValue({ apikey: 'test-apikey' } as Apikey);
+      // Mock examRepository.findOne để trả về exam với đủ số lượng câu hỏi
+      jest.spyOn(examRepository, 'findOne').mockResolvedValue({
+        numberQuestions: 2,
+        questions: [{ content: 'Câu hỏi 1' }, { content: 'Câu hỏi 2' }],
+      } as Exam);
+
+      const result = await service.generateQuestionsWithGemini(
+        [],
+        1,
+        new User(),
+        'idea',
+      );
+      expect(result).toEqual({
+        ok: false,
+        error: {
+          mainReason: 'Exam',
+          message: 'Exam already have enough questions',
+        },
+      });
+    });
+
+    it('should generate questions successfully', async () => {
+      // mock exam
+      const mockExam = {
+        id: 1,
+        name: 'Exam 1',
+        content: 'Content 1',
+        numberQuestions: 2,
+        questions: [],
+      } as Exam;
+      //mock user
+      const mockUser = new User();
+      // Mock apikeyRepository.findOne để trả về api key
+      jest
+        .spyOn(apikeyRepository, 'findOne')
+        .mockResolvedValue({ apikey: 'test-apikey' } as Apikey);
+      // Mock examRepository.findOne để trả về exam
+      jest.spyOn(examRepository, 'findOne').mockResolvedValue(mockExam);
+      // Mock GoogleGenerativeAI để trả về câu hỏi
+      (GoogleGenerativeAI as jest.Mock).mockImplementationOnce(() => ({
+        getGenerativeModel: jest.fn().mockReturnValue({
+          generateContent: jest.fn().mockResolvedValue({
+            response: {
+              text: jest
+                .fn()
+                .mockResolvedValue(
+                  '```json[{"content": "Câu hỏi 1"}, {"content": "Câu hỏi 2"}]```',
+                ),
+            },
+          }),
+        }),
+      }));
+      // Mock apikeyRepository.save để trả về api key
+      jest.spyOn(apikeyRepository, 'save').mockResolvedValue({} as Apikey);
+
+      const result = await service.generateQuestionsWithGemini(
+        [],
+        1,
+        mockUser,
+        'idea',
+      );
+      expect(result).toEqual({
+        ok: true,
+        questions: [{ content: 'Câu hỏi 1' }, { content: 'Câu hỏi 2' }],
+      });
+    });
+
+    it('should handle errors during question generation', async () => {
+      // Mock apikeyRepository.findOne để trả về api key
+      jest
+        .spyOn(apikeyRepository, 'findOne')
+        .mockResolvedValue({
+          apikey: 'AIzaSyCLob5fQm05BU4c1VDnCknr6tmxRnylz6Y',
+        } as Apikey);
+      // Mock examRepository.findOne để trả về exam
+      jest.spyOn(examRepository, 'findOne').mockResolvedValue({
+        id: 1,
+        name: 'Exam 1',
+        content: 'Content 1',
+        numberQuestions: 2,
+        questions: [],
+      } as Exam);
+
+      // Mock GoogleGenerativeAI để throw error
+      (GoogleGenerativeAI as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Test error');
+      });
+
+      const result = await service.generateQuestionsWithGemini(
+        [],
+        1,
+        new User(),
+        'idea',
+      );
+      expect(result).toEqual({
+        ok: false,
+        error: {
+          mainReason: 'Server',
+          message: 'Server error, please try again later',
+        },
+      });
+    });
   });
 });

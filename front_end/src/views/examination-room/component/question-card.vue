@@ -53,7 +53,12 @@
       type: Array,
       required: true,
     },
+    detailResult: {
+      type: Array,
+      required: true,
+    },
   });
+  const detailResult = ref(props.detailResult);
   interface DetailAnswerForm {
     questionId: number;
     answerId: number[];
@@ -76,7 +81,37 @@
       form.value.answerId = props.answers.length > 0 ? (props.answers as number[]) : [];
       isSubmit.value = true;
     }
-    else isSubmit.value = false;
+    else{
+      if(
+        detailResult.value.filter((dr: { question?: { id: number } }) => dr?.question?.id == props.question.id).length > 0
+      ){
+        detailResult.value = detailResult.value.map((dr: {
+          answer: any; question?: { id: number } 
+}) => {
+          if(dr?.question?.id == props.question.id){
+            form.value.answerId.forEach((a) => {
+              dr.answer.push({
+                id: a,
+              });
+            });
+          }
+          return dr;
+        });
+      }
+      else{
+        detailResult.value.push({
+          question: {
+            id: props.question.id,
+          },
+          answer: form.value.answerId.map((a) => {
+            return {
+              id: a,
+            };
+          }),
+        });
+      }
+      isSubmit.value = false;
+    }
   };
   const changeAnswer = (value: number[]) => {
     if (
