@@ -7,16 +7,13 @@ ARG PROJECT_DIR
 WORKDIR $PROJECT_DIR
 
 # 安装pnpm
-RUN npm install -g pnpm@8.10.2
+RUN npm install -g pnpm
 
 COPY . ./
-# 安装依赖
-# 若网络不通，可以使用淘宝源
-# RUN pnpm config set registry https://registry.npmmirror.com
 RUN pnpm install
 
 # 构建项目
-ENV VITE_BASE_URL=
+ENV VITE_BASE_URL=/
 RUN pnpm build
 
 

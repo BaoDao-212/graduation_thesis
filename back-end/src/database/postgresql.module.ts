@@ -18,12 +18,12 @@ import { User } from 'src/entities/user.entity';
     }),
     TypeOrmModule.forRoot({
        type: 'postgres',
-      host: '127.0.0.1',//
+      host: 'finalproject.postgres.database.azure.com',//
       port: 5432,
       username: 'postgres',
-      password: 'password',
+      password: 'Ba0dao@212',
       database: 'finalproject',
-      // ssl: true,
+      ssl: true,
       entities: [User,Post,Exam,Question,Answer,Result,DetailResult,Apikey,Category],
       synchronize: true,
       ...(process.env.NODE_ENV === 'production'

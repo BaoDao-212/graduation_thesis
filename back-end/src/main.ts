@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { setupSwagger } from './setup-swagger';
 import { ApiTransformInterceptor } from './common/api.transform';
 import { ConfigService } from '@nestjs/config';
-const SERVER_PORT = process.env.PORT;
+const SERVER_PORT = 45615;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
@@ -20,8 +20,9 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ApiTransformInterceptor(new Reflector()));
 
   // swagger
-  setupSwagger(app);
+  // setupSwagger(app);
   // start
+  Logger.log(`Server port: ${SERVER_PORT}`);
   await app.listen(SERVER_PORT, '0.0.0.0');
   const serverUrl = await app.getUrl();
   Logger.log(`api服务已经启动,请访问: ${serverUrl}`);

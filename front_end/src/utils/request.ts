@@ -122,7 +122,7 @@ export async function request<T = BaseResponse, Passive extends boolean = true>(
   try {
     // 兼容 from data 文件上传的情况
     const { requestType, isReturnResult = true, ...rest } = config;
-
+    console.log(baseApiUrl);
     const response = (await service.request<T>({
       url,
       ...rest,

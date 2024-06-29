@@ -66,7 +66,8 @@ export class ApikeyService {
           ok: true,
         };
       } catch (error) {
-        return createError('Input', 'API key not valid');
+        console.log(error);
+        return createError('Input', error);
       }
     } catch (error) {
       return createError('Server', 'Lỗi server, thử lại sau');
